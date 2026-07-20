@@ -1,0 +1,43 @@
+"""Application settings loaded from environment variables."""
+
+from functools import lru_cache
+from typing import List
+
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    """Central runtime configuration for the API."""
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore",
+    )
+
+    app_name: str = Field(default="Hospital AI API", alias="APP_NAME")
+    app_env: str = Field(default="development", alias="APP_ENV")
+    app_debug: bool = Field(default=True, alias="APP_DEBUG")
+    app_host: str = Field(default="0.0.0.0", alias="APP_HOST")
+    app_port: int = Field(default=8000, alias="APP_PORT")
+    app_version: str = Field(default="0.1.0", alias="APP_VERSION")
+    cors_origins: str = Field(
+        default="http://localhost:5173,http://127.0.0.1:5173",
+        alias="CORS_ORIGINS",
+    )
+    log_level: str = Field(default="INFO", alias="LOG_LEVEL")
+
+    @property
+    def cors_origins_list(self) -> List[str]:
+        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    @property
+    def is_development(self) -> bool:
+        return self.app_env.lower() in {"development", "dev", "local"}
+
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()

@@ -1,0 +1,30 @@
+import { useState } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import Navbar from '@/components/layout/Navbar';
+import Sidebar from '@/components/layout/Sidebar';
+import { NAV_ITEMS } from '@/utils/constants';
+
+function resolveTitle(pathname: string): string {
+  const match = NAV_ITEMS.find((item) =>
+    item.path === '/' ? pathname === '/' : pathname.startsWith(item.path),
+  );
+  return match?.label ?? 'Hospital AI';
+}
+
+export default function MainLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const title = resolveTitle(location.pathname);
+
+  return (
+    <div className="flex min-h-screen bg-[var(--bg-app)]">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Navbar title={title} onMenuClick={() => setSidebarOpen(true)} />
+        <main className="flex-1 p-4 lg:p-6">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
