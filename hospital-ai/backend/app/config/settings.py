@@ -29,13 +29,46 @@ class Settings(BaseSettings):
     )
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
 
+    supabase_url: str = Field(default="", alias="SUPABASE_URL")
+    supabase_anon_key: str = Field(default="", alias="SUPABASE_ANON_KEY")
+    supabase_service_role_key: str = Field(
+        default="",
+        alias="SUPABASE_SERVICE_ROLE_KEY",
+    )
+    supabase_jwt_secret: str = Field(default="", alias="SUPABASE_JWT_SECRET")
+    # Set false on machines with corporate SSL inspection (local only).
+    supabase_ssl_verify: bool = Field(default=True, alias="SUPABASE_SSL_VERIFY")
+
     @property
     def cors_origins_list(self) -> List[str]:
-        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+        return [
+            origin.strip()
+            for origin in self.cors_origins.split(",")
+            if origin.strip()
+        ]
 
     @property
     def is_development(self) -> bool:
         return self.app_env.lower() in {"development", "dev", "local"}
+
+    def require_supabase(self) -> None:
+        missing = [
+            name
+            for name, value in (
+                ("SUPABASE_URL", self.supabase_url),
+                ("SUPABASE_ANON_KEY", self.supabase_anon_key),
+                ("SUPABASE_SERVICE_ROLE_KEY", self.supabase_service_role_key),
+                ("SUPABASE_JWT_SECRET", self.supabase_jwt_secret),
+            )
+            if not value or value.startswith("your-") or "YOUR_PROJECT" in value
+        ]
+        if missing:
+            raise RuntimeError(
+                "Missing or placeholder Supabase settings: "
+                + ", ".join(missing)
+                + ". Copy backend/.env.example to backend/.env and fill values "
+                "from the Supabase dashboard."
+            )
 
 
 @lru_cache

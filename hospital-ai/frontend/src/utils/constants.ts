@@ -4,7 +4,7 @@ export const APP_NAME =
   import.meta.env.VITE_APP_NAME || 'Hospital AI';
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Dashboard', path: '/' },
+  { label: 'Dashboard', path: '/dashboard' },
   { label: 'Patients', path: '/patients' },
   { label: 'Doctors', path: '/doctors' },
   { label: 'Appointments', path: '/appointments' },

@@ -39,7 +39,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             <NavLink
               key={item.path}
               to={item.path}
-              end={item.path === '/'}
+              end={item.path === '/dashboard'}
               onClick={onClose}
               className={({ isActive }) =>
                 `block rounded-lg px-3 py-2.5 text-sm font-medium transition ${
@@ -55,7 +55,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </nav>
 
         <div className="border-t border-slate-700/60 px-4 py-4">
-          <p className="text-xs text-slate-500">Week 1 · Architecture scaffold</p>
+          <p className="text-xs text-slate-500">Authenticated · Supabase Auth</p>
         </div>
       </aside>
     </>

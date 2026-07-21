@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
+import { useAuth } from '@/hooks/useAuth';
 
 interface NavbarProps {
   title: string;
@@ -7,6 +9,17 @@ interface NavbarProps {
 
 export default function Navbar({ title, onMenuClick }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
+  const { user, role, logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    setIsLoggingOut(true);
+    try {
+      await logout();
+    } finally {
+      setIsLoggingOut(false);
+    }
+  }
 
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-[var(--border-color)] bg-[var(--bg-navbar)] px-4 shadow-sm lg:px-6">
@@ -35,7 +48,7 @@ export default function Navbar({ title, onMenuClick }: NavbarProps) {
         </h1>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 sm:gap-3">
         <button
           type="button"
           onClick={toggleTheme}
@@ -44,12 +57,39 @@ export default function Navbar({ title, onMenuClick }: NavbarProps) {
         >
           {theme === 'light' ? 'Dark' : 'Light'} mode
         </button>
-        <div className="hidden items-center gap-2 rounded-full border border-[var(--border-color)] px-3 py-1.5 sm:flex">
-          <span className="h-2 w-2 rounded-full bg-emerald-500" />
-          <span className="text-xs text-[var(--text-secondary)]">
-            System ready
-          </span>
-        </div>
+
+        {user && (
+          <div className="hidden items-center gap-3 rounded-xl border border-[var(--border-color)] px-3 py-1.5 sm:flex">
+            <div className="min-w-0 text-right">
+              <p className="truncate text-sm font-medium text-[var(--text-primary)]">
+                {user.full_name}
+              </p>
+              <p className="truncate text-xs text-[var(--text-secondary)]">
+                {role}
+              </p>
+            </div>
+            <div
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-600 text-xs font-semibold text-white"
+              aria-hidden
+            >
+              {user.full_name
+                .split(' ')
+                .map((part) => part[0])
+                .join('')
+                .slice(0, 2)
+                .toUpperCase()}
+            </div>
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="rounded-lg bg-slate-800 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-slate-700 disabled:opacity-60 dark:bg-slate-700 dark:hover:bg-slate-600"
+        >
+          {isLoggingOut ? 'Signing out…' : 'Logout'}
+        </button>
       </div>
     </header>
   );

@@ -1,22 +1,24 @@
 # Hospital AI — Multi-Agent Hospital Management System
 
-Production-oriented scaffold for a multi-agent AI hospital management platform.
-This repository currently contains **Week 1 · Step 1**: project initialization and scalable architecture only.
+Production-oriented multi-agent AI hospital management platform.
 
-> No domain CRUD, database models, Supabase wiring, or authentication logic is implemented yet.
+Current status: **Week 1 · Auth** — project scaffold + Supabase authentication.
+
+> Hospital domain CRUD (patients, doctors, appointments, etc.) is not implemented yet.
 
 ---
 
 ## Project Overview
 
-**Hospital AI** is designed to coordinate clinical and operational workflows through specialized AI agents, while providing staff with a modern web console for patients, doctors, appointments, records, departments, and resources.
+**Hospital AI** coordinates clinical and operational workflows through specialized AI agents, with a modern staff console for patients, doctors, appointments, records, departments, and resources.
 
-Week 1 Step 1 establishes:
+This step delivers:
 
-- A monorepo under `hospital-ai/`
-- A React + Vite + TypeScript frontend with routing, theming, and layout chrome
-- A FastAPI backend with CORS, logging, environment configuration, and health checks
-- Docker packaging for local and containerized development
+- Scalable React + FastAPI monorepo under `hospital-ai/`
+- Supabase Auth (email/password) with JWT validation
+- `public.users` table + Row Level Security
+- Login / logout / session persistence / protected routes
+- Navbar user name, role, and logout
 
 ---
 
@@ -27,70 +29,27 @@ Week 1 Step 1 establishes:
 | Frontend | React, Vite, TypeScript, Tailwind CSS |
 | Routing / data | React Router DOM, TanStack React Query, Axios |
 | Backend | FastAPI, Uvicorn, Pydantic, pydantic-settings |
-| Database (planned) | Supabase (PostgreSQL) |
-| Auth (planned) | Supabase Auth |
+| Database | Supabase (PostgreSQL) |
+| Auth | Supabase Auth + JWT middleware |
 | Storage (planned) | Supabase Storage |
 | Containers | Docker, Docker Compose |
 | Package manager | npm (frontend), pip (backend) |
 
 ---
 
-## Folder Structure
+## Supabase setup (required)
 
-```text
-hospital-ai/
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── components/
-│   │   │   ├── common/          # ProtectedRoute, PagePlaceholder
-│   │   │   ├── layout/          # Sidebar, Navbar
-│   │   │   └── ui/              # Loading, ErrorState
-│   │   ├── pages/
-│   │   │   ├── Dashboard/
-│   │   │   ├── Patients/
-│   │   │   ├── Doctors/
-│   │   │   ├── Appointments/
-│   │   │   ├── MedicalRecords/
-│   │   │   ├── Departments/
-│   │   │   ├── Resources/
-│   │   │   ├── Profile/
-│   │   │   └── Login/
-│   │   ├── layouts/
-│   │   ├── hooks/
-│   │   ├── context/
-│   │   ├── services/
-│   │   ├── types/
-│   │   ├── utils/
-│   │   ├── routes/
-│   │   └── styles/
-│   ├── Dockerfile
-│   ├── nginx.conf
-│   ├── package.json
-│   └── vite.config.ts
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   ├── auth/
-│   │   ├── config/
-│   │   ├── core/
-│   │   ├── database/
-│   │   ├── middleware/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── schemas/
-│   │   ├── services/
-│   │   ├── utils/
-│   │   └── main.py
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── .env.example
-├── docs/
-│   └── architecture.md
-├── docker-compose.yml
-└── README.md
-```
+Follow the full walkthrough:
+
+**[`docs/supabase-setup.md`](./docs/supabase-setup.md)**
+
+Quick checklist:
+
+1. Create a Supabase project
+2. Copy API URL, anon key, service role key, and JWT secret into `.env` files
+3. Run `backend/migrations/001_create_users.sql` in the SQL Editor
+4. Create a test Auth user with metadata `full_name` + `role`
+5. Start frontend + backend and sign in at `/login`
 
 ---
 
@@ -101,24 +60,26 @@ hospital-ai/
 - Node.js 20+ and npm
 - Python 3.11+
 - Git
-- Docker Desktop (optional, for containerized runs)
+- A Supabase project
+- Docker Desktop (optional)
 
-### 1. Clone the repository
+### 1. Clone
 
 ```bash
 git clone <your-repo-url>
 cd MultiAgent-AI-Hospital-Mangement-System/hospital-ai
 ```
 
-### 2. Frontend setup
+### 2. Frontend
 
 ```bash
 cd frontend
 cp .env.example .env
+# fill VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
 npm install
 ```
 
-### 3. Backend setup
+### 3. Backend
 
 ```bash
 cd ../backend
@@ -132,73 +93,86 @@ source .venv/bin/activate
 
 pip install -r requirements.txt
 cp .env.example .env
+# fill SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_JWT_SECRET
 ```
 
 ---
 
 ## Running the Project
 
-### Frontend (Vite)
+### Frontend
 
 ```bash
 cd hospital-ai/frontend
 npm run dev
 ```
 
-App: [http://localhost:5173](http://localhost:5173)
+App: [http://localhost:5173](http://localhost:5173) → redirects to `/login` when signed out.
 
-### Backend (Uvicorn)
+### Backend
 
 ```bash
 cd hospital-ai/backend
-# ensure virtualenv is active
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-- API root: [http://localhost:8000](http://localhost:8000)
-- Health: [http://localhost:8000/health](http://localhost:8000/health)
-- Swagger docs: [http://localhost:8000/docs](http://localhost:8000/docs)
+| Endpoint | Description |
+|----------|-------------|
+| `GET /health` | Health check |
+| `POST /auth/login` | Email/password login |
+| `POST /auth/logout` | Invalidate session (Bearer required) |
+| `GET /auth/me` | Current user profile + role (Bearer required) |
+| `/docs` | Swagger UI |
 
 ### Docker Compose
 
-From `hospital-ai/`:
-
 ```bash
+cd hospital-ai
 docker compose up --build
 ```
 
-- Frontend (nginx): [http://localhost:3000](http://localhost:3000)
-- Backend API: [http://localhost:8000](http://localhost:8000)
+---
+
+## Auth architecture
+
+```text
+Login Page
+   │  POST /auth/login
+   ▼
+FastAPI AuthService ──► Supabase Auth (password grant)
+   │
+   ├── returns access_token + refresh_token + users profile
+   ▼
+Frontend AuthContext
+   ├── supabase.auth.setSession(...)   (persistence / refresh)
+   ├── React Query caches /auth/me
+   └── Axios attaches Authorization: Bearer <token>
+   ▼
+Protected routes + Navbar (name, role, logout)
+   ▼
+SupabaseJWTMiddleware + Depends(get_current_user)
+```
+
+Roles: `Admin` | `Doctor` | `Nurse` | `Receptionist`
 
 ---
 
-## What is included in this step
+## What is included
 
-- Sidebar layout, navbar, global theme (light/dark)
-- Protected route scaffold (auth deferred)
-- Loading, error, and 404 UI components
-- Placeholder pages for all primary modules
-- FastAPI app factory with CORS, logging middleware, env settings
-- `/health` endpoint
-- Frontend & backend Dockerfiles + Compose stack
+- Supabase client (frontend + backend)
+- Users table migration with RLS
+- Login page (validation, loading, errors, remember me)
+- Logout + session persistence
+- Protected / public route guards
+- User context + role retrieval
+- JWT verification middleware + DI dependencies
 
 ## What is intentionally not included
 
-- CRUD APIs
-- Database tables / ORM models
-- Supabase connection
-- Authentication implementation
-- AI agent logic
-
----
-
-## Next steps (roadmap)
-
-1. Connect Supabase project and define database schema
-2. Implement authentication with Supabase Auth
-3. Add domain models, schemas, and CRUD APIs
-4. Introduce multi-agent orchestration services
-5. Wire React Query hooks to live endpoints
+- Patients / Doctors / Appointments / Medical Records CRUD
+- AI agent orchestration
+- Password reset flow (UI button only)
+- Supabase Storage
 
 ---
 

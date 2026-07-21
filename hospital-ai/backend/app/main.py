@@ -10,6 +10,7 @@ from app.api import api_router
 from app.config import get_settings
 from app.core.logging import get_logger, setup_logging
 from app.middleware.request_logging import RequestLoggingMiddleware
+from app.middleware.supabase_jwt import SupabaseJWTMiddleware
 
 settings = get_settings()
 logger = get_logger("hospital_ai")
@@ -35,7 +36,7 @@ def create_app() -> FastAPI:
         version=settings.app_version,
         description=(
             "Multi-Agent AI Hospital Management System API. "
-            "Week 1 scaffold — no domain CRUD yet."
+            "Authentication via Supabase Auth (JWT)."
         ),
         debug=settings.app_debug,
         lifespan=lifespan,
@@ -48,6 +49,7 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    app.add_middleware(SupabaseJWTMiddleware)
     app.add_middleware(RequestLoggingMiddleware)
 
     app.include_router(api_router)

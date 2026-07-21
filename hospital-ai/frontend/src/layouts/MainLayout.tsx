@@ -5,9 +5,7 @@ import Sidebar from '@/components/layout/Sidebar';
 import { NAV_ITEMS } from '@/utils/constants';
 
 function resolveTitle(pathname: string): string {
-  const match = NAV_ITEMS.find((item) =>
-    item.path === '/' ? pathname === '/' : pathname.startsWith(item.path),
-  );
+  const match = NAV_ITEMS.find((item) => pathname.startsWith(item.path));
   return match?.label ?? 'Hospital AI';
 }
 

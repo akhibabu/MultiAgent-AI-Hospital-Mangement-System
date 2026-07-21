@@ -1,5 +1,6 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from '@/components/common/ProtectedRoute';
+import PublicOnlyRoute from '@/components/common/PublicOnlyRoute';
 import MainLayout from '@/layouts/MainLayout';
 import DashboardPage from '@/pages/Dashboard/DashboardPage';
 import PatientsPage from '@/pages/Patients/PatientsPage';
@@ -15,11 +16,14 @@ import NotFoundPage from '@/pages/NotFoundPage';
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route element={<PublicOnlyRoute />}>
+        <Route path="/login" element={<LoginPage />} />
+      </Route>
 
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
-          <Route index element={<DashboardPage />} />
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route path="dashboard" element={<DashboardPage />} />
           <Route path="patients" element={<PatientsPage />} />
           <Route path="doctors" element={<DoctorsPage />} />
           <Route path="appointments" element={<AppointmentsPage />} />

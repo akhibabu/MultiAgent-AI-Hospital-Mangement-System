@@ -1,17 +1,16 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuthPlaceholder } from '@/hooks/useAuthPlaceholder';
+import { useAuth } from '@/hooks/useAuth';
 import Loading from '@/components/ui/Loading';
 
 /**
- * Route guard scaffold. Real Supabase Auth checks will replace
- * the placeholder hook in a later week.
+ * Guards authenticated application routes.
+ * Unauthenticated users are redirected to /login.
  */
 export default function ProtectedRoute() {
-  const { isAuthenticated } = useAuthPlaceholder();
+  const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
-  // Brief loading affordance for future async session resolution
-  if (isAuthenticated === undefined) {
+  if (isLoading) {
     return <Loading fullScreen message="Checking session…" />;
   }
 

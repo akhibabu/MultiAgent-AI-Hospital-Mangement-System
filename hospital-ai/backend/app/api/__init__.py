@@ -1,12 +1,9 @@
-"""API router aggregation.
-
-Future domain routers (patients, appointments, agents, etc.)
-will be registered here. No business routers in Week 1 Step 1.
-"""
+"""API router aggregation."""
 
 from fastapi import APIRouter
 
-from app.routes import health
+from app.routes import auth, health
 
 api_router = APIRouter()
 api_router.include_router(health.router)
+api_router.include_router(auth.router)
