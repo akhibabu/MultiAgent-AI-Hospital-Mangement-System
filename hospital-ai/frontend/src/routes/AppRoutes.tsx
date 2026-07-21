@@ -4,6 +4,7 @@ import PublicOnlyRoute from '@/components/common/PublicOnlyRoute';
 import MainLayout from '@/layouts/MainLayout';
 import DashboardPage from '@/pages/Dashboard/DashboardPage';
 import PatientsPage from '@/pages/Patients/PatientsPage';
+import PatientProfilePage from '@/pages/Patients/PatientProfilePage';
 import DoctorsPage from '@/pages/Doctors/DoctorsPage';
 import AppointmentsPage from '@/pages/Appointments/AppointmentsPage';
 import MedicalRecordsPage from '@/pages/MedicalRecords/MedicalRecordsPage';
@@ -25,6 +26,7 @@ export default function AppRoutes() {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="patients" element={<PatientsPage />} />
+          <Route path="patients/:patientId" element={<PatientProfilePage />} />
           <Route path="doctors" element={<DoctorsPage />} />
           <Route path="appointments" element={<AppointmentsPage />} />
           <Route path="medical-records" element={<MedicalRecordsPage />} />

@@ -15,6 +15,7 @@ logger = get_logger("hospital_ai.auth.middleware")
 PROTECTED_PREFIXES: tuple[str, ...] = (
     "/auth/me",
     "/auth/logout",
+    "/patients",
 )
 
 # Exact public paths under /auth that skip JWT checks.

@@ -19,3 +19,13 @@ export type {
   UserProfile,
   UserRole,
 } from '@/types/auth';
+
+export type {
+  BloodGroup,
+  Patient,
+  PatientAIExtensions,
+  PatientFormValues,
+  PatientGender,
+  PatientListParams,
+  PatientListResponse,
+} from '@/types/patient';
