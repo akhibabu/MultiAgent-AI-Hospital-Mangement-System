@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { useHospitalSettings } from '@/context/SettingsContext';
 import { APP_NAME, NAV_ITEMS } from '@/utils/constants';
 
 interface SidebarProps {
@@ -7,6 +8,9 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const { settings } = useHospitalSettings();
+  const brand = settings.hospitalName?.trim() || APP_NAME;
+
   return (
     <>
       {isOpen && (
@@ -25,11 +29,21 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         aria-label="Main navigation"
       >
         <div className="flex h-16 items-center gap-3 border-b border-slate-700/60 px-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-600 text-sm font-bold">
-            HA
-          </div>
-          <div>
-            <p className="text-sm font-semibold tracking-wide">{APP_NAME}</p>
+          {settings.hospitalLogo ? (
+            <img
+              src={settings.hospitalLogo}
+              alt=""
+              className="h-9 w-9 rounded-lg object-cover"
+            />
+          ) : (
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-600 text-sm font-bold">
+              HA
+            </div>
+          )}
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold tracking-wide">
+              {brand}
+            </p>
             <p className="text-xs text-slate-400">Management System</p>
           </div>
         </div>
@@ -39,7 +53,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             <NavLink
               key={item.path}
               to={item.path}
-              end={item.path === '/dashboard'}
+              end={item.path === '/dashboard' || item.path === '/ai'}
               onClick={onClose}
               className={({ isActive }) =>
                 `block rounded-lg px-3 py-2.5 text-sm font-medium transition ${
@@ -55,7 +69,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </nav>
 
         <div className="border-t border-slate-700/60 px-4 py-4">
-          <p className="text-xs text-slate-500">Authenticated · Supabase Auth</p>
+          <p className="text-xs text-slate-500">Week 1 · Operations ready</p>
         </div>
       </aside>
     </>

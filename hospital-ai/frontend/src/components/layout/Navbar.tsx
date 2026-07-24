@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
+import GlobalSearch from '@/components/layout/GlobalSearch';
+import NotificationCenter from '@/components/layout/NotificationCenter';
 
 interface NavbarProps {
   title: string;
@@ -22,8 +24,8 @@ export default function Navbar({ title, onMenuClick }: NavbarProps) {
   }
 
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-[var(--border-color)] bg-[var(--bg-navbar)] px-4 shadow-sm lg:px-6">
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-[var(--border-color)] bg-[var(--bg-navbar)] px-4 shadow-sm lg:px-6">
+      <div className="flex shrink-0 items-center gap-3">
         <button
           type="button"
           onClick={onMenuClick}
@@ -43,12 +45,15 @@ export default function Navbar({ title, onMenuClick }: NavbarProps) {
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
-        <h1 className="text-lg font-semibold text-[var(--text-primary)]">
+        <h1 className="hidden text-lg font-semibold text-[var(--text-primary)] sm:block">
           {title}
         </h1>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-3">
+      <GlobalSearch />
+
+      <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+        <NotificationCenter />
         <button
           type="button"
           onClick={toggleTheme}

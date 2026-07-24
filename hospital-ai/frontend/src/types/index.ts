@@ -29,3 +29,23 @@ export type {
   PatientListParams,
   PatientListResponse,
 } from '@/types/patient';
+
+export type {
+  Appointment,
+  AppointmentAIExtensions,
+  AppointmentFormValues,
+  AppointmentListParams,
+  AppointmentListResponse,
+  AppointmentStatus,
+  VisitType,
+} from '@/types/appointment';
+
+export type {
+  MedicalDocument,
+  MedicalRecord,
+  MedicalRecordAIExtensions,
+  MedicalRecordFormValues,
+  MedicalRecordListParams,
+  MedicalRecordListResponse,
+  MedicalRecordType,
+} from '@/types/medicalRecord';

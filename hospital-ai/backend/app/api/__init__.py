@@ -2,9 +2,31 @@
 
 from fastapi import APIRouter
 
-from app.routes import auth, health, patients
+from app.routes import (
+    announcements,
+    appointments,
+    auth,
+    availability,
+    dashboard,
+    departments,
+    doctors,
+    health,
+    medical_records,
+    patients,
+    resources,
+)
 
 api_router = APIRouter()
 api_router.include_router(health.router)
 api_router.include_router(auth.router)
 api_router.include_router(patients.router)
+api_router.include_router(doctors.router)
+api_router.include_router(departments.router)
+api_router.include_router(availability.router)
+api_router.include_router(appointments.router)
+api_router.include_router(medical_records.router)
+api_router.include_router(resources.router)
+api_router.include_router(announcements.router)
+api_router.include_router(announcements.notifications_router)
+api_router.include_router(dashboard.router)
+api_router.include_router(dashboard.search_router)

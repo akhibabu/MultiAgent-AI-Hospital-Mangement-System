@@ -1,6 +1,8 @@
 import { type ReactNode } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
+import PatientAppointmentHistory from '@/components/appointments/PatientAppointmentHistory';
+import PatientMedicalHistory from '@/components/medical-records/PatientMedicalHistory';
 import Loading from '@/components/ui/Loading';
 import ErrorState from '@/components/ui/ErrorState';
 import { usePatient } from '@/hooks/usePatients';
@@ -124,6 +126,10 @@ function ProfileContent({ patient }: { patient: Patient }) {
             />
           </dl>
         </InfoCard>
+
+        <PatientAppointmentHistory patientId={patient.id} />
+
+        <PatientMedicalHistory patientId={patient.id} />
 
         <InfoCard title="Future AI activity">
           <div className="space-y-3">
