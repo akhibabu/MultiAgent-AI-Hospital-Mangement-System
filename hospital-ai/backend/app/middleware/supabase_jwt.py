@@ -26,6 +26,7 @@ PROTECTED_PREFIXES: tuple[str, ...] = (
     "/notifications",
     "/dashboard",
     "/search",
+    "/ai",
 )
 
 # Exact public paths under /auth that skip JWT checks.

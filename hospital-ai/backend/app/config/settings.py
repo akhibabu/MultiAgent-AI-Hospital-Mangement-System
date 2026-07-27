@@ -39,6 +39,21 @@ class Settings(BaseSettings):
     # Set false on machines with corporate SSL inspection (local only).
     supabase_ssl_verify: bool = Field(default=True, alias="SUPABASE_SSL_VERIFY")
 
+    # AI / Intake Agent providers (adapters selected by name)
+    ocr_provider: str = Field(default="stub", alias="OCR_PROVIDER")
+    llm_provider: str = Field(default="stub", alias="LLM_PROVIDER")
+    openai_api_key: str = Field(default="", alias="OPENAI_API_KEY")
+    openai_model: str = Field(default="gpt-4o-mini", alias="OPENAI_MODEL")
+    gemini_api_key: str = Field(default="", alias="GEMINI_API_KEY")
+    gemini_model: str = Field(default="gemini-1.5-flash", alias="GEMINI_MODEL")
+    anthropic_api_key: str = Field(default="", alias="ANTHROPIC_API_KEY")
+    anthropic_model: str = Field(default="claude-3-5-haiku-latest", alias="ANTHROPIC_MODEL")
+    ollama_base_url: str = Field(default="http://127.0.0.1:11434", alias="OLLAMA_BASE_URL")
+    ollama_model: str = Field(default="llama3.2", alias="OLLAMA_MODEL")
+    google_vision_api_key: str = Field(default="", alias="GOOGLE_VISION_API_KEY")
+    azure_ocr_endpoint: str = Field(default="", alias="AZURE_OCR_ENDPOINT")
+    azure_ocr_key: str = Field(default="", alias="AZURE_OCR_KEY")
+
     @property
     def cors_origins_list(self) -> List[str]:
         return [

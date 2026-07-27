@@ -11,6 +11,7 @@ function resolveTitle(pathname: string): string {
   if (pathname.startsWith('/appointments/')) return 'Appointment Details';
   if (pathname.startsWith('/medical-records/files/')) return 'Document Viewer';
   if (pathname.startsWith('/medical-records/')) return 'Medical Record';
+  if (pathname.startsWith('/ai/intake')) return 'Intake Agent';
   if (pathname.startsWith('/ai/')) return 'AI Agent';
   if (pathname === '/ai') return 'AI Center';
   if (pathname === '/unauthorized') return 'Unauthorized';
