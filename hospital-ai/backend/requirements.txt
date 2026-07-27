@@ -8,4 +8,11 @@ httpx==0.28.1
 supabase==2.13.0
 PyJWT==2.10.1
 cryptography==49.0.0
-email-validator==2.2.0
+pymupdf==1.25.5
+pdfplumber==0.11.6
+pillow==11.1.0
+pytesseract==0.3.13
+pdf2image==1.17.0
+# Primary OCR (optional — auto-falls back to Tesseract if installed):
+#   pip install paddlepaddle paddleocr
+

@@ -106,7 +106,9 @@ class PlaceholderMedicalSummaryService:
         return ""
 
 
-# Default injectable singletons (swap with real implementations later)
+# Default injectable singletons
+# OCR enqueue stays as placeholder until Medical History Extraction / OCR stages land.
+# Patient Registration (POST /ai/intake/register) is the Intake stage-1 entrypoint.
 ocr_service: OCRService = PlaceholderOCRService()
 embedding_service: EmbeddingService = PlaceholderEmbeddingService()
 vector_index_service: VectorIndexService = PlaceholderVectorIndexService()

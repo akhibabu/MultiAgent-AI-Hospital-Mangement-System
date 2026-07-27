@@ -598,6 +598,7 @@ class MedicalRecordService:
             details={"file_name": doc.file_name, "file_size": doc.file_size},
         )
 
+        # Intake Agent is the sole component allowed to OCR / extract entities.
         get_ocr_service().enqueue(document_id=doc.id, storage_path=doc.storage_path)
         get_embedding_service().embed_document(document_id=doc.id)
 
