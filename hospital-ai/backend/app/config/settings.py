@@ -54,6 +54,14 @@ class Settings(BaseSettings):
     azure_ocr_endpoint: str = Field(default="", alias="AZURE_OCR_ENDPOINT")
     azure_ocr_key: str = Field(default="", alias="AZURE_OCR_KEY")
 
+    # Diagnosis Agent (clinical decision support — assists, never replaces, a physician)
+    diagnosis_engine: str = Field(default="rule_based", alias="DIAGNOSIS_ENGINE")
+
+    # Research Agent (evidence enrichment providers)
+    research_provider: str = Field(default="mock", alias="RESEARCH_PROVIDER")
+    pubmed_api_key: str = Field(default="", alias="PUBMED_API_KEY")
+    clinical_trials_api_key: str = Field(default="", alias="CLINICAL_TRIALS_API_KEY")
+
     @property
     def cors_origins_list(self) -> List[str]:
         return [

@@ -5,6 +5,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
+import Badge from '@/components/common/Badge';
+import Card from '@/components/common/Card';
 import { usePatients } from '@/hooks/usePatients';
 import { useDoctors } from '@/hooks/useDoctors';
 import { useAppointments } from '@/hooks/useAppointments';
@@ -44,45 +46,6 @@ import type {
   GraphStatistics,
   PatientGraphSummary,
 } from '@/types/knowledgeGraph';
-
-function Badge({
-  tone,
-  children,
-}: {
-  tone: 'green' | 'blue' | 'amber' | 'red' | 'gray';
-  children: React.ReactNode;
-}) {
-  const map = {
-    green: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
-    blue: 'bg-primary-600/15 text-primary-700 dark:text-primary-300',
-    amber: 'bg-amber-500/15 text-amber-800 dark:text-amber-200',
-    red: 'bg-red-500/15 text-red-700 dark:text-red-300',
-    gray: 'bg-black/5 text-[var(--text-secondary)] dark:bg-white/10',
-  };
-  return (
-    <span
-      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${map[tone]}`}
-    >
-      {children}
-    </span>
-  );
-}
-
-function Card({
-  children,
-  className = '',
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <section
-      className={`rounded-2xl border border-[var(--border-color)] bg-[var(--bg-navbar)] p-5 shadow-sm ${className}`}
-    >
-      {children}
-    </section>
-  );
-}
 
 function niceDocType(mime?: string | null) {
   if (!mime) return 'Document';
