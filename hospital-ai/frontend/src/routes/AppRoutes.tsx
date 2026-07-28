@@ -49,6 +49,8 @@ const AnnouncementsPage = lazy(
 const ProfilePage = lazy(() => import('@/pages/Profile/ProfilePage'));
 const SettingsPage = lazy(() => import('@/pages/Settings/SettingsPage'));
 const IntakeAgentPage = lazy(() => import('@/pages/AI/IntakeAgentPage'));
+const DiagnosisAgentPage = lazy(() => import('@/pages/AI/DiagnosisAgentPage'));
+const ResearchAgentPage = lazy(() => import('@/pages/AI/ResearchAgentPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'));
 const ServerErrorPage = lazy(() => import('@/pages/ServerErrorPage'));
@@ -104,24 +106,8 @@ export default function AppRoutes() {
               path="ai/intake/history"
               element={<Navigate to="/ai/intake" replace />}
             />
-            <Route
-              path="ai/diagnosis"
-              element={
-                <AIAgentPlaceholderPage
-                  title="Diagnosis Agent"
-                  description="Clinical decision support and differentials. Will consume Patient Context from Intake only."
-                />
-              }
-            />
-            <Route
-              path="ai/research"
-              element={
-                <AIAgentPlaceholderPage
-                  title="Research Agent"
-                  description="Literature and protocol research assistant."
-                />
-              }
-            />
+            <Route path="ai/diagnosis" element={<DiagnosisAgentPage />} />
+            <Route path="ai/research" element={<ResearchAgentPage />} />
             <Route
               path="ai/prescription"
               element={

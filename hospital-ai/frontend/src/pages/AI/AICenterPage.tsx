@@ -12,49 +12,57 @@ const AGENTS = [
   {
     path: '/ai/diagnosis',
     name: 'Diagnosis Agent',
-    description: 'Clinical decision support and differential suggestions.',
-    ready: false,
+    description:
+      'Differential diagnoses, disease probability, severity, and treatment pathways. Assists — never replaces — a physician.',
+    ready: true,
   },
   {
     path: '/ai/research',
     name: 'Research Agent',
-    description: 'Literature and protocol research assistant.',
-    ready: false,
+    description:
+      'Evidence-backed literature, clinical trials, guidelines, and drug efficacy for every diagnosis.',
+    ready: true,
   },
   {
     path: '/ai/prescription',
     name: 'Prescription Agent',
-    description: 'Medication recommendations and interaction checks.',
+    description: 'Medication recommendations and interaction checks. (Coming Soon)',
     ready: false,
   },
   {
     path: '/ai/scheduling',
     name: 'Scheduling Agent',
-    description: 'Smart appointment slot optimization.',
+    description: 'Smart appointment slot optimization. (Coming Soon)',
     ready: false,
   },
   {
     path: '/ai/emergency',
     name: 'Emergency Agent',
-    description: 'Triage prioritization and escalation.',
+    description: 'Triage prioritization and escalation. (Coming Soon)',
     ready: false,
   },
   {
     path: '/ai/digital-twin',
     name: 'Digital Twin',
-    description: 'Hospital capacity and flow simulation.',
+    description: 'Hospital capacity and flow simulation. (Coming Soon)',
     ready: false,
   },
   {
     path: '/ai/insurance',
     name: 'Insurance Agent',
-    description: 'Coverage checks and claim assistance.',
+    description: 'Coverage checks and claim assistance. (Coming Soon)',
     ready: false,
   },
   {
     path: '/ai/medical-report',
     name: 'Medical Report Agent',
-    description: 'Summaries and structured report generation.',
+    description: 'Summaries and structured report generation. (Coming Soon)',
+    ready: false,
+  },
+  {
+    path: '/ai/resource-allocation',
+    name: 'Resource Allocation Agent',
+    description: 'Bed, staff, and equipment allocation optimization. (Coming Soon)',
     ready: false,
   },
 ];
@@ -69,8 +77,27 @@ export default function AICenterPage() {
           </h2>
           <p className="mt-1 text-sm text-[var(--text-secondary)]">
             Multi-agent clinical intelligence. The Intake Agent is one workflow
-            with sequential stages.
+            with sequential stages; Diagnosis and Research consume its output.
           </p>
+          <ul className="mt-4 flex flex-wrap gap-2 text-xs">
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Intake Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Diagnosis Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Research Agent
+            </li>
+            {AGENTS.filter((a) => !a.ready).map((a) => (
+              <li
+                key={a.path}
+                className="rounded-md border border-dashed border-[var(--border-color)] px-2.5 py-1 text-[var(--text-secondary)]"
+              >
+                {a.name} (Coming Soon)
+              </li>
+            ))}
+          </ul>
         </header>
 
         <Link
@@ -122,6 +149,55 @@ export default function AICenterPage() {
             </li>
           </ul>
         </Link>
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          <Link
+            to="/ai/diagnosis"
+            className="block rounded-xl border border-[var(--border-color)] bg-[var(--bg-navbar)] p-5 transition hover:border-primary-500/50"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-primary-600">
+                  Diagnosis Agent
+                </p>
+                <h3 className="mt-1 text-lg font-semibold text-[var(--text-primary)]">
+                  Clinical Decision Support
+                </h3>
+                <p className="mt-1 max-w-xl text-sm text-[var(--text-secondary)]">
+                  Symptom analysis, differential diagnoses, probability scoring,
+                  severity prediction, and treatment pathways. Assists — never
+                  replaces — a physician.
+                </p>
+              </div>
+              <span className="rounded-md bg-primary-600/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary-600">
+                Available
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            to="/ai/research"
+            className="block rounded-xl border border-[var(--border-color)] bg-[var(--bg-navbar)] p-5 transition hover:border-primary-500/50"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-primary-600">
+                  Research Agent
+                </p>
+                <h3 className="mt-1 text-lg font-semibold text-[var(--text-primary)]">
+                  Evidence Enrichment
+                </h3>
+                <p className="mt-1 max-w-xl text-sm text-[var(--text-secondary)]">
+                  Literature, clinical trials, treatment guidelines, and drug
+                  efficacy evidence for every Diagnosis Agent result.
+                </p>
+              </div>
+              <span className="rounded-md bg-primary-600/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary-600">
+                Available
+              </span>
+            </div>
+          </Link>
+        </div>
 
         <div>
           <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">
