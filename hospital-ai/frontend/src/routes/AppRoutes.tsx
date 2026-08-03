@@ -51,6 +51,12 @@ const SettingsPage = lazy(() => import('@/pages/Settings/SettingsPage'));
 const IntakeAgentPage = lazy(() => import('@/pages/AI/IntakeAgentPage'));
 const DiagnosisAgentPage = lazy(() => import('@/pages/AI/DiagnosisAgentPage'));
 const ResearchAgentPage = lazy(() => import('@/pages/AI/ResearchAgentPage'));
+const PrescriptionAgentPage = lazy(
+  () => import('@/pages/AI/PrescriptionAgentPage'),
+);
+const MedicalReportAgentPage = lazy(
+  () => import('@/pages/AI/MedicalReportAgentPage'),
+);
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'));
 const ServerErrorPage = lazy(() => import('@/pages/ServerErrorPage'));
@@ -108,14 +114,10 @@ export default function AppRoutes() {
             />
             <Route path="ai/diagnosis" element={<DiagnosisAgentPage />} />
             <Route path="ai/research" element={<ResearchAgentPage />} />
+            <Route path="ai/prescription" element={<PrescriptionAgentPage />} />
             <Route
-              path="ai/prescription"
-              element={
-                <AIAgentPlaceholderPage
-                  title="Prescription Agent"
-                  description="Medication recommendations and safety checks."
-                />
-              }
+              path="ai/medical-report"
+              element={<MedicalReportAgentPage />}
             />
             <Route
               path="ai/scheduling"
@@ -150,15 +152,6 @@ export default function AppRoutes() {
                 <AIAgentPlaceholderPage
                   title="Insurance Agent"
                   description="Coverage checks and claim assistance."
-                />
-              }
-            />
-            <Route
-              path="ai/medical-report"
-              element={
-                <AIAgentPlaceholderPage
-                  title="Medical Report Agent"
-                  description="Structured clinical report generation."
                 />
               }
             />

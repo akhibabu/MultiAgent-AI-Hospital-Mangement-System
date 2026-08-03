@@ -26,8 +26,16 @@ const AGENTS = [
   {
     path: '/ai/prescription',
     name: 'Prescription Agent',
-    description: 'Medication recommendations and interaction checks. (Coming Soon)',
-    ready: false,
+    description:
+      'Medication selection, interaction checks, allergy verification, and dosage ranges. Never a final prescription.',
+    ready: true,
+  },
+  {
+    path: '/ai/medical-report',
+    name: 'Medical Report Agent',
+    description:
+      'Clinical summary, doctor notes, discharge summary, referral letters, insurance docs, and patient reports.',
+    ready: true,
   },
   {
     path: '/ai/scheduling',
@@ -54,12 +62,6 @@ const AGENTS = [
     ready: false,
   },
   {
-    path: '/ai/medical-report',
-    name: 'Medical Report Agent',
-    description: 'Summaries and structured report generation. (Coming Soon)',
-    ready: false,
-  },
-  {
     path: '/ai/resource-allocation',
     name: 'Resource Allocation Agent',
     description: 'Bed, staff, and equipment allocation optimization. (Coming Soon)',
@@ -76,8 +78,9 @@ export default function AICenterPage() {
             AI Center
           </h2>
           <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Multi-agent clinical intelligence. The Intake Agent is one workflow
-            with sequential stages; Diagnosis and Research consume its output.
+            Multi-agent clinical intelligence. Each agent is one workflow with
+            sequential stages; Diagnosis, Research, Prescription, and Medical
+            Report consume the outputs before them.
           </p>
           <ul className="mt-4 flex flex-wrap gap-2 text-xs">
             <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
@@ -88,6 +91,12 @@ export default function AICenterPage() {
             </li>
             <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
               ✓ Research Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Prescription Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Medical Report Agent
             </li>
             {AGENTS.filter((a) => !a.ready).map((a) => (
               <li
@@ -190,6 +199,52 @@ export default function AICenterPage() {
                 <p className="mt-1 max-w-xl text-sm text-[var(--text-secondary)]">
                   Literature, clinical trials, treatment guidelines, and drug
                   efficacy evidence for every Diagnosis Agent result.
+                </p>
+              </div>
+              <span className="rounded-md bg-primary-600/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary-600">
+                Available
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            to="/ai/prescription"
+            className="block rounded-xl border border-[var(--border-color)] bg-[var(--bg-navbar)] p-5 transition hover:border-primary-500/50"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-primary-600">
+                  Prescription Agent
+                </p>
+                <h3 className="mt-1 text-lg font-semibold text-[var(--text-primary)]">
+                  Physician-Review Treatment Plan
+                </h3>
+                <p className="mt-1 max-w-xl text-sm text-[var(--text-secondary)]">
+                  Medication selection, drug interaction checks, allergy
+                  verification, and dosage ranges. Never a final prescription.
+                </p>
+              </div>
+              <span className="rounded-md bg-primary-600/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary-600">
+                Available
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            to="/ai/medical-report"
+            className="block rounded-xl border border-[var(--border-color)] bg-[var(--bg-navbar)] p-5 transition hover:border-primary-500/50"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-primary-600">
+                  Medical Report Agent
+                </p>
+                <h3 className="mt-1 text-lg font-semibold text-[var(--text-primary)]">
+                  Professional Documentation
+                </h3>
+                <p className="mt-1 max-w-xl text-sm text-[var(--text-secondary)]">
+                  Clinical summary, doctor notes, discharge summary, referral
+                  letters, insurance documents, and a patient-friendly report.
                 </p>
               </div>
               <span className="rounded-md bg-primary-600/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary-600">

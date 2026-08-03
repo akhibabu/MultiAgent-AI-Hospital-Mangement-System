@@ -14,6 +14,8 @@ function resolveTitle(pathname: string): string {
   if (pathname.startsWith('/ai/intake')) return 'Intake Agent';
   if (pathname.startsWith('/ai/diagnosis')) return 'Diagnosis Agent';
   if (pathname.startsWith('/ai/research')) return 'Research Agent';
+  if (pathname.startsWith('/ai/prescription')) return 'Prescription Agent';
+  if (pathname.startsWith('/ai/medical-report')) return 'Medical Report Agent';
   if (pathname.startsWith('/ai/')) return 'AI Agent';
   if (pathname === '/ai') return 'AI Center';
   if (pathname === '/unauthorized') return 'Unauthorized';
