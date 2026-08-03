@@ -14,7 +14,9 @@ from app.routes import (
     health,
     intake,
     medical_records,
+    medical_report,
     patients,
+    prescription,
     research,
     resources,
 )
@@ -36,3 +38,5 @@ api_router.include_router(dashboard.search_router)
 api_router.include_router(intake.router)
 api_router.include_router(diagnosis.router)
 api_router.include_router(research.router)
+api_router.include_router(prescription.router)
+api_router.include_router(medical_report.router)

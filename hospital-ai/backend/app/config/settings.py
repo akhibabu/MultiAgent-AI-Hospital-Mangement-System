@@ -62,6 +62,12 @@ class Settings(BaseSettings):
     pubmed_api_key: str = Field(default="", alias="PUBMED_API_KEY")
     clinical_trials_api_key: str = Field(default="", alias="CLINICAL_TRIALS_API_KEY")
 
+    # Prescription Agent (physician-review treatment recommendations)
+    prescription_engine: str = Field(default="rule_based", alias="PRESCRIPTION_ENGINE")
+
+    # Medical Report Agent (professional hospital documentation)
+    medical_report_engine: str = Field(default="template_based", alias="MEDICAL_REPORT_ENGINE")
+
     @property
     def cors_origins_list(self) -> List[str]:
         return [
