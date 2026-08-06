@@ -26,6 +26,7 @@ from app.ai.prescription.interaction_checker import DrugInteractionChecker
 from app.ai.prescription.models import PrescriptionReport
 from app.ai.prescription.prescription_validator import PrescriptionValidator
 from app.ai.prescription.treatment_plan_builder import TreatmentPlanBuilder
+from app.ai.orchestrator.agent_helpers import collect_debug
 from app.core.logging import get_logger
 from app.repositories.diagnosis_repository import DiagnosisResultRepository
 from app.repositories.patient_context_repository import (
@@ -112,10 +113,14 @@ class PrescriptionPipeline:
         suggested_drugs = [m.medication_name for m in medications]
 
         # 2. Drug Interaction Check
-        interactions = self._interaction_checker.check(current_drugs, suggested_drugs)
+        interactions = self._interaction_checker.check(
+            current_drugs, suggested_drugs, patient_id=patient_id
+        )
 
         # 3. Allergy Verification
-        allergy_checks = self._allergy_verifier.verify(context.allergies, suggested_drugs)
+        allergy_checks = self._allergy_verifier.verify(
+            context.allergies, suggested_drugs, patient_id=patient_id
+        )
 
         # 4. Dosage Optimization
         dosages = self._dosage_optimizer.optimize(context, suggested_drugs, severity_level)
@@ -130,6 +135,7 @@ class PrescriptionPipeline:
             diagnosis_specialists=treatment_path.get("recommended_specialists"),
             diagnosis_tests=treatment_path.get("diagnostic_tests"),
             diagnosis_imaging=treatment_path.get("imaging"),
+            patient_id=patient_id,
         )
 
         # 6. Prescription Validation
@@ -139,9 +145,19 @@ class PrescriptionPipeline:
             interactions=interactions,
             allergy_checks=allergy_checks,
             dosages=dosages,
+            patient_id=patient_id,
         )
 
         summary = self._build_summary(target_conditions, medications, validation)
+
+        ai_debug = collect_debug(
+            self._selector,
+            self._interaction_checker,
+            self._allergy_verifier,
+            self._dosage_optimizer,
+            self._treatment_plan_builder,
+            self._validator,
+        )
 
         logger.info(
             "Prescription pipeline complete patient=%s medications=%s approval=%s",
@@ -164,6 +180,7 @@ class PrescriptionPipeline:
             summary=summary,
             engine=self._factory.engine_name,
             warnings=warnings,
+            ai_debug=ai_debug,
         )
 
     def _load_diagnosis(

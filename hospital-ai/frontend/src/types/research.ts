@@ -1,4 +1,5 @@
 /** Research Agent types — evidence enrichment for Diagnosis Agent results. */
+import type { OrchestratorDebugInfo } from '@/types/aiOrchestrator';
 
 export type EvidenceLevel = 'High' | 'Medium' | 'Low';
 
@@ -119,6 +120,7 @@ export interface ResearchStartResult {
   evidence_level_counts: Record<string, number>;
   recommendations: ResearchRecommendation[];
   research_result: ResearchResult;
+  ai_debug: OrchestratorDebugInfo[];
 }
 
 export interface ResearchHistoryItem {

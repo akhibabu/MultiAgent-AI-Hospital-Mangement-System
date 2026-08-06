@@ -1,4 +1,4 @@
-import apiClient from '@/services/apiClient';
+import apiClient, { AI_AGENT_TIMEOUT_MS } from '@/services/apiClient';
 import type {
   DiagnosisHistoryItem,
   DiagnosisResult,
@@ -17,6 +17,7 @@ export const diagnosisService = {
         chief_complaint: options?.chief_complaint,
         focus_symptoms: options?.focus_symptoms ?? [],
       },
+      { timeout: AI_AGENT_TIMEOUT_MS },
     );
     return data;
   },

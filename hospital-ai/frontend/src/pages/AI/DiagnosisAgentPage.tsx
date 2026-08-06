@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import Badge, { type BadgeTone } from '@/components/common/Badge';
 import Card from '@/components/common/Card';
+import OrchestratorDebugPanel from '@/components/common/OrchestratorDebugPanel';
 import { usePatients } from '@/hooks/usePatients';
 import {
   useDiagnosisHistory,
@@ -16,6 +17,7 @@ import {
   useStartDiagnosis,
 } from '@/hooks/useDiagnosis';
 import { useStartResearch } from '@/hooks/useResearch';
+import { getApiErrorMessage } from '@/services/apiClient';
 import type {
   ClinicalDecisionSupport,
   DifferentialDiagnosis,
@@ -170,6 +172,7 @@ export default function DiagnosisAgentPage() {
   const [patientId, setPatientId] = useState('');
   const [chiefComplaint, setChiefComplaint] = useState('');
   const [conditionFilter, setConditionFilter] = useState('');
+  const [devOpen, setDevOpen] = useState(false);
 
   const patientsQuery = usePatients({
     page: 1,
@@ -241,6 +244,13 @@ export default function DiagnosisAgentPage() {
                 differential diagnoses and clinical insights. Clinical decision support
                 only — assists, never replaces, a physician. Does not prescribe medication.
               </p>
+              <Link
+                to="/ai/orchestrator"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-primary-600/10 px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-primary-600 hover:bg-primary-600/20"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-primary-600" />
+                Connected through AI Orchestrator
+              </Link>
             </div>
             <Link
               to="/ai"
@@ -334,9 +344,12 @@ export default function DiagnosisAgentPage() {
               </button>
             ) : null}
           </div>
-          {startMutation.isError ? (
+          {startMutation.isError && !hasResult ? (
             <p className="mt-3 text-sm text-red-600">
-              Diagnosis Agent failed. Ensure the patient has completed Intake Agent stages.
+              {getApiErrorMessage(
+                startMutation.error,
+                'Diagnosis Agent failed. Ensure the patient has completed Intake Agent stages.',
+              )}
             </p>
           ) : null}
         </Card>
@@ -696,6 +709,31 @@ export default function DiagnosisAgentPage() {
                   ) : (
                     <p className="mt-3 text-sm text-[var(--text-secondary)]">No prior runs yet.</p>
                   )}
+                </Card>
+
+                {/* Developer Mode */}
+                <Card className="border-dashed">
+                  <button
+                    type="button"
+                    onClick={() => setDevOpen((v) => !v)}
+                    className="flex w-full items-center justify-between text-left"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-[var(--text-primary)]">Developer Mode</p>
+                      <p className="mt-0.5 text-xs text-[var(--text-secondary)]">
+                        AI Orchestrator calls and raw pipeline output. Hidden from clinical use.
+                      </p>
+                    </div>
+                    <span className="text-xs text-primary-600">{devOpen ? 'Collapse' : 'Expand'}</span>
+                  </button>
+                  {devOpen ? (
+                    <div className="mt-4 space-y-4">
+                      <OrchestratorDebugPanel entries={liveReport?.ai_debug} />
+                      <pre className="max-h-96 overflow-auto rounded-lg bg-black/5 p-3 text-[11px] leading-relaxed dark:bg-white/5">
+                        {JSON.stringify(liveReport || persisted, null, 2)}
+                      </pre>
+                    </div>
+                  ) : null}
                 </Card>
               </>
             ) : null}

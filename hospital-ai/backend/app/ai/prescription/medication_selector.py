@@ -2,20 +2,27 @@
 Prescription Agent — Stage 1: Medication Selection.
 
 Recommends medications supported by Diagnosis Agent output, Research Agent
-evidence, clinical guidelines, and patient history. Never a final
-prescription — always subject to physician review.
+evidence, clinical guidelines, and patient history — via the AI
+Orchestrator (`prescription` agent, `medication_selection` task). Never a
+final prescription — always subject to physician review.
 """
 
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional
+from uuid import UUID
 
+from pydantic import BaseModel, Field
+
+from app.ai.orchestrator.agent_helpers import OrchestratorCallMixin
 from app.ai.prescription.knowledge_base import DrugKnowledgeBase
 from app.ai.prescription.models import MedicationRecommendation
 from app.repositories.patient_context_repository import PatientClinicalContext
 
-_MAX_DRUGS_PER_CONDITION = 2
+
+class _MedicationRecommendationList(BaseModel):
+    items: List[MedicationRecommendation] = Field(default_factory=list)
 
 
 class MedicationSelectionStrategy(ABC):
@@ -29,8 +36,13 @@ class MedicationSelectionStrategy(ABC):
         raise NotImplementedError
 
 
-class RuleBasedMedicationSelector(MedicationSelectionStrategy):
-    """Matches target conditions against the rule-based drug knowledge base."""
+class LLMMedicationSelector(OrchestratorCallMixin, MedicationSelectionStrategy):
+    """
+    Delegates medication selection to the AI Orchestrator. The rule-based
+    `DrugKnowledgeBase` (condition -> drug profiles) remains available as
+    grounding data for other stages (dosage/interaction/allergy) but no
+    longer makes this stage's recommendation itself.
+    """
 
     def __init__(self, knowledge_base: DrugKnowledgeBase) -> None:
         self._kb = knowledge_base
@@ -41,41 +53,16 @@ class RuleBasedMedicationSelector(MedicationSelectionStrategy):
         target_conditions: List[str],
         research_recommendations: Optional[Dict[str, Dict[str, Any]]] = None,
     ) -> List[MedicationRecommendation]:
-        research_recommendations = research_recommendations or {}
-        recommendations: List[MedicationRecommendation] = []
-
-        for condition in target_conditions:
-            profiles = self._kb.drugs_for_condition(condition)[:_MAX_DRUGS_PER_CONDITION]
-            research = research_recommendations.get(condition) or {}
-            evidence_boost = float(research.get("confidence_score") or 0.0)
-            literature = research.get("supporting_literature") or []
-            guidelines = research.get("clinical_guidelines") or []
-
-            for profile in profiles:
-                confidence = profile.confidence
-                if evidence_boost:
-                    confidence = round((confidence + evidence_boost) / 2, 4)
-
-                evidence_source = profile.evidence_source
-                if literature:
-                    evidence_source = f"{profile.evidence_source}; {literature[0]}"
-
-                clinical_guideline = profile.clinical_guideline
-                if guidelines:
-                    clinical_guideline = f"{profile.clinical_guideline}; {guidelines[0]}"
-
-                recommendations.append(
-                    MedicationRecommendation(
-                        condition=condition,
-                        medication_name=profile.name,
-                        drug_class=profile.drug_class,
-                        purpose=profile.purpose,
-                        evidence_source=evidence_source,
-                        clinical_guideline=clinical_guideline,
-                        confidence=confidence,
-                        alternative_drugs=list(profile.alternative_drugs),
-                        expected_outcome=profile.expected_outcome,
-                    )
-                )
-
-        return recommendations
+        if not target_conditions:
+            return []
+        data = self._call(
+            agent="prescription",
+            task="medication_selection",
+            patient_id=UUID(context.patient_id),
+            response_model=_MedicationRecommendationList,
+            extra_vars={
+                "target_conditions": target_conditions,
+                "research_recommendations": research_recommendations or {},
+            },
+        )
+        return _MedicationRecommendationList.model_validate(data).items

@@ -7,6 +7,8 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
+from app.ai.orchestrator.models import OrchestratorDebugInfo
+
 INTERACTION_LEVELS = ("Minor", "Moderate", "Major", "Critical")
 ALLERGY_STATUSES = ("Safe", "Warning", "Contraindicated")
 APPROVAL_STATUSES = ("Approved", "Requires Physician Review", "Rejected")
@@ -103,8 +105,9 @@ class PrescriptionReport(BaseModel):
     treatment_plan: TreatmentPlan = Field(default_factory=TreatmentPlan)
     validation: PrescriptionValidation = Field(default_factory=PrescriptionValidation)
     summary: str = ""
-    engine: str = "rule_based"
+    engine: str = "ai_orchestrator"
     warnings: List[str] = Field(default_factory=list)
+    ai_debug: List[OrchestratorDebugInfo] = Field(default_factory=list)
     disclaimer: str = PRESCRIPTION_DISCLAIMER
     generated_at: str = Field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat()

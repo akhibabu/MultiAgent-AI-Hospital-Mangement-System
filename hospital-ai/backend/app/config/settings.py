@@ -39,34 +39,109 @@ class Settings(BaseSettings):
     # Set false on machines with corporate SSL inspection (local only).
     supabase_ssl_verify: bool = Field(default=True, alias="SUPABASE_SSL_VERIFY")
 
-    # AI / Intake Agent providers (adapters selected by name)
+    # Intake Agent — OCR provider (unrelated to the AI Orchestrator)
     ocr_provider: str = Field(default="stub", alias="OCR_PROVIDER")
-    llm_provider: str = Field(default="stub", alias="LLM_PROVIDER")
-    openai_api_key: str = Field(default="", alias="OPENAI_API_KEY")
-    openai_model: str = Field(default="gpt-4o-mini", alias="OPENAI_MODEL")
-    gemini_api_key: str = Field(default="", alias="GEMINI_API_KEY")
-    gemini_model: str = Field(default="gemini-1.5-flash", alias="GEMINI_MODEL")
-    anthropic_api_key: str = Field(default="", alias="ANTHROPIC_API_KEY")
-    anthropic_model: str = Field(default="claude-3-5-haiku-latest", alias="ANTHROPIC_MODEL")
-    ollama_base_url: str = Field(default="http://127.0.0.1:11434", alias="OLLAMA_BASE_URL")
-    ollama_model: str = Field(default="llama3.2", alias="OLLAMA_MODEL")
     google_vision_api_key: str = Field(default="", alias="GOOGLE_VISION_API_KEY")
     azure_ocr_endpoint: str = Field(default="", alias="AZURE_OCR_ENDPOINT")
     azure_ocr_key: str = Field(default="", alias="AZURE_OCR_KEY")
 
-    # Diagnosis Agent (clinical decision support — assists, never replaces, a physician)
-    diagnosis_engine: str = Field(default="rule_based", alias="DIAGNOSIS_ENGINE")
+    # ------------------------------------------------------------------
+    # AI Orchestrator — the ONLY place any agent's LLM/model config lives.
+    # No AI Agent talks to a provider directly; every agent calls
+    # `AIOrchestrator.run(agent=..., task=..., ...)`.
+    #
+    # The provider *fleet* (which providers exist, their priority in the
+    # failover chain, their models, capabilities, and pricing) is declared in
+    # `backend/providers.yaml`, not here. These settings hold the credentials
+    # that file interpolates, plus runtime knobs.
+    # ------------------------------------------------------------------
+    # Preferred primary provider. This is a *preference*, not a lock: if it
+    # is unavailable the Provider Orchestrator automatically fails over to
+    # the next provider in providers.yaml. `stub` is the one exception and
+    # pins the system offline for tests/local dev.
+    ai_provider: str = Field(default="groq", alias="AI_PROVIDER")
 
-    # Research Agent (evidence enrichment providers)
-    research_provider: str = Field(default="mock", alias="RESEARCH_PROVIDER")
+    # Groq — priority 1. Free API key: https://console.groq.com/keys
+    groq_api_key: str = Field(default="", alias="GROQ_API_KEY")
+    groq_base_url: str = Field(
+        default="https://api.groq.com/openai/v1", alias="GROQ_BASE_URL"
+    )
+
+    # Google Gemini — priority 2. Free key: https://aistudio.google.com/apikey
+    gemini_api_key: str = Field(default="", alias="GEMINI_API_KEY")
+
+    # OpenRouter — priority 3. Free key: https://openrouter.ai/keys
+    openrouter_api_key: str = Field(default="", alias="OPENROUTER_API_KEY")
+
+    # HuggingFace Inference — priority 4. Free token:
+    # https://huggingface.co/settings/tokens
+    huggingface_api_key: str = Field(default="", alias="HUGGINGFACE_API_KEY")
+
+    # Ollama — optional local runtime. Enable in providers.yaml.
+    ollama_url: str = Field(default="http://localhost:11434", alias="OLLAMA_URL")
+
+    # Model Router — one model setting per requesting agent. Adding a new
+    # agent = one new setting + one entry in ModelRouter._MODEL_SETTING_MAP.
+    # Defaults target Groq's hosted Llama 3.3; override per-agent for A/B
+    # testing or to point a specific agent at a different provider's model.
+    intake_model: str = Field(default="llama-3.3-70b-versatile", alias="INTAKE_MODEL")
+    diagnosis_model: str = Field(default="llama-3.3-70b-versatile", alias="DIAGNOSIS_MODEL")
+    research_model: str = Field(default="llama-3.3-70b-versatile", alias="RESEARCH_MODEL")
+    prescription_model: str = Field(
+        default="llama-3.3-70b-versatile", alias="PRESCRIPTION_MODEL"
+    )
+    report_model: str = Field(default="llama-3.3-70b-versatile", alias="REPORT_MODEL")
+
+    # Generation defaults (per-call overridable)
+    ai_temperature: float = Field(default=0.2, alias="TEMPERATURE")
+    # Completion reservation. Providers meter `prompt + max_tokens` against one
+    # per-request ceiling, so this is subtracted from the prompt budget whether
+    # or not the model uses it — on Groq's free tier 4096 left under 2 000
+    # tokens for the prompt. Agent responses are structured JSON measured at
+    # 200-700 tokens, so this is still generous.
+    ai_max_tokens: int = Field(default=2048, alias="MAX_TOKENS")
+    # Per-request network timeout (seconds) — passed to every provider's generate()/stream().
+    ai_timeout_seconds: float = Field(default=120.0, alias="TIMEOUT")
+
+    # Cache Manager
+    ai_cache_ttl_seconds: int = Field(default=300, alias="AI_CACHE_TTL_SECONDS")
+
+    # Retry Handler — exponential backoff
+    ai_max_retries: int = Field(default=3, alias="AI_MAX_RETRIES")
+    ai_retry_base_delay_ms: int = Field(default=500, alias="AI_RETRY_BASE_DELAY_MS")
+
+    # Conversation Memory — recent turns included per orchestrator call
+    ai_memory_turns: int = Field(default=5, alias="AI_MEMORY_TURNS")
+
+    # Token optimization — compress patient context before each provider call
+    # (dedupe history, trim timelines, compact the knowledge graph, and drop
+    # the replayed prompt text from conversation memory).
+    ai_context_compression: bool = Field(default=True, alias="AI_CONTEXT_COMPRESSION")
+
+    # Request Queue — bounds simultaneous provider calls so a burst of agent
+    # runs queues instead of stampeding a provider's concurrency limit.
+    ai_max_concurrent_requests: int = Field(
+        default=4, alias="AI_MAX_CONCURRENT_REQUESTS"
+    )
+    ai_queue_wait_timeout_seconds: float = Field(
+        default=60.0, alias="AI_QUEUE_WAIT_TIMEOUT_SECONDS"
+    )
+
+    # Automatic failover master switch. Off = single-provider behavior
+    # (useful when reproducing a provider-specific bug).
+    ai_failover_enabled: bool = Field(default=True, alias="AI_FAILOVER_ENABLED")
+
+    # Paid providers — implemented and pluggable; enable them in
+    # providers.yaml (`openai.enabled: true`, etc.) once a key is set.
+    openai_api_key: str = Field(default="", alias="OPENAI_API_KEY")
+    anthropic_api_key: str = Field(default="", alias="ANTHROPIC_API_KEY")
+    azure_openai_api_key: str = Field(default="", alias="AZURE_OPENAI_API_KEY")
+    azure_openai_endpoint: str = Field(default="", alias="AZURE_OPENAI_ENDPOINT")
+
+    # Reserved for a future live PubMed / ClinicalTrials.gov integration.
+    # The Research Agent's LLM-backed providers do not call these yet.
     pubmed_api_key: str = Field(default="", alias="PUBMED_API_KEY")
     clinical_trials_api_key: str = Field(default="", alias="CLINICAL_TRIALS_API_KEY")
-
-    # Prescription Agent (physician-review treatment recommendations)
-    prescription_engine: str = Field(default="rule_based", alias="PRESCRIPTION_ENGINE")
-
-    # Medical Report Agent (professional hospital documentation)
-    medical_report_engine: str = Field(default="template_based", alias="MEDICAL_REPORT_ENGINE")
 
     @property
     def cors_origins_list(self) -> List[str]:

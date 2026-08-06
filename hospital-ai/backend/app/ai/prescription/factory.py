@@ -1,25 +1,25 @@
-"""Factory selecting Prescription Agent strategy implementations by settings."""
+"""Factory selecting Prescription Agent strategy implementations.
 
+Medication selection now delegates to the AI Orchestrator (see
+`app/ai/orchestrator/`). `DrugKnowledgeBase` remains available as
+grounding/reference data (and as a deterministic safety cross-check
+layer for interactions/allergies elsewhere in the pipeline) — it no
+longer makes the medication-selection decision itself. This factory is
+kept so a future strategy can be registered here without touching
+`pipeline.py` or any route code.
+"""
 from __future__ import annotations
 
 from app.ai.prescription.knowledge_base import DrugKnowledgeBase
 from app.ai.prescription.medication_selector import (
+    LLMMedicationSelector,
     MedicationSelectionStrategy,
-    RuleBasedMedicationSelector,
 )
 
 
 class PrescriptionStrategyFactory:
-    """
-    Resolves engine implementations from `settings.prescription_engine`.
-
-    Today only `rule_based` is implemented. Future engines (e.g. `llm`, or a
-    real pharmacy database provider) can be registered here without changing
-    pipeline or route code.
-    """
-
-    def __init__(self, engine: str = "rule_based") -> None:
-        self._engine = (engine or "rule_based").strip().lower()
+    def __init__(self, engine: str = "ai_orchestrator") -> None:
+        self._engine = (engine or "ai_orchestrator").strip().lower()
         self._kb = DrugKnowledgeBase()
 
     @property
@@ -27,16 +27,11 @@ class PrescriptionStrategyFactory:
         return self._engine
 
     def create_medication_selector(self) -> MedicationSelectionStrategy:
-        if self._engine in {"rule_based", "stub", "default"}:
-            return RuleBasedMedicationSelector(self._kb)
-        raise ValueError(f"Unknown PRESCRIPTION_ENGINE '{self._engine}'")
+        return LLMMedicationSelector(self._kb)
 
     def knowledge_base(self) -> DrugKnowledgeBase:
         return self._kb
 
 
 def get_prescription_strategy_factory() -> PrescriptionStrategyFactory:
-    from app.config import get_settings
-
-    settings = get_settings()
-    return PrescriptionStrategyFactory(getattr(settings, "prescription_engine", "rule_based"))
+    return PrescriptionStrategyFactory("ai_orchestrator")

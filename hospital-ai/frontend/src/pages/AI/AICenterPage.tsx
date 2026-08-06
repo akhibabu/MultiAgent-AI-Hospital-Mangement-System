@@ -1,5 +1,17 @@
 import { Link } from 'react-router-dom';
+import Badge from '@/components/common/Badge';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
+
+/** Small pill shown on every LLM-backed agent card — every agent now talks
+ * to the AI Orchestrator instead of directly to an LLM provider. */
+function OrchestratorBadge() {
+  return (
+    <span className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-primary-600/10 px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-primary-600">
+      <span className="h-1.5 w-1.5 rounded-full bg-primary-600" />
+      Connected through AI Orchestrator
+    </span>
+  );
+}
 
 const AGENTS = [
   {
@@ -157,6 +169,7 @@ export default function AICenterPage() {
               ✓ Intake Completed
             </li>
           </ul>
+          <OrchestratorBadge />
         </Link>
 
         <div className="grid gap-4 lg:grid-cols-2">
@@ -177,6 +190,7 @@ export default function AICenterPage() {
                   severity prediction, and treatment pathways. Assists — never
                   replaces — a physician.
                 </p>
+                <OrchestratorBadge />
               </div>
               <span className="rounded-md bg-primary-600/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary-600">
                 Available
@@ -200,6 +214,7 @@ export default function AICenterPage() {
                   Literature, clinical trials, treatment guidelines, and drug
                   efficacy evidence for every Diagnosis Agent result.
                 </p>
+                <OrchestratorBadge />
               </div>
               <span className="rounded-md bg-primary-600/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary-600">
                 Available
@@ -223,6 +238,7 @@ export default function AICenterPage() {
                   Medication selection, drug interaction checks, allergy
                   verification, and dosage ranges. Never a final prescription.
                 </p>
+                <OrchestratorBadge />
               </div>
               <span className="rounded-md bg-primary-600/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary-600">
                 Available
@@ -246,10 +262,38 @@ export default function AICenterPage() {
                   Clinical summary, doctor notes, discharge summary, referral
                   letters, insurance documents, and a patient-friendly report.
                 </p>
+                <OrchestratorBadge />
               </div>
               <span className="rounded-md bg-primary-600/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary-600">
                 Available
               </span>
+            </div>
+          </Link>
+        </div>
+
+        <div>
+          <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">
+            AI Infrastructure
+          </h3>
+          <Link
+            to="/ai/orchestrator"
+            className="block rounded-xl border border-[var(--border-color)] bg-[var(--bg-navbar)] p-5 transition hover:border-primary-500/50"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-primary-600">
+                  AI Infrastructure
+                </p>
+                <h3 className="mt-1 text-lg font-semibold text-[var(--text-primary)]">
+                  AI Orchestrator
+                </h3>
+                <p className="mt-1 max-w-xl text-sm text-[var(--text-secondary)]">
+                  Single entry point for every AI request: model routing, prompt
+                  loading, patient context, conversation memory, caching, retries,
+                  response parsing, and usage tracking for all five agents above.
+                </p>
+              </div>
+              <Badge tone="blue">Infrastructure</Badge>
             </div>
           </Link>
         </div>

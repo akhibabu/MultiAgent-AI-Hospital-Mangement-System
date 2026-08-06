@@ -1,4 +1,4 @@
-import apiClient from '@/services/apiClient';
+import apiClient, { AI_AGENT_TIMEOUT_MS } from '@/services/apiClient';
 import type {
   MedicalEntity,
   NERResult,
@@ -8,9 +8,11 @@ import type {
 
 export const nerService = {
   async start(jobId: string): Promise<NERStartResult> {
-    const { data } = await apiClient.post<NERStartResult>('/ai/intake/ner/start', {
-      job_id: jobId,
-    });
+    const { data } = await apiClient.post<NERStartResult>(
+      '/ai/intake/ner/start',
+      { job_id: jobId },
+      { timeout: AI_AGENT_TIMEOUT_MS },
+    );
     return data;
   },
 

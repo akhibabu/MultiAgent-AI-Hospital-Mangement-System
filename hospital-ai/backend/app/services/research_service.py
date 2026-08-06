@@ -8,13 +8,14 @@ from uuid import UUID
 
 from fastapi import HTTPException
 
-from app.ai.research.models import ResearchReport
+from app.ai.research.models import ResearchReport, normalize_evidence_type
 from app.ai.research.pipeline import ResearchPipeline
 from app.core.logging import get_logger
 from app.repositories.research_repository import (
     ClinicalEvidenceRepository,
     ResearchResultRepository,
 )
+from app.schemas.ai_orchestrator import OrchestratorDebugInfoOut
 from app.schemas.research import (
     ClinicalEvidenceOut,
     ClinicalTrialItemOut,
@@ -54,7 +55,11 @@ class ResearchService:
         except HTTPException:
             raise
         except Exception as exc:  # noqa: BLE001
+            from app.ai.orchestrator import AIOrchestratorError
+
             logger.exception("Research pipeline failed patient=%s", request.patient_id)
+            if isinstance(exc, AIOrchestratorError):
+                raise HTTPException(status_code=503, detail=str(exc)) from exc
             raise HTTPException(status_code=500, detail=f"Research Agent failed: {exc}") from exc
 
         elapsed_ms = int((time.perf_counter() - started) * 1000)
@@ -81,12 +86,14 @@ class ResearchService:
         evidence_rows = [
             {
                 "research_result_id": str(row["id"]),
-                "evidence_type": e.evidence_type,
+                # Normalize LLM synonyms (e.g. "literature" → "pubmed") to satisfy
+                # the clinical_evidence_evidence_type_check DB constraint.
+                "evidence_type": normalize_evidence_type(e.evidence_type),
                 "condition": e.condition,
                 "title": e.title,
                 "source": e.source,
                 "reference_id": e.reference_id,
-                "url": e.url,
+                "url": e.url or "",
                 "publication_date": e.publication_date,
                 "summary": e.summary,
                 "evidence_level": e.evidence_level,
@@ -135,6 +142,10 @@ class ResearchService:
                 for r in report.recommendations
             ],
             research_result=ResearchResultOut.model_validate(row),
+            ai_debug=[
+                OrchestratorDebugInfoOut.model_validate(d.model_dump(mode="json"))
+                for d in report.ai_debug
+            ],
         )
 
     def result(self, patient_id: UUID) -> ResearchResultOut:

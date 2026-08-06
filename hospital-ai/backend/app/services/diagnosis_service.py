@@ -13,6 +13,7 @@ from app.ai.diagnosis.pipeline import DiagnosisPipeline
 from app.core.logging import get_logger
 from app.repositories.diagnosis_repository import DiagnosisResultRepository
 from app.repositories.intake_repositories import DocumentProcessingJobRepository
+from app.schemas.ai_orchestrator import OrchestratorDebugInfoOut
 from app.schemas.diagnosis import (
     ClinicalDecisionSupportOut,
     DiagnosisHistoryItemOut,
@@ -51,7 +52,11 @@ class DiagnosisService:
         except HTTPException:
             raise
         except Exception as exc:  # noqa: BLE001
+            from app.ai.orchestrator import AIOrchestratorError
+
             logger.exception("Diagnosis pipeline failed patient=%s", request.patient_id)
+            if isinstance(exc, AIOrchestratorError):
+                raise HTTPException(status_code=503, detail=str(exc)) from exc
             raise HTTPException(status_code=500, detail=f"Diagnosis Agent failed: {exc}") from exc
 
         elapsed_ms = int((time.perf_counter() - started) * 1000)
@@ -113,6 +118,10 @@ class DiagnosisService:
                 report.clinical_decision_support.model_dump(mode="json")
             ),
             diagnosis_result=DiagnosisResultOut.model_validate(row),
+            ai_debug=[
+                OrchestratorDebugInfoOut.model_validate(d.model_dump(mode="json"))
+                for d in report.ai_debug
+            ],
         )
 
     def result(self, patient_id: UUID) -> DiagnosisResultOut:

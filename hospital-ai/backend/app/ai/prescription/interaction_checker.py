@@ -1,21 +1,36 @@
 """
 Prescription Agent — Stage 2: Drug Interaction Check.
 
-Analyzes current medications + suggested medications for known interactions,
-severity, and contraindications. Explains every interaction found.
+Analyzes current medications + suggested medications for known
+interactions, severity, and contraindications via the AI Orchestrator
+(`prescription` agent, `drug_interaction_check` task). Explains every
+interaction found.
 """
 
 from __future__ import annotations
 
-from itertools import combinations
-from typing import List
+from typing import List, Optional
+from uuid import UUID
 
+from pydantic import BaseModel, Field
+
+from app.ai.orchestrator.agent_helpers import OrchestratorCallMixin
 from app.ai.prescription.knowledge_base import DrugKnowledgeBase
 from app.ai.prescription.models import DrugInteraction
 
+_SEVERITY_RANK = {"Critical": 0, "Major": 1, "Moderate": 2, "Minor": 3}
 
-class DrugInteractionChecker:
-    """Pairwise interaction lookup across current + suggested medications."""
+
+class _DrugInteractionList(BaseModel):
+    items: List[DrugInteraction] = Field(default_factory=list)
+
+
+class DrugInteractionChecker(OrchestratorCallMixin):
+    """
+    Pairwise interaction analysis across current + suggested medications,
+    via the AI Orchestrator. `DrugKnowledgeBase.DRUG_INTERACTIONS` stays
+    available as grounding data for known interaction pairs.
+    """
 
     def __init__(self, knowledge_base: DrugKnowledgeBase) -> None:
         self._kb = knowledge_base
@@ -24,26 +39,22 @@ class DrugInteractionChecker:
         self,
         current_drugs: List[str],
         suggested_drugs: List[str],
+        *,
+        patient_id: Optional[UUID] = None,
     ) -> List[DrugInteraction]:
         all_drugs = list(dict.fromkeys([d for d in (current_drugs + suggested_drugs) if d]))
-        interactions: List[DrugInteraction] = []
-
-        for drug_a, drug_b in combinations(all_drugs, 2):
-            hit = self._kb.interaction_between(drug_a, drug_b)
-            if not hit:
-                continue
-            level, explanation, recommendation = hit
-            interactions.append(
-                DrugInteraction(
-                    drug_a=drug_a,
-                    drug_b=drug_b,
-                    interaction_level=level,
-                    explanation=explanation,
-                    recommendation=recommendation,
-                )
-            )
-
-        # Highest severity first for clinician attention
-        severity_rank = {"Critical": 0, "Major": 1, "Moderate": 2, "Minor": 3}
-        interactions.sort(key=lambda i: severity_rank.get(i.interaction_level, 4))
+        if len(all_drugs) < 2:
+            return []
+        data = self._call(
+            agent="prescription",
+            task="drug_interaction_check",
+            patient_id=patient_id,
+            response_model=_DrugInteractionList,
+            extra_vars={
+                "medications": current_drugs,
+                "suggested_medications": suggested_drugs,
+            },
+        )
+        interactions = _DrugInteractionList.model_validate(data).items
+        interactions.sort(key=lambda i: _SEVERITY_RANK.get(i.interaction_level, 4))
         return interactions

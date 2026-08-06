@@ -1,4 +1,5 @@
 /** Medical Report Agent types — professional hospital documentation. Assists — never replaces — clinician review. */
+import type { OrchestratorDebugInfo } from '@/types/aiOrchestrator';
 
 export interface ClinicalSummary {
   patient_overview: string;
@@ -105,6 +106,7 @@ export interface MedicalReportStartResult {
   insurance_documentation: InsuranceDocumentation;
   patient_report: PatientReport;
   generated_report: GeneratedMedicalReport;
+  ai_debug: OrchestratorDebugInfo[];
 }
 
 export interface MedicalReportHistoryItem {

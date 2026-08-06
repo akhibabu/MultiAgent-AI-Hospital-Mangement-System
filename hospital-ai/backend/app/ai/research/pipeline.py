@@ -13,7 +13,8 @@ from uuid import UUID
 
 from fastapi import HTTPException
 
-from app.ai.research.evidence_ranker import EvidenceRankingStrategy, HeuristicEvidenceRanker
+from app.ai.orchestrator.agent_helpers import collect_debug
+from app.ai.research.evidence_ranker import EvidenceRankingStrategy, LLMEvidenceRanker
 from app.ai.research.models import ResearchReport
 from app.ai.research.providers.factory import (
     ResearchProviderBundle,
@@ -46,9 +47,14 @@ class ResearchPipeline:
     ) -> None:
         self._diagnosis_repo = diagnosis_repo or DiagnosisResultRepository()
         self._context_repo = context_repo or PatientClinicalContextRepository()
-        self._providers = provider_bundle or get_research_provider_bundle()
-        self._ranker = evidence_ranker or HeuristicEvidenceRanker()
-        self._recommender = recommendation_generator or RecommendationGenerator()
+        # `provider_bundle` / `evidence_ranker` / `recommendation_generator`
+        # are only pre-built here if the caller injects them explicitly
+        # (e.g. tests). In normal operation they are built per-run inside
+        # `run()`, bound to that call's `patient_id`, so every AI
+        # Orchestrator call is attributed to the right patient.
+        self._injected_providers = provider_bundle
+        self._injected_ranker = evidence_ranker
+        self._injected_recommender = recommendation_generator
 
     def run(
         self,
@@ -56,6 +62,10 @@ class ResearchPipeline:
         *,
         diagnosis_result_id: Optional[UUID] = None,
     ) -> ResearchReport:
+        self._providers = self._injected_providers or get_research_provider_bundle(patient_id)
+        self._ranker = self._injected_ranker or LLMEvidenceRanker(patient_id)
+        self._recommender = self._injected_recommender or RecommendationGenerator(patient_id)
+
         diagnosis_row = self._load_diagnosis(patient_id, diagnosis_result_id)
         context = self._context_repo.load(patient_id)
 
@@ -118,6 +128,15 @@ class ResearchPipeline:
 
         summary = self._build_summary(conditions, ranked_evidence, level_counts)
 
+        ai_debug = collect_debug(
+            self._providers.pubmed,
+            self._providers.clinical_trials,
+            self._providers.guidelines,
+            self._providers.drug_evidence,
+            self._ranker,
+            self._recommender,
+        )
+
         logger.info(
             "Research pipeline complete patient=%s conditions=%s evidence=%s",
             patient_id,
@@ -139,6 +158,7 @@ class ResearchPipeline:
             summary=summary,
             provider=self._providers.provider_name,
             warnings=warnings,
+            ai_debug=ai_debug,
         )
 
     def _load_diagnosis(

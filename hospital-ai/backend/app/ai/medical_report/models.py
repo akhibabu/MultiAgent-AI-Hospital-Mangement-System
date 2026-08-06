@@ -7,6 +7,8 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
+from app.ai.orchestrator.models import OrchestratorDebugInfo
+
 MEDICAL_REPORT_DISCLAIMER = (
     "Generated documentation synthesized from Intake, Diagnosis, Research, and "
     "Prescription Agent output. Assists — never replaces — clinician review. "
@@ -104,9 +106,10 @@ class MedicalReportBundle(BaseModel):
     insurance_documentation: InsuranceDocumentation = Field(default_factory=InsuranceDocumentation)
     patient_report: PatientReport = Field(default_factory=PatientReport)
     summary: str = ""
-    engine: str = "template_based"
+    engine: str = "ai_orchestrator"
     version: int = 1
     warnings: List[str] = Field(default_factory=list)
+    ai_debug: List[OrchestratorDebugInfo] = Field(default_factory=list)
     disclaimer: str = MEDICAL_REPORT_DISCLAIMER
     generated_at: str = Field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat()

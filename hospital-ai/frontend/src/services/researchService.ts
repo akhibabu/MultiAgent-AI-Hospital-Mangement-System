@@ -1,4 +1,4 @@
-import apiClient from '@/services/apiClient';
+import apiClient, { AI_AGENT_TIMEOUT_MS } from '@/services/apiClient';
 import type {
   ResearchHistoryItem,
   ResearchResult,
@@ -16,6 +16,7 @@ export const researchService = {
         patient_id: patientId,
         diagnosis_result_id: diagnosisResultId,
       },
+      { timeout: AI_AGENT_TIMEOUT_MS },
     );
     return data;
   },

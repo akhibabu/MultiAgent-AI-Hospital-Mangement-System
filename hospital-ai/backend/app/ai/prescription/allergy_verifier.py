@@ -2,20 +2,33 @@
 Prescription Agent — Stage 3: Allergy Verification.
 
 Compares patient allergies against drug ingredients, drug classes, and
-known cross-reactive classes. Every result explains WHY it is safe, a
-warning, or contraindicated.
+known cross-reactive classes via the AI Orchestrator (`prescription`
+agent, `allergy_verification` task). Every result explains WHY it is
+safe, a warning, or contraindicated.
 """
 
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional
+from uuid import UUID
 
+from pydantic import BaseModel, Field
+
+from app.ai.orchestrator.agent_helpers import OrchestratorCallMixin
 from app.ai.prescription.knowledge_base import DrugKnowledgeBase
 from app.ai.prescription.models import AllergyCheckItem
 
 
-class AllergyVerifier:
-    """Rule-based allergy / cross-reactivity screening."""
+class _AllergyCheckList(BaseModel):
+    items: List[AllergyCheckItem] = Field(default_factory=list)
+
+
+class AllergyVerifier(OrchestratorCallMixin):
+    """
+    LLM-backed allergy / cross-reactivity screening. `DrugKnowledgeBase`
+    (allergy classes, cross-reactive classes per drug) remains available
+    as grounding data.
+    """
 
     def __init__(self, knowledge_base: DrugKnowledgeBase) -> None:
         self._kb = knowledge_base
@@ -24,75 +37,19 @@ class AllergyVerifier:
         self,
         patient_allergies: List[str],
         suggested_drugs: List[str],
+        *,
+        patient_id: Optional[UUID] = None,
     ) -> List[AllergyCheckItem]:
-        allergies = [a.strip().lower() for a in patient_allergies if a and a.strip()]
-        results: List[AllergyCheckItem] = []
-
-        for drug_name in dict.fromkeys(suggested_drugs):
-            profile = self._kb.get(drug_name)
-            if not profile:
-                results.append(
-                    AllergyCheckItem(
-                        medication_name=drug_name,
-                        status="Safe",
-                        reason="No allergy data on record for this medication in the knowledge base.",
-                    )
-                )
-                continue
-
-            direct_hit = next(
-                (
-                    a
-                    for a in allergies
-                    if a in [c.lower() for c in profile.allergy_classes] or profile.name.lower() == a
-                ),
-                None,
-            )
-            if direct_hit:
-                results.append(
-                    AllergyCheckItem(
-                        medication_name=drug_name,
-                        status="Contraindicated",
-                        reason=(
-                            f"Patient has a documented allergy to '{direct_hit}', which directly "
-                            f"matches {profile.name} ({profile.drug_class})."
-                        ),
-                        cross_reactivity=list(profile.cross_reactive_allergy_classes),
-                    )
-                )
-                continue
-
-            cross_hit = next(
-                (
-                    a
-                    for a in allergies
-                    if a in [c.lower() for c in profile.cross_reactive_allergy_classes]
-                ),
-                None,
-            )
-            if cross_hit:
-                results.append(
-                    AllergyCheckItem(
-                        medication_name=drug_name,
-                        status="Warning",
-                        reason=(
-                            f"Patient allergy to '{cross_hit}' has documented cross-reactivity "
-                            f"potential with {profile.name} ({profile.drug_class}). Use with caution."
-                        ),
-                        cross_reactivity=list(profile.cross_reactive_allergy_classes),
-                    )
-                )
-                continue
-
-            results.append(
-                AllergyCheckItem(
-                    medication_name=drug_name,
-                    status="Safe",
-                    reason=(
-                        f"No match found between patient allergies and {profile.name}'s allergy "
-                        "classes or known cross-reactive classes."
-                    ),
-                )
-            )
-
-        return results
+        if not suggested_drugs:
+            return []
+        data = self._call(
+            agent="prescription",
+            task="allergy_verification",
+            patient_id=patient_id,
+            response_model=_AllergyCheckList,
+            extra_vars={
+                "allergies": patient_allergies,
+                "suggested_medications": list(dict.fromkeys(suggested_drugs)),
+            },
+        )
+        return _AllergyCheckList.model_validate(data).items

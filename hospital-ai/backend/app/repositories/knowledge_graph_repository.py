@@ -166,7 +166,8 @@ class KnowledgeGraphContextUpdater:
 
         payload = {
             "processing_job_id": str(processing_job_id),
-            "status": "Completed",
+            # patient_ai_context_status enum: Initialized | Pending | Ready | Failed
+            "status": "Ready",
             "kg_completed": True,
             "kg_node_count": node_count,
             "kg_relationship_count": relationship_count,

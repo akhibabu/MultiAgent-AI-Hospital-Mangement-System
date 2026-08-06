@@ -5,9 +5,11 @@ from __future__ import annotations
 import re
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
+from uuid import UUID
 
 from app.ai.diagnosis.knowledge_base import ConditionKnowledgeBase
 from app.ai.diagnosis.models import SymptomAnalysis, SymptomCluster
+from app.ai.orchestrator.agent_helpers import OrchestratorCallMixin
 from app.repositories.patient_context_repository import PatientClinicalContext
 
 _DURATION_PATTERN = re.compile(
@@ -115,11 +117,35 @@ class RuleBasedSymptomAnalyzer(SymptomAnalysisStrategy):
         return " ".join(pieces)
 
 
+class LLMSymptomAnalysisStrategy(OrchestratorCallMixin, SymptomAnalysisStrategy):
+    """
+    Delegates symptom clustering to the AI Orchestrator (`diagnosis` agent,
+    `symptom_analysis` task) instead of the rule-based body-system matcher.
+
+    The rule-based `ConditionKnowledgeBase` is still used elsewhere as
+    grounding data (see `differential_engine.py`), but this stage's actual
+    reasoning now comes from the LLM via the orchestrator.
+    """
+
+    def analyze(self, context: PatientClinicalContext) -> SymptomAnalysis:
+        data = self._call(
+            agent="diagnosis",
+            task="symptom_analysis",
+            patient_id=UUID(context.patient_id),
+            response_model=SymptomAnalysis,
+        )
+        return SymptomAnalysis.model_validate(data)
+
+
 class SymptomAnalyzer:
-    """Facade selecting a SymptomAnalysisStrategy (default: rule-based)."""
+    """Facade selecting a SymptomAnalysisStrategy (default: AI Orchestrator-backed)."""
 
     def __init__(self, strategy: SymptomAnalysisStrategy | None = None) -> None:
-        self._strategy = strategy or RuleBasedSymptomAnalyzer()
+        self._strategy = strategy or LLMSymptomAnalysisStrategy()
 
     def analyze(self, context: PatientClinicalContext) -> SymptomAnalysis:
         return self._strategy.analyze(context)
+
+    @property
+    def last_debug(self):
+        return getattr(self._strategy, "last_debug", None)

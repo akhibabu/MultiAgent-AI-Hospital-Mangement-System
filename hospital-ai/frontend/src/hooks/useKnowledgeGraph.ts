@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { isAxiosError } from 'axios';
 import { knowledgeGraphService } from '@/services/knowledgeGraphService';
+import { getApiErrorMessage } from '@/services/apiClient';
 import { riskKeys } from '@/hooks/useRisk';
 import { nerKeys } from '@/hooks/useNer';
 import { ocrKeys } from '@/hooks/useOcr';
@@ -12,20 +12,6 @@ export const kgKeys = {
   result: (jobId: string) => [...kgKeys.all, 'result', jobId] as const,
   patient: (patientId: string) => [...kgKeys.all, 'patient', patientId] as const,
 };
-
-function getErrorMessage(error: unknown, fallback: string): string {
-  if (isAxiosError(error)) {
-    const detail = error.response?.data?.detail;
-    if (typeof detail === 'string') return detail;
-    if (Array.isArray(detail)) {
-      return detail
-        .map((item) => item?.msg || JSON.stringify(item))
-        .join(', ');
-    }
-  }
-  if (error instanceof Error) return error.message;
-  return fallback;
-}
 
 export function useKnowledgeGraphResult(jobId: string | undefined, enabled = true) {
   return useQuery({
@@ -56,7 +42,11 @@ export function useStartKnowledgeGraph(patientId: string | undefined) {
       );
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Knowledge graph creation failed'));
+      // A client timeout does not mean the backend failed — KG builds often
+      // finish after axios aborts. Invalidate so the next result poll can
+      // pick up a graph that landed in the background.
+      queryClient.invalidateQueries({ queryKey: kgKeys.all });
+      toast.error(getApiErrorMessage(error, 'Knowledge graph creation failed'));
     },
   });
 }
