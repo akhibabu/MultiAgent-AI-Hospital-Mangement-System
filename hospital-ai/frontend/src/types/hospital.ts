@@ -98,7 +98,7 @@ export interface HospitalSettings {
 }
 
 export const DEFAULT_HOSPITAL_SETTINGS: HospitalSettings = {
-  hospitalName: 'Hospital AI',
+  hospitalName: 'Hospital',
   hospitalLogo: '',
   theme: 'system',
   language: 'en',

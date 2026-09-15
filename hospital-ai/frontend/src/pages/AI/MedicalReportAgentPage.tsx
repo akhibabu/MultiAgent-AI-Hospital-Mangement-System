@@ -19,6 +19,7 @@ import {
   useStartMedicalReport,
 } from '@/hooks/useMedicalReport';
 import { getApiErrorMessage } from '@/services/apiClient';
+import MedicalReportValidationResults from '@/components/validation/MedicalReportValidationResults';
 import type {
   ClinicalSummary,
   DischargeSummary,
@@ -262,12 +263,15 @@ export default function MedicalReportAgentPage() {
                 Connected through AI Orchestrator
               </Link>
             </div>
-            <Link
-              to="/ai"
-              className="rounded-xl border border-[var(--border-color)] px-3 py-2 text-sm text-[var(--text-secondary)] transition hover:border-primary-500/40"
-            >
-              Back to AI Center
-            </Link>
+            <div className="flex flex-wrap items-center gap-2">
+              <MedicalReportValidationResults />
+              <Link
+                to="/ai"
+                className="rounded-xl border border-[var(--border-color)] px-3 py-2 text-sm text-[var(--text-secondary)] transition hover:border-primary-500/40"
+              >
+                Back to AI Center
+              </Link>
+            </div>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
