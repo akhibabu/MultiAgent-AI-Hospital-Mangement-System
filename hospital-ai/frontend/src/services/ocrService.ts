@@ -1,4 +1,4 @@
-import apiClient from '@/services/apiClient';
+import apiClient, { AI_AGENT_TIMEOUT_MS } from '@/services/apiClient';
 import type {
   OCRResult,
   OCRStartResult,
@@ -8,9 +8,11 @@ import type {
 
 export const ocrService = {
   async start(jobId: string): Promise<OCRStartResult> {
-    const { data } = await apiClient.post<OCRStartResult>('/ai/intake/ocr/start', {
-      job_id: jobId,
-    });
+    const { data } = await apiClient.post<OCRStartResult>(
+      '/ai/intake/ocr/start',
+      { job_id: jobId },
+      { timeout: AI_AGENT_TIMEOUT_MS },
+    );
     return data;
   },
 

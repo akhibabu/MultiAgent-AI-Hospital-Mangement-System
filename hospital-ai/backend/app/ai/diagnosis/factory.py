@@ -1,28 +1,31 @@
-"""Factory selecting Diagnosis Agent strategy implementations by settings."""
+"""Factory selecting Diagnosis Agent strategy implementations.
 
+Every stage now delegates its reasoning to the AI Orchestrator (see
+`app/ai/orchestrator/`). `ConditionKnowledgeBase` remains available as
+grounding/reference data for prompt context — it no longer makes the
+diagnostic decision itself. This factory is kept (rather than
+constructing strategies inline) so a future strategy — e.g. a
+hybrid/ensemble approach — can be registered here without touching
+`pipeline.py` or any route code.
+"""
 from __future__ import annotations
 
 from app.ai.diagnosis.differential_engine import (
     DifferentialDiagnosisStrategy,
-    RuleBasedDifferentialStrategy,
+    LLMDifferentialStrategy,
 )
 from app.ai.diagnosis.knowledge_base import ConditionKnowledgeBase
 from app.ai.diagnosis.symptom_analyzer import (
-    RuleBasedSymptomAnalyzer,
+    LLMSymptomAnalysisStrategy,
     SymptomAnalysisStrategy,
 )
 
 
 class DiagnosisStrategyFactory:
-    """
-    Resolves engine implementations from `settings.diagnosis_engine`.
+    """Resolves the active (AI Orchestrator-backed) strategy implementations."""
 
-    Today only `rule_based` is implemented. Future engines (e.g. `llm`) can be
-    registered here without changing pipeline or route code.
-    """
-
-    def __init__(self, engine: str = "rule_based") -> None:
-        self._engine = (engine or "rule_based").strip().lower()
+    def __init__(self, engine: str = "ai_orchestrator") -> None:
+        self._engine = (engine or "ai_orchestrator").strip().lower()
         self._kb = ConditionKnowledgeBase()
 
     @property
@@ -30,21 +33,14 @@ class DiagnosisStrategyFactory:
         return self._engine
 
     def create_symptom_strategy(self) -> SymptomAnalysisStrategy:
-        if self._engine in {"rule_based", "stub", "default"}:
-            return RuleBasedSymptomAnalyzer(self._kb)
-        raise ValueError(f"Unknown DIAGNOSIS_ENGINE '{self._engine}'")
+        return LLMSymptomAnalysisStrategy()
 
     def create_differential_strategy(self) -> DifferentialDiagnosisStrategy:
-        if self._engine in {"rule_based", "stub", "default"}:
-            return RuleBasedDifferentialStrategy(self._kb)
-        raise ValueError(f"Unknown DIAGNOSIS_ENGINE '{self._engine}'")
+        return LLMDifferentialStrategy(self._kb)
 
     def knowledge_base(self) -> ConditionKnowledgeBase:
         return self._kb
 
 
 def get_diagnosis_strategy_factory() -> DiagnosisStrategyFactory:
-    from app.config import get_settings
-
-    settings = get_settings()
-    return DiagnosisStrategyFactory(getattr(settings, "diagnosis_engine", "rule_based"))
+    return DiagnosisStrategyFactory("ai_orchestrator")

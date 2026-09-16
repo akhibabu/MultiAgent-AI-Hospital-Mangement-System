@@ -1,7 +1,7 @@
 import type { NavItem } from '@/types';
 
 export const APP_NAME =
-  import.meta.env.VITE_APP_NAME || 'Hospital AI';
+  import.meta.env.VITE_APP_NAME || 'Hospital';
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard', path: '/dashboard' },
@@ -13,6 +13,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Resources', path: '/resources' },
   { label: 'Announcements', path: '/announcements' },
   { label: 'AI Center', path: '/ai' },
+  { label: 'Validation Center', path: '/validation' },
   { label: 'Availability', path: '/availability' },
   { label: 'Profile', path: '/profile' },
   { label: 'Settings', path: '/settings' },

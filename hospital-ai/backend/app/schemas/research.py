@@ -8,6 +8,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
+from app.schemas.ai_orchestrator import OrchestratorDebugInfoOut
+
 
 class ResearchStartRequest(BaseModel):
     patient_id: UUID
@@ -122,6 +124,7 @@ class ResearchStartResponse(BaseModel):
     evidence_level_counts: Dict[str, int] = Field(default_factory=dict)
     recommendations: List[ResearchRecommendationOut] = Field(default_factory=list)
     research_result: ResearchResultOut
+    ai_debug: List[OrchestratorDebugInfoOut] = Field(default_factory=list)
 
 
 class ResearchHistoryItemOut(BaseModel):

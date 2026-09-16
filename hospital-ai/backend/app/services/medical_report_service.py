@@ -16,6 +16,7 @@ from app.repositories.medical_report_repository import (
     InsuranceDocumentRepository,
     ReferralLetterRepository,
 )
+from app.schemas.ai_orchestrator import OrchestratorDebugInfoOut
 from app.schemas.medical_report import (
     ClinicalSummaryOut,
     DischargeSummaryOut,
@@ -63,7 +64,11 @@ class MedicalReportService:
         except HTTPException:
             raise
         except Exception as exc:  # noqa: BLE001
+            from app.ai.orchestrator import AIOrchestratorError
+
             logger.exception("Medical Report pipeline failed patient=%s", request.patient_id)
+            if isinstance(exc, AIOrchestratorError):
+                raise HTTPException(status_code=503, detail=str(exc)) from exc
             raise HTTPException(status_code=500, detail=f"Medical Report Agent failed: {exc}") from exc
 
         elapsed_ms = int((time.perf_counter() - started) * 1000)
@@ -154,6 +159,10 @@ class MedicalReportService:
                 bundle.patient_report.model_dump(mode="json")
             ),
             generated_report=GeneratedMedicalReportOut.model_validate(row),
+            ai_debug=[
+                OrchestratorDebugInfoOut.model_validate(d.model_dump(mode="json"))
+                for d in bundle.ai_debug
+            ],
         )
 
     def result(self, patient_id: UUID) -> GeneratedMedicalReportOut:

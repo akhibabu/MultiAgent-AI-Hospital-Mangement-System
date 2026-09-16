@@ -95,6 +95,27 @@ function previewParagraphs(text: string, count = 3) {
   return clean.slice(0, 480);
 }
 
+interface StageMeta {
+  completed?: boolean;
+  processing_job_id?: string;
+}
+
+/**
+ * `patient_ai_context` is one row PER PATIENT, overwritten by every intake
+ * job that patient has ever run. Its `*_metadata.completed` flags therefore
+ * reflect "has this patient EVER completed this stage" (possibly from a
+ * different, older job) — not "has the currently selected job completed it".
+ * Only trust a stage-completion flag from the shared context when its own
+ * `processing_job_id` matches the job the user currently has selected;
+ * otherwise fall back to the selected job's own `current_stage`/result data.
+ */
+function metaMatchesJob(
+  meta: StageMeta | undefined,
+  jobId: string | undefined,
+): boolean {
+  return Boolean(meta?.completed && jobId && meta.processing_job_id === jobId);
+}
+
 function formatWhen(iso?: string | null) {
   if (!iso) return '—';
   try {
@@ -283,7 +304,10 @@ export default function IntakeAgentPage() {
         (selectedJob?.current_stage === 'Completed' ||
           selectedJob?.status === 'Completed' ||
           selectedJob?.current_stage === 'Patient Knowledge Graph' ||
-          kgMutation.isSuccess),
+          kgMutation.isSuccess ||
+          // Client timeout does not cancel the server — keep polling so a
+          // graph that finished in the background still appears.
+          kgMutation.isError),
     ),
   );
 
@@ -306,46 +330,52 @@ export default function IntakeAgentPage() {
 
   const history = historyQuery.data?.medical_history;
   const hasHistory = Boolean(history);
+  const ctxJson = contextQuery.data?.patient_context_json as
+    | {
+        ocr_metadata?: StageMeta;
+        ner_metadata?: StageMeta;
+        risk_metadata?: StageMeta;
+        kg_metadata?: StageMeta;
+      }
+    | undefined;
+
   const ocrResult = ocrResultQuery.data || ocrMutation.data?.ocr_result;
   const ocrDone = Boolean(
-    contextQuery.data?.ocr_completed ||
+    metaMatchesJob(ctxJson?.ocr_metadata, activeJobId) ||
       selectedJob?.current_stage === 'Medical Entity Recognition' ||
       selectedJob?.current_stage === 'Patient Risk Profiling' ||
       selectedJob?.current_stage === 'Patient Knowledge Graph' ||
       selectedJob?.current_stage === 'Completed' ||
       selectedJob?.status === 'Completed' ||
-      ocrResult,
+      ocrResult ||
+      (ocrMutation.isSuccess && ocrMutation.variables === activeJobId),
   );
   const nerResult = nerResultQuery.data || nerMutation.data?.ner_result;
   const nerDone = Boolean(
-    (contextQuery.data?.patient_context_json as { ner_metadata?: { completed?: boolean } } | undefined)
-      ?.ner_metadata?.completed ||
+    metaMatchesJob(ctxJson?.ner_metadata, activeJobId) ||
       selectedJob?.current_stage === 'Patient Risk Profiling' ||
       selectedJob?.current_stage === 'Patient Knowledge Graph' ||
       selectedJob?.current_stage === 'Completed' ||
       selectedJob?.status === 'Completed' ||
       nerResult ||
-      nerMutation.isSuccess,
+      (nerMutation.isSuccess && nerMutation.variables === activeJobId),
   );
   const riskResult = riskResultQuery.data || riskMutation.data?.risk_profile;
   const riskDone = Boolean(
-    (contextQuery.data?.patient_context_json as { risk_metadata?: { completed?: boolean } } | undefined)
-      ?.risk_metadata?.completed ||
+    metaMatchesJob(ctxJson?.risk_metadata, activeJobId) ||
       selectedJob?.current_stage === 'Patient Knowledge Graph' ||
       selectedJob?.current_stage === 'Completed' ||
       selectedJob?.status === 'Completed' ||
       riskResult ||
-      riskMutation.isSuccess,
+      (riskMutation.isSuccess && riskMutation.variables === activeJobId),
   );
   const kgResult = kgResultQuery.data || kgMutation.data?.knowledge_graph;
   const kgDone = Boolean(
-    (contextQuery.data as { kg_completed?: boolean } | undefined)?.kg_completed ||
-      (contextQuery.data?.patient_context_json as { kg_metadata?: { completed?: boolean } } | undefined)
-        ?.kg_metadata?.completed ||
+    metaMatchesJob(ctxJson?.kg_metadata, activeJobId) ||
       selectedJob?.current_stage === 'Completed' ||
       selectedJob?.status === 'Completed' ||
       kgResult ||
-      kgMutation.isSuccess,
+      (kgMutation.isSuccess && kgMutation.variables === activeJobId),
   );
   const nerRunning =
     nerMutation.isPending ||

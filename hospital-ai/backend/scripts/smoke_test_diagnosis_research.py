@@ -2,22 +2,66 @@
 Standalone smoke test for the Diagnosis Agent and Research Agent pipelines.
 
 Runs entirely in-memory using a fake PatientClinicalContextRepository so it
-requires no Supabase connection. Prints a compact summary of each stage.
+requires no Supabase connection, and routes every AI Orchestrator call
+through `AI_PROVIDER=stub` (deterministic canned JSON, no Groq/network
+required). Prints a compact summary of each stage.
 """
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 from uuid import uuid4
 
+# Must be set before any `app.*` module reads settings, so every strategy's
+# AI Orchestrator call resolves to the deterministic stub provider instead
+# of attempting a real network connection.
+os.environ.setdefault("AI_PROVIDER", "stub")
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.ai.diagnosis.pipeline import DiagnosisPipeline  # noqa: E402
+from app.ai.orchestrator import orchestrator as _orchestrator_module  # noqa: E402
+from app.ai.orchestrator.orchestrator import AIOrchestrator  # noqa: E402
 from app.ai.research.pipeline import ResearchPipeline  # noqa: E402
 from app.repositories.patient_context_repository import (  # noqa: E402
     PatientClinicalContext,
 )
+
+
+class _NoopConversationMemory:
+    """No-op conversation memory — keeps this smoke test fully offline
+    (no Supabase `ai_conversation_memory` table required)."""
+
+    def recent(self, patient_id, agent, limit):
+        return []
+
+    def append(self, *args, **kwargs):
+        return None
+
+
+class _NoopInteractionLogger:
+    """No-op interaction logger — keeps this smoke test fully offline
+    (no Supabase `ai_interaction_logs` table required)."""
+
+    def log(self, **fields):
+        return None
+
+
+def _seed_offline_orchestrator() -> None:
+    """
+    Pre-seeds the AI Orchestrator singleton with no-op conversation
+    memory / interaction logging so this script never touches Supabase —
+    matching its "runs entirely in-memory" contract even though every AI
+    Agent stage still round-trips through the real orchestrator pipeline
+    (prompt loading, routing, the `stub` provider, caching, retries,
+    response parsing).
+    """
+    _orchestrator_module._orchestrator = AIOrchestrator(
+        memory=_NoopConversationMemory(),
+        interaction_logger=_NoopInteractionLogger(),
+    )
 
 
 class FakeContextRepository:
@@ -57,6 +101,7 @@ class FakeDiagnosisRepo:
 
 
 def main() -> None:
+    _seed_offline_orchestrator()
     patient_id = uuid4()
 
     diagnosis_pipeline = DiagnosisPipeline(context_repo=FakeContextRepository())

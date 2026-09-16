@@ -1,4 +1,4 @@
-import apiClient from '@/services/apiClient';
+import apiClient, { AI_AGENT_TIMEOUT_MS } from '@/services/apiClient';
 import type {
   GeneratedMedicalReport,
   MedicalReportHistoryItem,
@@ -25,6 +25,7 @@ export const medicalReportService = {
         prescription_result_id: options?.prescription_result_id,
         receiving_specialist: options?.receiving_specialist,
       },
+      { timeout: AI_AGENT_TIMEOUT_MS },
     );
     return data;
   },

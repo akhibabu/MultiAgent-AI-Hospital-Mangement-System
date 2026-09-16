@@ -23,6 +23,7 @@ from app.ai.medical_report.insurance_documentation_generator import (
 from app.ai.medical_report.models import MedicalReportBundle
 from app.ai.medical_report.patient_report_generator import PatientReportGenerator
 from app.ai.medical_report.referral_letter_generator import ReferralLetterGenerator
+from app.ai.orchestrator.agent_helpers import collect_debug
 from app.core.logging import get_logger
 from app.repositories.diagnosis_repository import DiagnosisResultRepository
 from app.repositories.patient_context_repository import (
@@ -129,6 +130,15 @@ class MedicalReportPipeline:
             "and a patient-friendly report."
         )
 
+        ai_debug = collect_debug(
+            self._clinical_summary,
+            self._doctor_notes,
+            self._discharge_summary,
+            self._referral_letter,
+            self._insurance_documentation,
+            self._patient_report,
+        )
+
         logger.info(
             "Medical Report pipeline complete patient=%s version=%s",
             patient_id,
@@ -149,6 +159,7 @@ class MedicalReportPipeline:
             summary=summary,
             version=version,
             warnings=warnings,
+            ai_debug=ai_debug,
         )
 
     @staticmethod

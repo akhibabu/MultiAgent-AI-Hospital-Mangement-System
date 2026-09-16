@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional
+from uuid import UUID
 
 from app.ai.diagnosis.knowledge_base import ConditionKnowledgeBase
 from app.ai.diagnosis.models import (
@@ -10,18 +11,16 @@ from app.ai.diagnosis.models import (
     SeverityAssessment,
     TreatmentPathRecommendation,
 )
-
-_URGENCY_BY_LEVEL = {
-    "Critical": "Immediate — Emergency Department",
-    "High": "Urgent — within 24 hours",
-    "Moderate": "Prompt — within a few days",
-    "Low": "Routine follow-up",
-    "Very Low": "Routine follow-up",
-}
+from app.ai.orchestrator.agent_helpers import OrchestratorCallMixin
 
 
-class TreatmentPathRecommender:
-    """Recommends specialist/department/test pathways only — no medication."""
+class TreatmentPathRecommender(OrchestratorCallMixin):
+    """
+    Recommends a referral pathway ONLY — never a medication — via the AI
+    Orchestrator (`diagnosis` agent, `treatment_path_recommendation`
+    task). `ConditionKnowledgeBase` stays available as grounding data
+    (specialist/department/test profiles per condition).
+    """
 
     def __init__(self, knowledge_base: ConditionKnowledgeBase | None = None) -> None:
         self._kb = knowledge_base or ConditionKnowledgeBase()
@@ -30,49 +29,17 @@ class TreatmentPathRecommender:
         self,
         differentials: List[DifferentialDiagnosis],
         severity: SeverityAssessment,
+        *,
+        patient_id: Optional[UUID] = None,
     ) -> TreatmentPathRecommendation:
-        specialists: List[str] = []
-        tests: List[str] = []
-        imaging: List[str] = []
-        department = None
-
-        top = differentials[:3]
-        for diff in top:
-            profile = self._kb.get(diff.condition)
-            if not profile:
-                continue
-            for s in profile.specialists:
-                if s not in specialists:
-                    specialists.append(s)
-            for t in profile.diagnostic_tests:
-                if t not in tests:
-                    tests.append(t)
-            for i in profile.imaging:
-                if i not in imaging:
-                    imaging.append(i)
-            if department is None:
-                department = profile.department
-
-        if severity.level in {"Critical", "High"} and "Emergency Department" not in specialists:
-            specialists.insert(0, "Emergency Department")
-
-        if not specialists:
-            specialists.append("General Physician")
-            department = department or "General Medicine"
-
-        urgency = _URGENCY_BY_LEVEL.get(severity.level, "Routine follow-up")
-
-        notes = (
-            "Recommended pathway only — diagnostic tests and specialist referral "
-            "suggestions. No medication is prescribed by this system; treatment "
-            "decisions remain with the attending physician."
+        data = self._call(
+            agent="diagnosis",
+            task="treatment_path_recommendation",
+            patient_id=patient_id,
+            response_model=TreatmentPathRecommendation,
+            extra_vars={
+                "differentials": [d.model_dump(mode="json") for d in differentials[:3]],
+                "severity": severity.model_dump(mode="json"),
+            },
         )
-
-        return TreatmentPathRecommendation(
-            recommended_specialists=specialists[:5],
-            recommended_department=department,
-            diagnostic_tests=tests[:8],
-            imaging=imaging[:5],
-            urgency=urgency,
-            notes=notes,
-        )
+        return TreatmentPathRecommendation.model_validate(data)

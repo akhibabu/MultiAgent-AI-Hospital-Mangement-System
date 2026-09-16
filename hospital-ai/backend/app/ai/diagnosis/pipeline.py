@@ -25,6 +25,7 @@ from app.ai.diagnosis.probability_scorer import DiseaseProbabilityScorer
 from app.ai.diagnosis.severity_predictor import SeverityPredictor
 from app.ai.diagnosis.symptom_analyzer import SymptomAnalyzer
 from app.ai.diagnosis.treatment_path import TreatmentPathRecommender
+from app.ai.orchestrator.agent_helpers import collect_debug
 from app.core.logging import get_logger
 from app.repositories.patient_context_repository import (
     PatientClinicalContextRepository,
@@ -94,10 +95,16 @@ class DiagnosisPipeline:
         if differentials:
             profile = self._factory.knowledge_base().get(differentials[0].condition)
             top_weight = profile.severity_weight if profile else 0.0
-        severity = self._severity_predictor.predict(context, top_weight)
+        severity = self._severity_predictor.predict(
+            context,
+            top_weight,
+            differentials=[d.model_dump(mode="json") for d in differentials[:5]],
+        )
 
         # 5. Treatment Path Recommendation
-        treatment_path = self._treatment_path_recommender.recommend(differentials, severity)
+        treatment_path = self._treatment_path_recommender.recommend(
+            differentials, severity, patient_id=patient_id
+        )
 
         # 6. Clinical Decision Support
         cds = self._cds_generator.generate(
@@ -112,9 +119,18 @@ class DiagnosisPipeline:
         warnings = list(context.validation_warnings)
         if not differentials:
             warnings.append(
-                "No matching conditions found in the rule-based knowledge base — "
+                "The AI Orchestrator returned no candidate conditions — "
                 "consider direct clinical evaluation."
             )
+
+        ai_debug = collect_debug(
+            self._symptom_analyzer,
+            self._differential_engine,
+            self._probability_scorer,
+            self._severity_predictor,
+            self._treatment_path_recommender,
+            self._cds_generator,
+        )
 
         logger.info(
             "Diagnosis pipeline complete patient=%s conditions=%s severity=%s",
@@ -136,4 +152,5 @@ class DiagnosisPipeline:
             summary=summary,
             engine=self._factory.engine_name,
             warnings=warnings,
+            ai_debug=ai_debug,
         )

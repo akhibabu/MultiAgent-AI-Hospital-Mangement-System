@@ -17,6 +17,7 @@ from app.repositories.prescription_repository import (
     PrescriptionResultRepository,
     ValidationReportRepository,
 )
+from app.schemas.ai_orchestrator import OrchestratorDebugInfoOut
 from app.schemas.prescription import (
     AllergyCheckItemOut,
     DosageRecommendationOut,
@@ -62,7 +63,11 @@ class PrescriptionService:
         except HTTPException:
             raise
         except Exception as exc:  # noqa: BLE001
+            from app.ai.orchestrator import AIOrchestratorError
+
             logger.exception("Prescription pipeline failed patient=%s", request.patient_id)
+            if isinstance(exc, AIOrchestratorError):
+                raise HTTPException(status_code=503, detail=str(exc)) from exc
             raise HTTPException(status_code=500, detail=f"Prescription Agent failed: {exc}") from exc
 
         elapsed_ms = int((time.perf_counter() - started) * 1000)
@@ -179,6 +184,10 @@ class PrescriptionService:
                 report.validation.model_dump(mode="json")
             ),
             prescription_result=PrescriptionResultOut.model_validate(row),
+            ai_debug=[
+                OrchestratorDebugInfoOut.model_validate(d.model_dump(mode="json"))
+                for d in report.ai_debug
+            ],
         )
 
     def result(self, patient_id: UUID) -> PrescriptionResultOut:

@@ -8,6 +8,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
+from app.schemas.ai_orchestrator import OrchestratorDebugInfoOut
+
 
 class PrescriptionStartRequest(BaseModel):
     patient_id: UUID
@@ -111,6 +113,7 @@ class PrescriptionStartResponse(BaseModel):
     treatment_plan: TreatmentPlanOut
     validation: PrescriptionValidationOut
     prescription_result: PrescriptionResultOut
+    ai_debug: List[OrchestratorDebugInfoOut] = Field(default_factory=list)
 
 
 class PrescriptionHistoryItemOut(BaseModel):

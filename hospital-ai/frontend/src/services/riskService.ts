@@ -1,11 +1,13 @@
-import apiClient from '@/services/apiClient';
+import apiClient, { AI_AGENT_TIMEOUT_MS } from '@/services/apiClient';
 import type { RiskProfile, RiskStartResult, RiskStatus } from '@/types/risk';
 
 export const riskService = {
   async start(jobId: string): Promise<RiskStartResult> {
-    const { data } = await apiClient.post<RiskStartResult>('/ai/intake/risk/start', {
-      job_id: jobId,
-    });
+    const { data } = await apiClient.post<RiskStartResult>(
+      '/ai/intake/risk/start',
+      { job_id: jobId },
+      { timeout: AI_AGENT_TIMEOUT_MS },
+    );
     return data;
   },
 

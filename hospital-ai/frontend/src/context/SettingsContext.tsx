@@ -18,7 +18,23 @@ function load(): HospitalSettings {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...DEFAULT_HOSPITAL_SETTINGS };
-    return { ...DEFAULT_HOSPITAL_SETTINGS, ...JSON.parse(raw) };
+    const parsed = { ...DEFAULT_HOSPITAL_SETTINGS, ...JSON.parse(raw) } as HospitalSettings;
+    const legacy = new Set([
+      'Hospital GAAND',
+      'Hospital GAAnd',
+      'hospital GAAND',
+      'Hospital AI',
+      'hospital-ai',
+      'Hospital AI API',
+      'Eklavya Hospital',
+      'eklavya hospital',
+      'Eklavya hospital',
+      'EKLAVYA HOSPITAL',
+    ]);
+    if (legacy.has(parsed.hospitalName)) {
+      parsed.hospitalName = DEFAULT_HOSPITAL_SETTINGS.hospitalName;
+    }
+    return parsed;
   } catch {
     return { ...DEFAULT_HOSPITAL_SETTINGS };
   }

@@ -4,10 +4,18 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from typing import List
+from uuid import UUID
+
+from pydantic import BaseModel, Field
 
 from app.ai.diagnosis.knowledge_base import ConditionKnowledgeBase
 from app.ai.diagnosis.models import DifferentialDiagnosis, SymptomAnalysis
+from app.ai.orchestrator.agent_helpers import OrchestratorCallMixin
 from app.repositories.patient_context_repository import PatientClinicalContext
+
+
+class _DifferentialDiagnosisList(BaseModel):
+    items: List[DifferentialDiagnosis] = Field(default_factory=list)
 
 
 class DifferentialDiagnosisStrategy(ABC):
@@ -100,11 +108,38 @@ class RuleBasedDifferentialStrategy(DifferentialDiagnosisStrategy):
         return results[:10]
 
 
+class LLMDifferentialStrategy(OrchestratorCallMixin, DifferentialDiagnosisStrategy):
+    """
+    Delegates differential-diagnosis generation to the AI Orchestrator
+    (`diagnosis` agent, `differential_diagnosis` task). The
+    `ConditionKnowledgeBase` (body-system/symptom/lab profiles) is passed
+    in as grounding data via the Knowledge Graph / patient context rather
+    than making the decision itself.
+    """
+
+    def __init__(self, knowledge_base: ConditionKnowledgeBase | None = None) -> None:
+        self._kb = knowledge_base or ConditionKnowledgeBase()
+
+    def generate(
+        self,
+        context: PatientClinicalContext,
+        symptom_analysis: SymptomAnalysis,
+    ) -> List[DifferentialDiagnosis]:
+        data = self._call(
+            agent="diagnosis",
+            task="differential_diagnosis",
+            patient_id=UUID(context.patient_id),
+            response_model=_DifferentialDiagnosisList,
+            extra_vars={"symptom_analysis": symptom_analysis.model_dump(mode="json")},
+        )
+        return _DifferentialDiagnosisList.model_validate(data).items[:10]
+
+
 class DifferentialDiagnosisEngine:
-    """Facade selecting a DifferentialDiagnosisStrategy (default: rule-based)."""
+    """Facade selecting a DifferentialDiagnosisStrategy (default: AI Orchestrator-backed)."""
 
     def __init__(self, strategy: DifferentialDiagnosisStrategy | None = None) -> None:
-        self._strategy = strategy or RuleBasedDifferentialStrategy()
+        self._strategy = strategy or LLMDifferentialStrategy()
 
     def generate(
         self,
@@ -112,3 +147,7 @@ class DifferentialDiagnosisEngine:
         symptom_analysis: SymptomAnalysis,
     ) -> List[DifferentialDiagnosis]:
         return self._strategy.generate(context, symptom_analysis)
+
+    @property
+    def last_debug(self):
+        return getattr(self._strategy, "last_debug", None)

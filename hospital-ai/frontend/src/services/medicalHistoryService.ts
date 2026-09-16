@@ -1,4 +1,4 @@
-import apiClient from '@/services/apiClient';
+import apiClient, { AI_AGENT_TIMEOUT_MS } from '@/services/apiClient';
 import type { MedicalHistoryResponse } from '@/types/medicalHistory';
 
 export const medicalHistoryService = {
@@ -13,6 +13,7 @@ export const medicalHistoryService = {
     const { data } = await apiClient.post<MedicalHistoryResponse>(
       '/ai/intake/history/extract',
       { job_id: jobId },
+      { timeout: AI_AGENT_TIMEOUT_MS },
     );
     return data;
   },

@@ -1,4 +1,4 @@
-import apiClient from '@/services/apiClient';
+import apiClient, { AI_AGENT_TIMEOUT_MS } from '@/services/apiClient';
 import type {
   DocumentProcessingJob,
   IntakeDashboard,
@@ -12,6 +12,7 @@ export const intakeService = {
     const { data } = await apiClient.post<IntakeProcessResult>(
       '/ai/intake/process',
       { document_id: documentId },
+      { timeout: AI_AGENT_TIMEOUT_MS },
     );
     return data;
   },

@@ -1,4 +1,5 @@
 /** Prescription Agent types — physician-review treatment recommendations. Never a final prescription. */
+import type { OrchestratorDebugInfo } from '@/types/aiOrchestrator';
 
 export type ApprovalStatus = 'Approved' | 'Requires Physician Review' | 'Rejected';
 export type InteractionLevel = 'Minor' | 'Moderate' | 'Major' | 'Critical';
@@ -119,6 +120,7 @@ export interface PrescriptionStartResult {
   treatment_plan: TreatmentPlan;
   validation: PrescriptionValidation;
   prescription_result: PrescriptionResult;
+  ai_debug: OrchestratorDebugInfo[];
 }
 
 export interface PrescriptionHistoryItem {

@@ -8,8 +8,8 @@ from uuid import UUID
 
 from app.ai.intake.patient_context import PatientContext, PatientIdentity
 from app.ai.knowledge_graph import PatientKnowledgeGraph, knowledge_graph_builder
-from app.ai.llm.providers import LLMMessage, get_llm_provider
 from app.ai.ner.extractor import ExtractedMedicalEntities, medical_entity_recognizer
+from app.ai.orchestrator import AIOrchestratorError, get_orchestrator
 from app.ai.ocr.providers import OCRResult, get_ocr_provider
 from app.ai.risk.profiler import PatientRiskProfile, risk_profiler
 from app.core.logging import get_logger
@@ -82,21 +82,24 @@ class OCRPipeline:
 class EntityExtractionPipeline:
     def run(self, ocr_text: str) -> ExtractedMedicalEntities:
         entities = medical_entity_recognizer.extract(ocr_text)
-        # Optional LLM enrichment (non-authoritative; rule NER remains source of truth)
+        # Optional LLM enrichment (non-authoritative; rule NER remains source
+        # of truth). Routed entirely through the AI Orchestrator — this
+        # pipeline never talks to Groq/Ollama/etc. directly, and a failure
+        # here (e.g. the provider being unreachable) never blocks Intake.
         try:
-            llm = get_llm_provider()
-            llm.complete(
-                [
-                    LLMMessage(
-                        role="system",
-                        content="You assist clinical intake. Do not invent facts.",
-                    ),
-                    LLMMessage(
-                        role="user",
-                        content=f"Review entities for completeness:\n{entities.model_dump_json()}",
-                    ),
-                ]
+            get_orchestrator().run(
+                agent="intake",
+                task="entity_enrichment",
+                patient_id=None,
+                use_cache=True,
+                use_memory=False,
+                extra_vars={
+                    "recognized_entities": entities.model_dump(mode="json"),
+                    "source_text": ocr_text[:4000],
+                },
             )
+        except AIOrchestratorError as exc:
+            logger.warning("LLM enrichment skipped (AI Orchestrator unavailable): %s", exc)
         except Exception as exc:  # noqa: BLE001
             logger.warning("LLM enrichment skipped: %s", exc)
         return entities

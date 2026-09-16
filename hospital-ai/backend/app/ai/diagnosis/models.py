@@ -7,6 +7,8 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
+from app.ai.orchestrator.models import OrchestratorDebugInfo
+
 SEVERITY_LEVELS = ("Very Low", "Low", "Moderate", "High", "Critical")
 
 DIAGNOSIS_DISCLAIMER = (
@@ -105,8 +107,9 @@ class DiagnosisReport(BaseModel):
         default_factory=ClinicalDecisionSupport
     )
     summary: str = ""
-    engine: str = "rule_based"
+    engine: str = "ai_orchestrator"
     warnings: List[str] = Field(default_factory=list)
+    ai_debug: List[OrchestratorDebugInfo] = Field(default_factory=list)
     generated_at: str = Field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat()
     )

@@ -1,25 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { isAxiosError } from 'axios';
 import { diagnosisService } from '@/services/diagnosisService';
+import { getApiErrorMessage } from '@/services/apiClient';
 
 export const diagnosisKeys = {
   all: ['diagnosis'] as const,
   result: (patientId: string) => [...diagnosisKeys.all, 'result', patientId] as const,
   history: (patientId: string) => [...diagnosisKeys.all, 'history', patientId] as const,
 };
-
-function getErrorMessage(error: unknown, fallback: string): string {
-  if (isAxiosError(error)) {
-    const detail = error.response?.data?.detail;
-    if (typeof detail === 'string') return detail;
-    if (Array.isArray(detail)) {
-      return detail.map((item) => item?.msg || JSON.stringify(item)).join(', ');
-    }
-  }
-  if (error instanceof Error) return error.message;
-  return fallback;
-}
 
 export function useDiagnosisResult(patientId: string | undefined, enabled = true) {
   return useQuery({
@@ -49,7 +37,7 @@ export function useStartDiagnosis(patientId: string | undefined) {
       toast.success('Diagnosis Agent completed — review results with the patient chart.');
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Diagnosis Agent failed'));
+      toast.error(getApiErrorMessage(error, 'Diagnosis Agent failed'));
     },
   });
 }

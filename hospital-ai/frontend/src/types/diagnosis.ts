@@ -1,4 +1,5 @@
 /** Diagnosis Agent types — clinical decision support (assists, never replaces, a physician). */
+import type { OrchestratorDebugInfo } from '@/types/aiOrchestrator';
 
 export type SeverityLevel = 'Very Low' | 'Low' | 'Moderate' | 'High' | 'Critical';
 
@@ -110,6 +111,7 @@ export interface DiagnosisStartResult {
   treatment_path: TreatmentPath;
   clinical_decision_support: ClinicalDecisionSupport;
   diagnosis_result: DiagnosisResult;
+  ai_debug: OrchestratorDebugInfo[];
 }
 
 export interface DiagnosisHistoryItem {

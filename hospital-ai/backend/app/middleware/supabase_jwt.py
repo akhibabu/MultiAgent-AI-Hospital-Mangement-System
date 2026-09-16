@@ -29,16 +29,20 @@ PROTECTED_PREFIXES: tuple[str, ...] = (
     "/ai",
 )
 
-# Exact public paths under /auth that skip JWT checks.
-PUBLIC_AUTH_PATHS: frozenset[str] = frozenset(
+# Exact paths that skip JWT checks even though they fall under a protected
+# prefix above — e.g. `/ai/health` is a public, provider-agnostic liveness
+# check (like `/health`) intended for uptime monitors, deliberately carved
+# out of the otherwise-protected `/ai` prefix.
+PUBLIC_EXACT_PATHS: frozenset[str] = frozenset(
     {
         "/auth/login",
+        "/ai/health",
     }
 )
 
 
 def _is_protected(path: str, prefixes: Iterable[str]) -> bool:
-    if path in PUBLIC_AUTH_PATHS:
+    if path in PUBLIC_EXACT_PATHS:
         return False
     return any(path == prefix or path.startswith(f"{prefix}/") for prefix in prefixes)
 

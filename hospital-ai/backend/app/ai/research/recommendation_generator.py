@@ -2,62 +2,35 @@
 
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional
+from uuid import UUID
 
+from app.ai.orchestrator.agent_helpers import OrchestratorCallMixin
 from app.ai.research.models import RankedEvidence, ResearchRecommendation
 
 
-class RecommendationGenerator:
-    """Synthesizes ranked evidence into clinician-friendly recommendations."""
+class RecommendationGenerator(OrchestratorCallMixin):
+    """
+    Synthesizes ranked evidence into a clinician-friendly recommendation
+    via the AI Orchestrator (`research` agent,
+    `recommendation_generation` task).
+    """
+
+    def __init__(self, patient_id: Optional[UUID] = None) -> None:
+        self._patient_id = patient_id
 
     def generate(
         self, condition: str, evidence: List[RankedEvidence]
     ) -> ResearchRecommendation:
         condition_evidence = [e for e in evidence if e.condition == condition]
-
-        literature = [e for e in condition_evidence if e.evidence_type == "pubmed"]
-        guidelines = [e for e in condition_evidence if e.evidence_type == "guideline"]
-        trials = [e for e in condition_evidence if e.evidence_type == "clinical_trial"]
-
-        high_count = sum(1 for e in condition_evidence if e.evidence_level == "High")
-        confidence_score = round(
-            min(
-                0.95,
-                (sum(e.confidence for e in condition_evidence) / len(condition_evidence))
-                if condition_evidence
-                else 0.3,
-            ),
-            3,
+        data = self._call(
+            agent="research",
+            task="recommendation_generation",
+            patient_id=self._patient_id,
+            response_model=ResearchRecommendation,
+            extra_vars={
+                "condition": condition,
+                "condition_evidence": [e.model_dump(mode="json") for e in condition_evidence],
+            },
         )
-
-        highlights: List[str] = []
-        if trials:
-            highlights.append(
-                f"{len(trials)} related clinical trial(s) identified, "
-                f"{sum(1 for t in trials if 'Completed' in t.source or True)} referenced."
-            )
-        if high_count:
-            highlights.append(f"{high_count} high-quality evidence source(s) support this condition.")
-        if not condition_evidence:
-            highlights.append("No evidence retrieved for this condition from configured providers.")
-
-        recommended_tests = list(
-            dict.fromkeys(
-                g.title.split(" for ")[0] for g in guidelines
-            )
-        )[:3]
-
-        evidence_summary = (
-            f"{len(literature)} literature source(s), {len(trials)} clinical trial(s), "
-            f"and {len(guidelines)} guideline(s) reviewed for {condition}."
-        )
-
-        return ResearchRecommendation(
-            condition=condition,
-            supporting_literature=[l.title for l in literature[:5]],
-            clinical_guidelines=[g.title for g in guidelines[:5]],
-            evidence_summary=evidence_summary,
-            recommended_diagnostic_tests=recommended_tests,
-            research_highlights=highlights,
-            confidence_score=confidence_score,
-        )
+        return ResearchRecommendation.model_validate(data)

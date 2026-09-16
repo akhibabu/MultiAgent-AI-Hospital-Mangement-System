@@ -1,0 +1,268 @@
+# =============================================================================
+# AI Provider Fleet — declarative configuration for the Provider Orchestrator.
+#
+#   AI Agent -> AI Orchestrator -> Provider Orchestrator -> Provider Router
+#             -> Provider Health Monitor -> <Groq | Gemini | OpenRouter | HF>
+#
+# This file is the ONLY place the provider fleet is declared. Nothing in the
+# codebase hardcodes a provider list, a priority, a model name, or a base URL.
+# Adding a provider = implement `BaseAIProvider`, register a factory in
+# `app/ai/orchestrator/provider_router.py`, add a block here. No AI Agent,
+# and no orchestrator code, ever changes.
+#
+# ENV INTERPOLATION
+#   ${VAR}            -> value of environment variable VAR ("" if unset)
+#   ${VAR:-fallback}  -> value of VAR, or `fallback` if unset/empty
+# Secrets therefore live in `.env` (never in this file, never in git, never
+# exposed to the frontend) while the *shape* of the fleet stays reviewable.
+#
+# A provider is only ever used when it is `enabled: true` AND its credential
+# resolves to a non-empty value — so a teammate who has only a Groq key can
+# clone the repo and everything still works, with failover simply skipping
+# the providers they haven't configured.
+# =============================================================================
+
+version: 1
+
+# -----------------------------------------------------------------------------
+# ROUTING — how the Provider Orchestrator picks the *first* provider to try.
+# Failover order after that always walks the remaining healthy candidates.
+# -----------------------------------------------------------------------------
+routing:
+  # priority | round_robin | least_latency | least_errors
+  strategy: ${AI_LOAD_BALANCER_STRATEGY:-priority}
+  # Hard ceiling on providers tried per request (protects request latency).
+  max_providers_per_request: ${AI_MAX_FAILOVER_PROVIDERS:-4}
+
+# -----------------------------------------------------------------------------
+# HEALTH MONITOR — thresholds for the healthy / warning / offline state machine.
+# -----------------------------------------------------------------------------
+health:
+  # Consecutive failures before a provider is taken out of rotation.
+  failure_threshold: ${AI_HEALTH_FAILURE_THRESHOLD:-3}
+  # Rolling error rate above which a provider is downgraded to "warning".
+  warning_error_rate: ${AI_HEALTH_WARNING_ERROR_RATE:-0.25}
+  # How long an "offline" provider is skipped before a probe is allowed.
+  cooldown_seconds: ${AI_HEALTH_COOLDOWN_SECONDS:-120}
+  # Longer cooldown for hard quota exhaustion (daily/monthly limits) — these
+  # do not recover in minutes, so retrying early just burns latency.
+  quota_cooldown_seconds: ${AI_HEALTH_QUOTA_COOLDOWN_SECONDS:-900}
+  # Rolling window size for latency / success-rate statistics.
+  sample_window: ${AI_HEALTH_SAMPLE_WINDOW:-50}
+
+# -----------------------------------------------------------------------------
+# PROVIDERS — ordered by `priority` (1 = tried first under the `priority`
+# strategy). `models.default` is used for any agent without a specific entry.
+# `pricing` is USD per 1M tokens and feeds the cost estimator only — it is an
+# estimate for the dashboard, never a billing source of truth.
+#
+# `limits.max_request_tokens` is the ceiling on `prompt + reserved completion`
+# for ONE call. Providers meter that sum, not the prompt alone, so a large
+# MAX_TOKENS silently eats the prompt budget. The orchestrator uses this to
+# shrink the completion reservation to fit, and to route a prompt that still
+# doesn't fit to a roomier provider instead of sending a doomed request.
+# Set it to the tightest limit your account actually has (for free tiers that
+# is usually tokens-per-minute, NOT the model's context window). `0` or an
+# absent block means "no declared limit".
+# -----------------------------------------------------------------------------
+providers:
+
+  # --- 1. Groq — primary. Fastest inference, generous free tier. ------------
+  groq:
+    enabled: ${GROQ_ENABLED:-true}
+    priority: 1
+    api_key: ${GROQ_API_KEY}
+    base_url: ${GROQ_BASE_URL:-https://api.groq.com/openai/v1}
+    timeout_seconds: ${TIMEOUT:-120}
+    console_url: https://console.groq.com/keys
+    models:
+      # Legacy per-agent env vars still win, so existing .env files keep working.
+      default: ${GROQ_MODEL:-llama-3.3-70b-versatile}
+      intake: ${INTAKE_MODEL:-llama-3.3-70b-versatile}
+      diagnosis: ${DIAGNOSIS_MODEL:-llama-3.3-70b-versatile}
+      research: ${RESEARCH_MODEL:-llama-3.3-70b-versatile}
+      prescription: ${PRESCRIPTION_MODEL:-llama-3.3-70b-versatile}
+      medical_report: ${REPORT_MODEL:-llama-3.3-70b-versatile}
+    capabilities:
+      streaming: true
+      vision: false
+      long_context: true
+    limits:
+      # Groq's free tier meters tokens-per-minute, and counts the reserved
+      # completion against it. The models themselves accept 128k context, but
+      # a free account cannot spend more than this in one call — exceeding it
+      # returns HTTP 413, not a truncation. Raise it if you upgrade tiers.
+      max_request_tokens: ${GROQ_MAX_REQUEST_TOKENS:-5800}
+      # List-shaped tasks (evidence ranking, drug interactions) need enough
+      # completion room to finish their JSON. Below this floor the orchestrator
+      # compresses/skips rather than accepting a reply that will be cut mid-string.
+      min_completion_tokens: ${GROQ_MIN_COMPLETION_TOKENS:-1200}
+    pricing:
+      input_per_1m: 0.59
+      output_per_1m: 0.79
+
+  # --- 2. Google Gemini — first fallback. Large free tier, long context. ----
+  gemini:
+    enabled: ${GEMINI_ENABLED:-true}
+    priority: 2
+    api_key: ${GEMINI_API_KEY}
+    base_url: ${GEMINI_BASE_URL:-https://generativelanguage.googleapis.com/v1beta}
+    timeout_seconds: ${TIMEOUT:-120}
+    console_url: https://aistudio.google.com/apikey
+    models:
+      default: ${GEMINI_MODEL:-gemini-2.5-flash}
+    capabilities:
+      streaming: true
+      vision: true
+      long_context: true
+    limits:
+      # Gemini's free tier is metered per minute too, but generously enough
+      # that the model's own context window is the practical bound. This is
+      # what makes Gemini the natural fallback for a prompt Groq can't hold.
+      max_request_tokens: ${GEMINI_MAX_REQUEST_TOKENS:-120000}
+    pricing:
+      input_per_1m: 0.30
+      output_per_1m: 2.50
+
+  # --- 3. OpenRouter — second fallback. Aggregates many free models. --------
+  openrouter:
+    enabled: ${OPENROUTER_ENABLED:-true}
+    priority: 3
+    api_key: ${OPENROUTER_API_KEY}
+    base_url: ${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+    timeout_seconds: ${TIMEOUT:-120}
+    console_url: https://openrouter.ai/keys
+    models:
+      default: ${OPENROUTER_MODEL:-deepseek/deepseek-r1-0528:free}
+    capabilities:
+      streaming: true
+      vision: false
+      long_context: true
+    limits:
+      max_request_tokens: ${OPENROUTER_MAX_REQUEST_TOKENS:-60000}
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0
+
+  # --- 4. HuggingFace Inference — last resort. OpenAI-compatible router. ----
+  huggingface:
+    enabled: ${HUGGINGFACE_ENABLED:-true}
+    priority: 4
+    api_key: ${HUGGINGFACE_API_KEY}
+    base_url: ${HUGGINGFACE_BASE_URL:-https://router.huggingface.co/v1}
+    timeout_seconds: ${TIMEOUT:-120}
+    console_url: https://huggingface.co/settings/tokens
+    models:
+      default: ${HUGGINGFACE_MODEL:-mistralai/Mistral-7B-Instruct-v0.3}
+    capabilities:
+      streaming: true
+      vision: false
+      long_context: false
+    limits:
+      # Mistral-7B-Instruct tops out at a 32k window; leave headroom for the
+      # completion so a long patient context degrades to failover, not a 413.
+      max_request_tokens: ${HUGGINGFACE_MAX_REQUEST_TOKENS:-28000}
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0
+
+  # ---------------------------------------------------------------------------
+  # Future providers — fully implemented adapters, disabled by default because
+  # they need paid credentials. Flip `enabled` and set the key to slot them
+  # into the failover chain; no code change required anywhere.
+  # ---------------------------------------------------------------------------
+
+  openai:
+    enabled: ${OPENAI_ENABLED:-false}
+    priority: 5
+    api_key: ${OPENAI_API_KEY}
+    base_url: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+    timeout_seconds: ${TIMEOUT:-120}
+    console_url: https://platform.openai.com/api-keys
+    models:
+      default: ${OPENAI_MODEL:-gpt-4o-mini}
+    capabilities:
+      streaming: true
+      vision: true
+      long_context: true
+    pricing:
+      input_per_1m: 0.15
+      output_per_1m: 0.60
+
+  anthropic:
+    enabled: ${ANTHROPIC_ENABLED:-false}
+    priority: 6
+    api_key: ${ANTHROPIC_API_KEY}
+    base_url: ${ANTHROPIC_BASE_URL:-https://api.anthropic.com/v1}
+    timeout_seconds: ${TIMEOUT:-120}
+    console_url: https://console.anthropic.com/settings/keys
+    models:
+      default: ${ANTHROPIC_MODEL:-claude-3-5-haiku-20241022}
+    capabilities:
+      streaming: true
+      vision: true
+      long_context: true
+    pricing:
+      input_per_1m: 0.80
+      output_per_1m: 4.00
+
+  azure_openai:
+    enabled: ${AZURE_OPENAI_ENABLED:-false}
+    priority: 7
+    api_key: ${AZURE_OPENAI_API_KEY}
+    # Azure is deployment-scoped: https://<resource>.openai.azure.com/openai/deployments/<deployment>
+    base_url: ${AZURE_OPENAI_ENDPOINT}
+    timeout_seconds: ${TIMEOUT:-120}
+    console_url: https://portal.azure.com
+    extra:
+      api_version: ${AZURE_OPENAI_API_VERSION:-2024-10-21}
+      deployment: ${AZURE_OPENAI_DEPLOYMENT}
+    models:
+      default: ${AZURE_OPENAI_MODEL:-gpt-4o-mini}
+    capabilities:
+      streaming: true
+      vision: true
+      long_context: true
+    pricing:
+      input_per_1m: 0.15
+      output_per_1m: 0.60
+
+  # Local runtime — no API key, no quota, no cost. Enable for offline dev.
+  ollama:
+    enabled: ${OLLAMA_ENABLED:-false}
+    priority: 8
+    api_key: ""
+    base_url: ${OLLAMA_URL:-http://localhost:11434}
+    timeout_seconds: ${OLLAMA_TIMEOUT:-180}
+    console_url: https://ollama.com
+    # Local runtimes have no credential to check, so availability is decided
+    # purely by the health monitor probing the endpoint.
+    requires_api_key: false
+    models:
+      default: ${OLLAMA_MODEL:-llama3.1:8b}
+    capabilities:
+      streaming: true
+      vision: false
+      long_context: false
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0
+
+  # Deterministic offline fixture — never part of automatic failover.
+  # Only used when explicitly pinned via AI_PROVIDER=stub.
+  stub:
+    enabled: ${STUB_ENABLED:-false}
+    priority: 99
+    api_key: ""
+    base_url: "in-memory (no network)"
+    requires_api_key: false
+    exclude_from_failover: true
+    models:
+      default: stub-local
+    capabilities:
+      streaming: false
+      vision: false
+      long_context: false
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0

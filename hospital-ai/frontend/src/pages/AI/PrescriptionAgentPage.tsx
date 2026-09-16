@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import Badge, { type BadgeTone } from '@/components/common/Badge';
 import Card from '@/components/common/Card';
+import OrchestratorDebugPanel from '@/components/common/OrchestratorDebugPanel';
 import { usePatients } from '@/hooks/usePatients';
 import {
   usePrescriptionHistory,
@@ -17,6 +18,7 @@ import {
   useStartPrescription,
 } from '@/hooks/usePrescription';
 import { useStartMedicalReport } from '@/hooks/useMedicalReport';
+import { getApiErrorMessage } from '@/services/apiClient';
 import type {
   AllergyCheckItem,
   DosageRecommendation,
@@ -222,6 +224,13 @@ export default function PrescriptionAgentPage() {
                 Research Agent output. Never a final prescription — assists, never replaces, a
                 physician.
               </p>
+              <Link
+                to="/ai/orchestrator"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-primary-600/10 px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-primary-600 hover:bg-primary-600/20"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-primary-600" />
+                Connected through AI Orchestrator
+              </Link>
             </div>
             <Link
               to="/ai"
@@ -303,9 +312,12 @@ export default function PrescriptionAgentPage() {
               </button>
             ) : null}
           </div>
-          {startMutation.isError ? (
+          {startMutation.isError && !hasResult ? (
             <p className="mt-3 text-sm text-red-600">
-              Prescription Agent failed. Ensure the patient has a completed Diagnosis Agent run.
+              {getApiErrorMessage(
+                startMutation.error,
+                'Prescription Agent failed. Ensure the patient has a completed Diagnosis Agent run.',
+              )}
             </p>
           ) : null}
         </Card>
@@ -667,9 +679,12 @@ export default function PrescriptionAgentPage() {
                     <span className="text-xs text-primary-600">{devOpen ? 'Collapse' : 'Expand'}</span>
                   </button>
                   {devOpen ? (
-                    <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-black/5 p-3 text-[11px] leading-relaxed dark:bg-white/5">
-                      {JSON.stringify(liveReport || persisted, null, 2)}
-                    </pre>
+                    <div className="mt-4 space-y-4">
+                      <OrchestratorDebugPanel entries={liveReport?.ai_debug} />
+                      <pre className="max-h-96 overflow-auto rounded-lg bg-black/5 p-3 text-[11px] leading-relaxed dark:bg-white/5">
+                        {JSON.stringify(liveReport || persisted, null, 2)}
+                      </pre>
+                    </div>
                   ) : null}
                 </Card>
               </>
