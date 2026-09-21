@@ -25,6 +25,9 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: pip install -r requirements.txt pytest
       - run: python -m compileall app
+      - name: Import Emergency API routes
+        run: |
+          python -c "from app.api import api_router; paths = [route.path for route in api_router.routes]; assert '/ai/emergency/start' in paths and '/ai/emergency/{patient_id}' in paths and '/ai/emergency/{patient_id}/history' in paths"
       - run: pytest -q tests/test_emergency_agent.py
 
   frontend-build:
