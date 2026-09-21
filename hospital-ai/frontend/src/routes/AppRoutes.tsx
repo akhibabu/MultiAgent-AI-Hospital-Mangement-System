@@ -60,6 +60,9 @@ const MedicalReportAgentPage = lazy(
 const AIOrchestratorPage = lazy(
   () => import('@/pages/AI/AIOrchestratorPage'),
 );
+const EmergencyAgentPage = lazy(
+  () => import('@/pages/AI/EmergencyAgentPage'),
+);
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'));
 const ServerErrorPage = lazy(() => import('@/pages/ServerErrorPage'));
@@ -132,15 +135,7 @@ export default function AppRoutes() {
                 />
               }
             />
-            <Route
-              path="ai/emergency"
-              element={
-                <AIAgentPlaceholderPage
-                  title="Emergency Agent"
-                  description="Triage prioritization and escalation."
-                />
-              }
-            />
+            <Route path="ai/emergency" element={<EmergencyAgentPage />} />
             <Route
               path="ai/digital-twin"
               element={

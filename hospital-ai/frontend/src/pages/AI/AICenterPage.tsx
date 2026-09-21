@@ -58,8 +58,8 @@ const AGENTS = [
   {
     path: '/ai/emergency',
     name: 'Emergency Agent',
-    description: 'Triage prioritization and escalation. (Coming Soon)',
-    ready: false,
+    description: 'Vital monitoring, emergency triage, critical event detection, ICU acuity signal, alerts, and patient priority ranking.',
+    ready: true,
   },
   {
     path: '/ai/digital-twin',
