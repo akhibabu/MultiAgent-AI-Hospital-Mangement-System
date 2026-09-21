@@ -53,6 +53,7 @@ jobs:
               "skipLibCheck": true,
               "noEmit": true,
               "baseUrl": ".",
+              "types": ["vite/client"],
               "paths": { "@/*": ["src/*"] },
               "lib": ["ES2022", "DOM", "DOM.Iterable"]
             },
