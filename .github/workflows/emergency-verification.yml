@@ -62,4 +62,4 @@ jobs:
           npx tsc -p tsconfig.emergency.json
 
 # Verification workflow intentionally kept on the feature branch during implementation.
-# Final backend verification pass after test path fix.
+# Final backend/frontend verification pass.
