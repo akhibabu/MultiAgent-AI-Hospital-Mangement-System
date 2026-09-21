@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: "3.11"
       - run: python -m pip install --upgrade pip
-      - run: pip install -r requirements.txt pytest
+      - run: pip install -r requirements.txt pytest email-validator
       - run: python -m compileall app
       - name: Import Emergency API routes
         run: |
@@ -66,4 +66,5 @@ jobs:
           npx tsc -p tsconfig.emergency.json
 
 # Verification workflow intentionally kept on the feature branch during implementation.
+# CI installs email-validator because the existing auth schemas use EmailStr but the base requirements omit it.
 # Final Emergency verification with pipeline and API smoke test.
