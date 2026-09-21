@@ -132,3 +132,38 @@ def test_priority_ranker_is_bounded():
 
     assert 0 <= priority.priority_score <= 100
     assert priority.priority_level == "Critical"
+
+
+
+def test_emergency_pipeline_chains_all_six_stages():
+    from app.ai.emergency.pipeline import EmergencyPipeline
+    from app.repositories.patient_context_repository import PatientClinicalContext
+
+    class FakeContextRepository:
+        def load(self, patient_id):
+            return PatientClinicalContext(
+                patient_id=str(patient_id),
+                patient_name="Test Patient",
+                symptoms=["chest pain", "shortness of breath"],
+                conditions=[],
+                vitals=[
+                    {"name": "SpO2", "value": "88", "unit": "%"},
+                    {"name": "Heart Rate", "value": "125", "unit": "bpm"},
+                ],
+                risk_overall_level="High",
+                risk_overall_score=60,
+                risk_alerts=[],
+                is_valid=True,
+            )
+
+    from uuid import uuid4
+
+    report = EmergencyPipeline(context_repo=FakeContextRepository()).run(uuid4())
+
+    assert report.status == "Completed"
+    assert report.vital_monitoring.critical_count == 2
+    assert report.critical_event_detection.detected_event_count >= 1
+    assert report.triage_classification.escalation_required is True
+    assert report.icu_requirement.signal in {"Moderate", "High"}
+    assert report.emergency_alerts.alert_count >= 1
+    assert 0 <= report.patient_priority.priority_score <= 100
