@@ -13,6 +13,7 @@ from app.routes import (
     departments,
     diagnosis,
     doctors,
+    emergency,
     health,
     intake,
     medical_records,
@@ -42,5 +43,6 @@ api_router.include_router(diagnosis.router)
 api_router.include_router(research.router)
 api_router.include_router(prescription.router)
 api_router.include_router(medical_report.router)
+api_router.include_router(emergency.router)
 api_router.include_router(ai_orchestrator.router)
 api_router.include_router(ai_health.router)
