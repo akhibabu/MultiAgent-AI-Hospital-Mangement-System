@@ -60,6 +60,9 @@ const MedicalReportAgentPage = lazy(
 const AIOrchestratorPage = lazy(
   () => import('@/pages/AI/AIOrchestratorPage'),
 );
+const EmergencyAgentPage = lazy(
+  () => import('@/pages/AI/EmergencyAgentPage'),
+);
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'));
 const ServerErrorPage = lazy(() => import('@/pages/ServerErrorPage'));
