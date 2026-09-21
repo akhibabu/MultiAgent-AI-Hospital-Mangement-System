@@ -67,4 +67,4 @@ jobs:
 
 # Verification workflow intentionally kept on the feature branch during implementation.
 # CI installs email-validator because the existing auth schemas use EmailStr but the base requirements omit it.
-# Final Emergency verification with pipeline and API smoke test.
+# Final Emergency verification pass.
