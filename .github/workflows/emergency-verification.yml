@@ -39,3 +39,5 @@ jobs:
           cache-dependency-path: hospital-ai/frontend/package-lock.json
       - run: npm ci
       - run: npm run build
+
+# Verification workflow intentionally kept on the feature branch during implementation.
