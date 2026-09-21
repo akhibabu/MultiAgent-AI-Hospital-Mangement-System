@@ -132,15 +132,7 @@ export default function AppRoutes() {
                 />
               }
             />
-            <Route
-              path="ai/emergency"
-              element={
-                <AIAgentPlaceholderPage
-                  title="Emergency Agent"
-                  description="Triage prioritization and escalation."
-                />
-              }
-            />
+            <Route path="ai/emergency" element={<EmergencyAgentPage />} />
             <Route
               path="ai/digital-twin"
               element={
