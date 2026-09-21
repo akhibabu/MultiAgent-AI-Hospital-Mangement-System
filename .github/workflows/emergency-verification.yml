@@ -1,0 +1,38 @@
+name: Emergency Agent Verification
+
+on:
+  push:
+    branches:
+      - feature/emergency-agent
+  workflow_dispatch:
+
+jobs:
+  backend-emergency:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hospital-ai/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --upgrade pip
+      - run: pip install -r requirements.txt
+      - run: python -m compileall app
+      - run: pytest -q tests/test_emergency_agent.py
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hospital-ai/frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: hospital-ai/frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
