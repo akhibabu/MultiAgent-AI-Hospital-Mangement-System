@@ -76,6 +76,9 @@ class TreatmentPlan(BaseModel):
     recommended_specialists: List[str] = Field(default_factory=list)
     follow_up_interval: str = ""
     emergency_advice: str = ""
+    surgery_required: bool = False
+    procedure_recommendations: List[str] = Field(default_factory=list)
+    estimated_duration_minutes: Optional[int] = Field(default=None, ge=30, le=480)
 
 
 class PrescriptionValidation(BaseModel):
