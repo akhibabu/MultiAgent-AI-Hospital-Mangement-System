@@ -4,7 +4,6 @@ from datetime import date
 from typing import Any, Dict, List
 from uuid import UUID
 from pydantic import BaseModel, Field
-from app.schemas.appointment import VisitType
 from app.ai.scheduling.models import (
     DoctorAssignmentResult, AppointmentSchedulingResult, SurgerySchedulingResult,
     FollowUpPlan, QueueOptimizationResult, WorkloadBalancingResult,
@@ -13,13 +12,6 @@ from app.ai.scheduling.models import (
 class SchedulingStartRequest(BaseModel):
     patient_id: UUID
     preferred_date: date = Field(default_factory=date.today)
-    visit_type: VisitType = VisitType.CONSULTATION
-    reason_for_visit: str | None = Field(default=None, max_length=2000)
-    department_id: UUID | None = None
-    preferred_doctor_id: UUID | None = None
-    surgery_required: bool = False
-    surgery_duration_minutes: int = Field(default=120, ge=30, le=480)
-    follow_up_days: int = Field(default=14, ge=1, le=180)
 
 class SchedulingResultOut(BaseModel):
     id: UUID
@@ -35,6 +27,12 @@ class SchedulingResultOut(BaseModel):
     engine: str = "deterministic_scheduling_rules_v1"
     emergency_priority_level: str = "Routine"
     emergency_priority_score: float = 0.0
+    visit_type: str = "Consultation"
+    derived_department: str | None = None
+    derived_specialists: List[str] = Field(default_factory=list)
+    surgery_recommendation: List[str] = Field(default_factory=list)
+    source_result_ids: Dict[str, str | None] = Field(default_factory=dict)
+    source_availability: Dict[str, bool] = Field(default_factory=dict)
     status: str = "Completed"
     warnings_json: List[str] = Field(default_factory=list)
     processing_time_ms: int | None = None
@@ -49,6 +47,12 @@ class SchedulingStartResponse(BaseModel):
     engine: str
     emergency_priority_level: str = "Routine"
     emergency_priority_score: float = 0.0
+    visit_type: str = "Consultation"
+    derived_department: str | None = None
+    derived_specialists: List[str] = Field(default_factory=list)
+    surgery_recommendation: List[str] = Field(default_factory=list)
+    source_result_ids: Dict[str, str | None] = Field(default_factory=dict)
+    source_availability: Dict[str, bool] = Field(default_factory=dict)
     warnings: List[str] = Field(default_factory=list)
     doctor_assignment: DoctorAssignmentResult
     appointment_scheduling: AppointmentSchedulingResult
