@@ -113,6 +113,7 @@ export interface SchedulingResult {
   recommended_imaging_json: string[];
   recommended_medications_json: string[];
   treatment_modes_json: string[];
+  resource_requirements_json: string[];
   treatment_validation_status: string | null;
   status: string;
   warnings_json: string[];
@@ -142,6 +143,7 @@ export interface SchedulingStartResult {
   recommended_imaging: string[];
   recommended_medications: string[];
   treatment_modes: string[];
+  resource_requirements: string[];
   treatment_validation_status: string | null;
   warnings: string[];
   doctor_assignment: DoctorAssignmentResult;
