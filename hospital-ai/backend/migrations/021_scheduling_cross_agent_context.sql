@@ -37,6 +37,7 @@ ALTER TABLE public.scheduling_results
   ADD COLUMN IF NOT EXISTS recommended_imaging_json JSONB NOT NULL DEFAULT '[]'::jsonb,
   ADD COLUMN IF NOT EXISTS recommended_medications_json JSONB NOT NULL DEFAULT '[]'::jsonb,
   ADD COLUMN IF NOT EXISTS treatment_modes_json JSONB NOT NULL DEFAULT '[]'::jsonb,
+  ADD COLUMN IF NOT EXISTS resource_requirements_json JSONB NOT NULL DEFAULT '[]'::jsonb,
   ADD COLUMN IF NOT EXISTS treatment_validation_status TEXT;
 
 CREATE INDEX IF NOT EXISTS idx_scheduling_results_patient_created
