@@ -11,4 +11,4 @@ Leading differentials: {{differentials}}
 Severity: {{severity}}
 
 Respond with STRICT JSON:
-{"recommended_specialists": ["string"], "recommended_department": "string or null", "diagnostic_tests": ["string"], "imaging": ["string"], "urgency": "Routine|Urgent|Emergency", "notes": "string"}
+{"recommended_specialists": ["string"], "recommended_department": "string or null", "diagnostic_tests": ["string"], "imaging": ["string"], "urgency": "Routine|Urgent|Emergency", "notes": "string", "surgery_required": true/false, "recommended_procedures": ["string"], "estimated_duration_minutes": "integer or null"}
