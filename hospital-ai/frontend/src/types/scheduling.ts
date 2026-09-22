@@ -21,6 +21,7 @@ export interface SchedulingResult {
   visit_type:string; derived_department:string|null; derived_specialists:string[];
   surgery_recommendation_json:string[]; source_result_ids_json:Record<string,string|null>;
   source_availability_json:Record<string,boolean>;
+  recommended_tests_json:string[]; recommended_imaging_json:string[]; recommended_medications_json:string[]; treatment_validation_status:string|null;
   status:string; warnings_json:string[]; processing_time_ms:number|null; created_at:string; updated_at:string|null;
 }
 export interface SchedulingStartResult {
@@ -28,6 +29,7 @@ export interface SchedulingStartResult {
   emergency_priority_level:string; emergency_priority_score:number; visit_type:string;
   derived_department:string|null; derived_specialists:string[]; surgery_recommendation:string[];
   source_result_ids:Record<string,string|null>; source_availability:Record<string,boolean>;
+  recommended_tests:string[]; recommended_imaging:string[]; recommended_medications:string[]; treatment_validation_status:string|null;
   warnings:string[]; doctor_assignment:DoctorAssignmentResult;
   appointment_scheduling:AppointmentSchedulingResult; surgery_scheduling:SurgerySchedulingResult;
   follow_up_planning:FollowUpPlan; queue_optimization:QueueOptimizationResult;
