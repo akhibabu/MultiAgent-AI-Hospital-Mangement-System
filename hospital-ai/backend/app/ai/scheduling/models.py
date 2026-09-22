@@ -90,6 +90,10 @@ class SchedulingReport(BaseModel):
     derived_department: str | None = None
     derived_specialists: List[str] = Field(default_factory=list)
     surgery_recommendation: List[str] = Field(default_factory=list)
+    recommended_tests: List[str] = Field(default_factory=list)
+    recommended_imaging: List[str] = Field(default_factory=list)
+    recommended_medications: List[str] = Field(default_factory=list)
+    treatment_validation_status: str | None = None
     source_result_ids: Dict[str, str | None] = Field(default_factory=dict)
     source_availability: Dict[str, bool] = Field(default_factory=dict)
     doctor_assignment: DoctorAssignmentResult = Field(default_factory=DoctorAssignmentResult)
