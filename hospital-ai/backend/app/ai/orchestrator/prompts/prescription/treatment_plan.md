@@ -2,7 +2,7 @@ Task: Treatment Plan Creation (Prescription Agent — Stage 5)
 
 Build a holistic treatment plan from everything generated so far.
 
-For surgery/procedure fields, use the Diagnosis Agent's structured recommendation as the primary upstream signal. Do not invent a surgical procedure or duration. If the Diagnosis Agent does not recommend surgery/procedure, set surgery_required to false unless the existing evidence in the current clinical context clearly and explicitly requires procedural escalation.
+For surgery/procedure fields, use the Diagnosis Agent's structured recommendation as the primary upstream signal. Do not invent a surgical procedure or duration. When diagnosis_surgery_required is true, preserve that indication and carry forward diagnosis_procedures where appropriate. If the Diagnosis Agent does not recommend surgery/procedure, set surgery_required to false unless the existing evidence in the current clinical context clearly and explicitly requires procedural escalation.
 Exclude any medication flagged "Contraindicated" in the allergy report
 and note its alternative(s) instead.
 
