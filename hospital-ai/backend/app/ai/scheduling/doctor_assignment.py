@@ -21,7 +21,7 @@ def _tokens(text: str) -> set[str]:
     return set(re.findall(r"[a-zA-Z]{3,}", text.lower()))
 
 class DoctorAssignmentEngine:
-    def assign(self, *, doctors: List[Dict[str, Any]], workload: Dict[str, int], department_names: Dict[str, str], preferred_doctor_id: str | None, requested_department_id: str | None, clinical_text: str, emergency_level: str, visit_type: str) -> DoctorAssignmentResult:
+    def assign(self, *, doctors: List[Dict[str, Any]], workload: Dict[str, int], department_names: Dict[str, str], preferred_doctor_id: str | None, requested_department_id: str | None, requested_department_name: str | None, preferred_specialists: List[str], clinical_text: str, emergency_level: str, visit_type: str) -> DoctorAssignmentResult:
         patient_tokens = _tokens(clinical_text)
         scored: List[DoctorCandidate] = []
         emergency_boost = {"Critical": 18, "Urgent": 10, "Semi-Urgent": 4, "Routine": 0}.get(emergency_level, 0)
@@ -34,7 +34,12 @@ class DoctorAssignmentEngine:
             elif status == "Busy": score += 5; reasons.append("Doctor is marked Busy, so workload is considered.")
             else: score -= 100; reasons.append("Doctor is on leave and excluded from normal booking.")
             if requested_department_id and str(d.get("department_id") or "") == requested_department_id:
-                score += 22; reasons.append("Requested department matches.")
+                score += 22; reasons.append("Recommended department matches.")
+            if requested_department_name and requested_department_name.lower() in str(department_names.get(str(d.get("department_id"))) or "").lower():
+                score += 18; reasons.append("Recommended department matches the available department.")
+            specialist_text=" ".join(preferred_specialists).lower()
+            if specialist_text and any(part.strip() and part.strip() in specialization.lower() for part in specialist_text.replace(",", " ").split()):
+                score += 20; reasons.append("Specialist recommendation from prior agents matches this doctor.")
             if preferred_doctor_id and did == preferred_doctor_id:
                 score += 30; reasons.append("Preferred doctor requested.")
             hint_score = 0
