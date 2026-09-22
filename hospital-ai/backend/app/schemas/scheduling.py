@@ -45,6 +45,8 @@ class SchedulingStartResponse(BaseModel):
     processing_time_ms: int
     summary: str
     engine: str
+    emergency_priority_level: str = "Routine"
+    emergency_priority_score: float = 0.0
     warnings: List[str] = Field(default_factory=list)
     doctor_assignment: DoctorAssignmentResult
     appointment_scheduling: AppointmentSchedulingResult
