@@ -10,7 +10,9 @@ class SurgeryScheduler:
         if not doctor_id or not doctor_name:
             return SurgerySchedulingResult(required=True, notes=["No assigned doctor is available for surgery planning."])
         if not windows:
-            return SurgerySchedulingResult(required=True, notes=["No open surgery planning window was found in the planning horizon."])
+            note = ("Upstream recommendation indicates surgery/procedure planning, but no procedure duration was supplied by prior agents. "
+                    "A surgery time slot is therefore not fabricated; downstream Resource Allocation or an upstream clinical agent must supply duration.") if duration_minutes <= 0 else "No open surgery planning window was found in the planning horizon."
+            return SurgerySchedulingResult(required=True, notes=[note])
         w=windows[0]
         slot=SlotRecommendation(doctor_id=doctor_id,doctor_name=doctor_name,appointment_date=w["appointment_date"],start_time=w["start_time"],end_time=w["end_time"],score=100.0,reasons=[f"Open doctor window supports the requested {duration_minutes}-minute planning duration.","Operating theatre/resource availability is intentionally deferred to the Resource Allocation Agent."])
         return SurgerySchedulingResult(required=True,recommended_slot=slot,notes=["Planning recommendation only — no operating theatre is reserved.","Resource Allocation Agent must validate theatre, staff, equipment, and bed requirements downstream."])
