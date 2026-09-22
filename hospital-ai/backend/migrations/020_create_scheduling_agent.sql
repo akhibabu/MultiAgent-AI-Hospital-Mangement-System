@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS public.scheduling_results (
   workload_balancing_json JSONB NOT NULL DEFAULT '{}'::jsonb,
   summary TEXT,
   engine TEXT NOT NULL DEFAULT 'deterministic_scheduling_rules_v1',
+  emergency_priority_level TEXT NOT NULL DEFAULT 'Routine',
+  emergency_priority_score NUMERIC NOT NULL DEFAULT 0,
   status TEXT NOT NULL DEFAULT 'Completed',
   warnings_json JSONB NOT NULL DEFAULT '[]'::jsonb,
   processing_time_ms INTEGER,
