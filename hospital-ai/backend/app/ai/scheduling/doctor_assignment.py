@@ -37,9 +37,11 @@ class DoctorAssignmentEngine:
                 score += 22; reasons.append("Recommended department matches.")
             if requested_department_name and requested_department_name.lower() in str(department_names.get(str(d.get("department_id"))) or "").lower():
                 score += 18; reasons.append("Recommended department matches the available department.")
-            specialist_text=" ".join(preferred_specialists).lower()
-            if specialist_text and any(part.strip() and part.strip() in specialization.lower() for part in specialist_text.replace(",", " ").split()):
-                score += 20; reasons.append("Specialist recommendation from prior agents matches this doctor.")
+            specialist_tokens = [t for t in _tokens(" ".join(preferred_specialists)) if len(t) >= 5]
+            specialization_tokens = _tokens(specialization)
+            if any(a[:5] == b[:5] for a in specialist_tokens for b in specialization_tokens):
+                score += 20
+                reasons.append("Specialist recommendation from prior agents matches this doctor.")
             if preferred_doctor_id and did == preferred_doctor_id:
                 score += 30; reasons.append("Preferred doctor requested.")
             hint_score = 0
