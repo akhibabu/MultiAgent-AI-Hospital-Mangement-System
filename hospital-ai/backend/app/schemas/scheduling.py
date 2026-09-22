@@ -33,6 +33,8 @@ class SchedulingResultOut(BaseModel):
     workload_balancing_json: Dict[str,Any] = Field(default_factory=dict)
     summary: str | None = None
     engine: str = "deterministic_scheduling_rules_v1"
+    emergency_priority_level: str = "Routine"
+    emergency_priority_score: float = 0.0
     status: str = "Completed"
     warnings_json: List[str] = Field(default_factory=list)
     processing_time_ms: int | None = None
