@@ -5,6 +5,7 @@ from app.ai.diagnosis.models import TreatmentPathRecommendation
 from app.ai.prescription.models import TreatmentPlan
 from app.ai.scheduling.context import SchedulingSourceContext
 from app.ai.scheduling.models import SurgerySchedulingResult
+from app.ai.scheduling.surgery_scheduler import SurgeryScheduler
 from app.schemas.scheduling import SchedulingStartRequest
 
 
@@ -181,5 +182,19 @@ def test_missing_upstream_duration_does_not_create_fake_surgery_slot():
         resource_allocation_required=True,
         notes=["Duration not provided upstream."],
     )
+    assert result.duration_minutes is None
+    assert result.resource_allocation_required is True
+
+
+def test_surgery_scheduler_defers_without_upstream_duration():
+    result = SurgeryScheduler().recommend(
+        required=True,
+        procedure_names=["Angioplasty"],
+        windows=[],
+        doctor_id="doctor-1",
+        doctor_name="Dr. Test",
+        duration_minutes=0,
+    )
+    assert result.recommended_slot is None
     assert result.duration_minutes is None
     assert result.resource_allocation_required is True
