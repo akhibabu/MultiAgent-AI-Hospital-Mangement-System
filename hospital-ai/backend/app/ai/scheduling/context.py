@@ -48,6 +48,7 @@ class SchedulingSourceContext:
         triage=str(tri.get("category") or "").strip() or None
         urgency=str(tp.get("urgency") or "").strip() or "Routine"
 
+        structured_surgery=bool(tp.get("surgery_required") or ep.get("surgery_required"))
         evidence=_surgery_evidence([
             ("Diagnosis Treatment Path",tp.get("notes")),
             ("Diagnosis Clinical Notes",cds.get("clinical_notes")),
@@ -83,8 +84,8 @@ class SchedulingSourceContext:
             "emergency_triage":triage,"icu_signal":str(icu.get("signal") or "Low"),
             "severity_level":str(sev.get("level") or "").strip() or None,
             "urgency":urgency,"clinical_text":" ".join(str(x) for x in text_parts if x).strip(),
-            "surgery_required":bool(evidence),"surgery_evidence":evidence,
-            "surgery_duration_minutes":120 if evidence else 0,
+            "surgery_required":structured_surgery or bool(evidence),"surgery_evidence":evidence,
+            "surgery_duration_minutes":_duration(tp.get("surgery_duration_minutes") or ep.get("surgery_duration_minutes")),
             "follow_up_text":follow,
             "recommended_tests":_unique([*_strings(tp.get("diagnostic_tests")),*_strings(ep.get("recommended_lab_tests"))]),
             "recommended_imaging":_unique([*_strings(tp.get("imaging")),*_strings(ep.get("recommended_imaging"))]),
@@ -118,3 +119,11 @@ def _unique(values:List[Any])->List[str]:
 def _num(value:Any)->float:
     try: return round(float(value or 0),1)
     except (TypeError,ValueError): return 0.0
+
+
+def _duration(value: Any) -> int:
+    try:
+        n = int(float(value))
+        return n if 30 <= n <= 480 else 0
+    except (TypeError, ValueError):
+        return 0
