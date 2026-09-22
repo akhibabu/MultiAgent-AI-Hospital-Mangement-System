@@ -84,8 +84,8 @@ function normalizeResult(
     workload_balancing: persisted?.workload_balancing_json,
     summary: persisted?.summary,
     warnings: persisted?.warnings_json ?? [],
-    emergency_priority_level: 'Routine',
-    emergency_priority_score: 0,
+    emergency_priority_level: persisted?.emergency_priority_level || 'Routine',
+    emergency_priority_score: persisted?.emergency_priority_score || 0,
   };
 }
 
