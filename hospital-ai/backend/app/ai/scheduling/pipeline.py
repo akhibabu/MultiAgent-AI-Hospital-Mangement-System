@@ -52,11 +52,11 @@ class SchedulingPipeline:
 
         surgery_duration=int(derived["surgery_duration_minutes"] or 0)
         surgery_windows=[]
-        if derived["surgery_required"] and assignment.selected_doctor_id:
-            surgery_windows=self.data_repo.open_window(UUID(assignment.selected_doctor_id),preferred_date,30,surgery_duration or 120)
-        surgery=self.surgery.recommend(required=derived["surgery_required"],windows=surgery_windows,doctor_id=assignment.selected_doctor_id,doctor_name=assignment.selected_doctor_name,duration_minutes=surgery_duration or 120)
-        if derived["surgery_required"] and not any("duration" in w.lower() for w in warnings):
-            warnings.append("Upstream agents indicated surgery/procedure planning, but no procedure duration was provided. A 120-minute planning window is used only to find a candidate slot; clinical staff must confirm duration.")
+        if derived["surgery_required"] and assignment.selected_doctor_id and surgery_duration:
+            surgery_windows=self.data_repo.open_window(UUID(assignment.selected_doctor_id),preferred_date,30,surgery_duration)
+        surgery=self.surgery.recommend(required=derived["surgery_required"],windows=surgery_windows,doctor_id=assignment.selected_doctor_id,doctor_name=assignment.selected_doctor_name,duration_minutes=surgery_duration)
+        if derived["surgery_required"] and not surgery_duration:
+            warnings.append("Upstream agents indicated surgery/procedure planning, but no procedure duration was provided. Surgery slot generation is deferred until an upstream agent supplies the required duration or the downstream Resource Allocation Agent resolves it.")
 
         follow_days=_follow_up_days(derived["follow_up_text"],14)
         if not derived["follow_up_text"]:
