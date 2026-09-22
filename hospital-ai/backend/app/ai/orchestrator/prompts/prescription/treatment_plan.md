@@ -28,7 +28,7 @@ Respond with STRICT JSON in this exact shape:
   "recommended_specialists": ["string"],
   "follow_up_interval": "string",
   "emergency_advice": "string",
-  "surgery_required": true/false,
+  "surgery_required": false,
   "procedure_recommendations": ["string"],
-  "estimated_duration_minutes": "integer or null"
+  "estimated_duration_minutes": null
 }
