@@ -4,7 +4,6 @@ from datetime import date
 from typing import Any, Dict, List
 from uuid import UUID
 from pydantic import BaseModel, Field
-from app.schemas.appointment import VisitType
 from app.ai.scheduling.models import (
     DoctorAssignmentResult, AppointmentSchedulingResult, SurgerySchedulingResult,
     FollowUpPlan, QueueOptimizationResult, WorkloadBalancingResult,
@@ -13,24 +12,17 @@ from app.ai.scheduling.models import (
 class SchedulingStartRequest(BaseModel):
     patient_id: UUID
     preferred_date: date = Field(default_factory=date.today)
-    visit_type: VisitType = VisitType.CONSULTATION
-    reason_for_visit: str | None = Field(default=None, max_length=2000)
-    department_id: UUID | None = None
-    preferred_doctor_id: UUID | None = None
-    surgery_required: bool = False
-    surgery_duration_minutes: int = Field(default=120, ge=30, le=480)
-    follow_up_days: int = Field(default=14, ge=1, le=180)
 
 class SchedulingResultOut(BaseModel):
     id: UUID
     patient_id: UUID
     processing_job_id: UUID | None = None
-    doctor_assignment_json: Dict[str,Any] = Field(default_factory=dict)
-    appointment_scheduling_json: Dict[str,Any] = Field(default_factory=dict)
-    surgery_scheduling_json: Dict[str,Any] = Field(default_factory=dict)
-    follow_up_planning_json: Dict[str,Any] = Field(default_factory=dict)
-    queue_optimization_json: Dict[str,Any] = Field(default_factory=dict)
-    workload_balancing_json: Dict[str,Any] = Field(default_factory=dict)
+    doctor_assignment_json: Dict[str, Any] = Field(default_factory=dict)
+    appointment_scheduling_json: Dict[str, Any] = Field(default_factory=dict)
+    surgery_scheduling_json: Dict[str, Any] = Field(default_factory=dict)
+    follow_up_planning_json: Dict[str, Any] = Field(default_factory=dict)
+    queue_optimization_json: Dict[str, Any] = Field(default_factory=dict)
+    workload_balancing_json: Dict[str, Any] = Field(default_factory=dict)
     summary: str | None = None
     engine: str = "deterministic_scheduling_rules_v1"
     emergency_priority_level: str = "Routine"
