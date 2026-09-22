@@ -16,8 +16,8 @@ from app.repositories.medical_report_repository import GeneratedMedicalReportRep
 from app.repositories.prescription_repository import PrescriptionResultRepository
 
 NEGATIVE_SURGERY = re.compile(
-    r"(?:no|not|without|does not|doesn't|do not|don't)s+"
-    r"(?:requires+|recommends+|needs+)?(?:fors+)?"
+    r"(?:no|not|without|does not|doesn't|do not|don't)\s+"
+    r"(?:require\s+|recommend\s+|need\s+)?(?:for\s+)?"
     r"(?:surgery|surgical intervention|operation|operative procedure)",
     re.IGNORECASE,
 )
