@@ -81,3 +81,73 @@ def test_surgery_is_triggered_only_by_explicit_upstream_recommendation():
     })
     assert derived["surgery_required"] is True
     assert derived["surgery_evidence"]
+
+
+def test_cross_agent_context_derives_scheduling_inputs():
+    from app.ai.scheduling.context import SchedulingSourceContext
+    derived=SchedulingSourceContext.derive({
+        "diagnosis":{
+            "id":"d1",
+            "treatment_path_json":{
+                "recommended_department":"Cardiology",
+                "recommended_specialists":["Cardiologist"],
+                "diagnostic_tests":["ECG"],
+                "imaging":["Echocardiogram"],
+                "urgency":"Urgent",
+                "notes":"Continue physician review."
+            },
+            "clinical_decision_support_json":{"possible_diagnoses":["Arrhythmia"],"clinical_notes":["Follow protocol."]},
+            "severity_assessment_json":{"level":"High"},
+            "differential_diagnoses_json":[{"condition":"Arrhythmia"}]
+        },
+        "emergency":{
+            "id":"e1",
+            "patient_priority_json":{"priority_level":"Urgent","priority_score":82},
+            "triage_classification_json":{"category":"Urgent"},
+            "icu_requirement_json":{"signal":"Moderate"}
+        },
+        "prescription":{
+            "id":"p1",
+            "treatment_plan_json":{
+                "follow_up_interval":"7 days",
+                "recommended_specialists":["Cardiologist"],
+                "recommended_lab_tests":["Troponin"],
+                "medication_plan":["Physician review recommended."]
+            },
+            "validation_summary_json":{"approval_status":"Requires Physician Review"}
+        },
+        "medical_report":{
+            "id":"m1",
+            "clinical_summary_json":{"diagnosis_summary":"Arrhythmia"},
+            "doctor_notes_json":{"plan":"Continue monitoring."}
+        }
+    })
+    assert derived["sources_available"]=={"diagnosis":True,"emergency":True,"prescription":True,"medical_report":True}
+    assert derived["visit_type"]=="Emergency"
+    assert derived["department"]=="Cardiology"
+    assert derived["specialists"]==["Cardiologist"]
+    assert derived["emergency_priority_score"]==82.0
+    assert derived["recommended_tests"]==["ECG","Troponin"]
+    assert derived["recommended_imaging"]==["Echocardiogram"]
+    assert derived["surgery_required"] is False
+
+def test_surgery_is_triggered_only_by_explicit_upstream_recommendation():
+    from app.ai.scheduling.context import SchedulingSourceContext
+    derived=SchedulingSourceContext.derive({
+        "diagnosis":{
+            "treatment_path_json":{"notes":"Surgical intervention is recommended after physician review."},
+            "clinical_decision_support_json":{}
+        },
+        "emergency":{}, "prescription":{}, "medical_report":{}
+    })
+    assert derived["surgery_required"] is True
+    assert derived["surgery_evidence"]
+
+def test_surgery_duration_is_not_fabricated_when_missing():
+    from app.ai.scheduling.context import SchedulingSourceContext
+    derived=SchedulingSourceContext.derive({
+        "diagnosis":{"treatment_path_json":{"surgery_required":True,"notes":"Surgery is required."}},
+        "emergency":{}, "prescription":{}, "medical_report":{}
+    })
+    assert derived["surgery_required"] is True
+    assert derived["surgery_duration_minutes"] == 0
