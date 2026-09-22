@@ -45,6 +45,10 @@ type SchedulingView = {
   derived_specialists: string[];
   surgery_recommendation: string[];
   source_availability: Record<string, boolean>;
+  recommended_tests: string[];
+  recommended_imaging: string[];
+  recommended_medications: string[];
+  treatment_validation_status: string | null;
 };
 
 function buildView(live?: SchedulingStartResult, saved?: SchedulingResult): SchedulingView {
@@ -65,6 +69,10 @@ function buildView(live?: SchedulingStartResult, saved?: SchedulingResult): Sche
       derived_specialists: live.derived_specialists,
       surgery_recommendation: live.surgery_recommendation,
       source_availability: live.source_availability,
+      recommended_tests: live.recommended_tests,
+      recommended_imaging: live.recommended_imaging,
+      recommended_medications: live.recommended_medications,
+      treatment_validation_status: live.treatment_validation_status,
     };
   }
   return {
@@ -83,6 +91,10 @@ function buildView(live?: SchedulingStartResult, saved?: SchedulingResult): Sche
     derived_specialists: saved?.derived_specialists_json ?? [],
     surgery_recommendation: saved?.surgery_recommendation_json ?? [],
     source_availability: saved?.source_availability_json ?? {},
+    recommended_tests: saved?.recommended_tests_json ?? [],
+    recommended_imaging: saved?.recommended_imaging_json ?? [],
+    recommended_medications: saved?.recommended_medications_json ?? [],
+    treatment_validation_status: saved?.treatment_validation_status ?? null,
   };
 }
 
@@ -316,6 +328,19 @@ export default function SchedulingAgentPage() {
                       Diagnosis treatment path, Emergency priority/triage, Prescription treatment plan,
                       and Medical Report documentation are combined before doctor and slot selection.
                     </p>
+                  </div>
+                  <div className="mt-4 grid gap-3 md:grid-cols-2">
+                    <div className="rounded-lg border border-[var(--border-color)] p-3">
+                      <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">Treatment / investigations from prior agents</p>
+                      <p className="mt-2 text-xs"><strong>Tests:</strong> {data.recommended_tests.join(', ') || 'None'}</p>
+                      <p className="mt-2 text-xs"><strong>Imaging:</strong> {data.recommended_imaging.join(', ') || 'None'}</p>
+                      <p className="mt-2 text-xs"><strong>Medicines:</strong> {data.recommended_medications.join(', ') || 'None'}</p>
+                    </div>
+                    <div className="rounded-lg border border-[var(--border-color)] p-3">
+                      <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">Treatment validation</p>
+                      <p className="mt-2 text-sm">{data.treatment_validation_status || 'No Prescription validation result available'}</p>
+                      <p className="mt-2 text-xs text-[var(--text-secondary)]">These values are context for scheduling and future downstream agents. They do not constitute a new treatment decision.</p>
+                    </div>
                   </div>
                 </Card>
 
