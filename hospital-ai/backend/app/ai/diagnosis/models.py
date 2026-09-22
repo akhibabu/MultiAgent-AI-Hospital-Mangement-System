@@ -76,6 +76,9 @@ class TreatmentPathRecommendation(BaseModel):
     imaging: List[str] = Field(default_factory=list)
     urgency: str = "Routine"
     notes: str = ""
+    surgery_required: bool = False
+    recommended_procedures: List[str] = Field(default_factory=list)
+    estimated_duration_minutes: Optional[int] = Field(default=None, ge=30, le=480)
 
 
 class ClinicalDecisionSupport(BaseModel):
