@@ -62,4 +62,4 @@ class SchedulingPipeline:
                  f"recommended {appointment.recommended_slot.appointment_date if appointment.recommended_slot else 'no open date'} "
                  f"{appointment.recommended_slot.start_time if appointment.recommended_slot else ''}, and produced queue/workload planning signals.")
         if emergency_priority: summary+=f" Emergency priority {emergency_level} ({emergency_priority}/100) was used."
-        return SchedulingReport(patient_id=str(patient_id),patient_name=context.patient_name,doctor_assignment=assignment,appointment_scheduling=appointment,surgery_scheduling=surgery,follow_up_planning=follow,queue_optimization=queue_result,workload_balancing=balancing,summary=summary,warnings=warnings)
+        return SchedulingReport(patient_id=str(patient_id),patient_name=context.patient_name,emergency_priority_level=emergency_level,emergency_priority_score=emergency_priority,doctor_assignment=assignment,appointment_scheduling=appointment,surgery_scheduling=surgery,follow_up_planning=follow,queue_optimization=queue_result,workload_balancing=balancing,summary=summary,warnings=warnings)
