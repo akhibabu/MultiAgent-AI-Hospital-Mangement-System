@@ -135,6 +135,9 @@ class PrescriptionPipeline:
             diagnosis_specialists=treatment_path.get("recommended_specialists"),
             diagnosis_tests=treatment_path.get("diagnostic_tests"),
             diagnosis_imaging=treatment_path.get("imaging"),
+            diagnosis_surgery_required=bool(treatment_path.get("surgery_required", False)),
+            diagnosis_procedures=treatment_path.get("recommended_procedures"),
+            diagnosis_procedure_duration=treatment_path.get("estimated_duration_minutes"),
             patient_id=patient_id,
         )
 
