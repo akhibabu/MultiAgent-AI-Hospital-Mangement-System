@@ -63,6 +63,9 @@ const AIOrchestratorPage = lazy(
 const EmergencyAgentPage = lazy(
   () => import('@/pages/AI/EmergencyAgentPage'),
 );
+const SchedulingAgentPage = lazy(
+  () => import('@/pages/AI/SchedulingAgentPage'),
+);
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'));
 const ServerErrorPage = lazy(() => import('@/pages/ServerErrorPage'));
@@ -126,15 +129,7 @@ export default function AppRoutes() {
               element={<MedicalReportAgentPage />}
             />
             <Route path="ai/orchestrator" element={<AIOrchestratorPage />} />
-            <Route
-              path="ai/scheduling"
-              element={
-                <AIAgentPlaceholderPage
-                  title="Scheduling Agent"
-                  description="Smart appointment optimization."
-                />
-              }
-            />
+            <Route path="ai/scheduling" element={<SchedulingAgentPage />} />
             <Route path="ai/emergency" element={<EmergencyAgentPage />} />
             <Route
               path="ai/digital-twin"

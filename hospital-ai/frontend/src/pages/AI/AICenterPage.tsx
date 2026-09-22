@@ -52,8 +52,9 @@ const AGENTS = [
   {
     path: '/ai/scheduling',
     name: 'Scheduling Agent',
-    description: 'Smart appointment slot optimization. (Coming Soon)',
-    ready: false,
+    description:
+      'Doctor assignment, appointment and surgery scheduling, follow-up planning, queue optimization, and workload balancing.',
+    ready: true,
   },
   {
     path: '/ai/emergency',
