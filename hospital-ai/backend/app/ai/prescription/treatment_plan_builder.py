@@ -43,6 +43,9 @@ class TreatmentPlanBuilder(OrchestratorCallMixin):
         diagnosis_specialists: Optional[List[str]] = None,
         diagnosis_tests: Optional[List[str]] = None,
         diagnosis_imaging: Optional[List[str]] = None,
+        diagnosis_surgery_required: bool = False,
+        diagnosis_procedures: Optional[List[str]] = None,
+        diagnosis_procedure_duration: Optional[int] = None,
         patient_id: Optional[UUID] = None,
     ) -> TreatmentPlan:
         data = self._call(
@@ -59,6 +62,9 @@ class TreatmentPlanBuilder(OrchestratorCallMixin):
                 "diagnosis_specialists": diagnosis_specialists or [],
                 "diagnosis_tests": diagnosis_tests or [],
                 "diagnosis_imaging": diagnosis_imaging or [],
+                "diagnosis_surgery_required": diagnosis_surgery_required,
+                "diagnosis_procedures": diagnosis_procedures or [],
+                "diagnosis_procedure_duration": diagnosis_procedure_duration,
             },
         )
         return TreatmentPlan.model_validate(data)
