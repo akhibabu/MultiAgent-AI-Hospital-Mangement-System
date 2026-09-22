@@ -52,6 +52,7 @@ type SchedulingView = {
   recommended_imaging: string[];
   recommended_medications: string[];
   treatment_modes: string[];
+  resource_requirements: string[];
   treatment_validation_status: string | null;
 };
 
@@ -80,6 +81,7 @@ function buildView(live?: SchedulingStartResult, saved?: SchedulingResult): Sche
       recommended_imaging: live.recommended_imaging,
       recommended_medications: live.recommended_medications,
       treatment_modes: live.treatment_modes,
+      resource_requirements: live.resource_requirements,
       treatment_validation_status: live.treatment_validation_status,
     };
   }
@@ -107,6 +109,7 @@ function buildView(live?: SchedulingStartResult, saved?: SchedulingResult): Sche
     recommended_imaging: saved?.recommended_imaging_json ?? [],
     recommended_medications: saved?.recommended_medications_json ?? [],
     treatment_modes: saved?.treatment_modes_json ?? [],
+    resource_requirements: saved?.resource_requirements_json ?? [],
     treatment_validation_status: saved?.treatment_validation_status ?? null,
   };
 }
@@ -372,7 +375,7 @@ export default function SchedulingAgentPage() {
                     </div>
                   </div>
 
-                  <div className="mt-4 grid gap-3 md:grid-cols-2">
+                  <div className="mt-4 grid gap-3 md:grid-cols-3">
                     <div className="rounded-lg border border-[var(--border-color)] p-3">
                       <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">
                         Treatment context
@@ -388,6 +391,18 @@ export default function SchedulingAgentPage() {
                       <p className="mt-2 text-xs">
                         <strong>Medication plan:</strong>{' '}
                         {data.recommended_medications.join(', ') || 'None'}
+                      </p>
+                    </div>
+
+                    <div className="rounded-lg border border-[var(--border-color)] p-3">
+                      <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">
+                        Downstream resource requirements
+                      </p>
+                      <p className="mt-2 text-sm">
+                        {data.resource_requirements.join(', ') || 'No additional operational resource signal'}
+                      </p>
+                      <p className="mt-2 text-xs text-[var(--text-secondary)]">
+                        These requirements are passed forward to the future Resource Allocation Agent.
                       </p>
                     </div>
 
