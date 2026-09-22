@@ -39,8 +39,11 @@ class AppointmentSchedulingResult(BaseModel):
 
 class SurgerySchedulingResult(BaseModel):
     required: bool = False
+    procedure_names: List[str] = Field(default_factory=list)
+    duration_minutes: int | None = None
     recommended_slot: SlotRecommendation | None = None
     operation_theatre_status: str = "Not evaluated — Resource Allocation Agent is downstream."
+    resource_allocation_required: bool = True
     notes: List[str] = Field(default_factory=list)
 
 class FollowUpPlan(BaseModel):
