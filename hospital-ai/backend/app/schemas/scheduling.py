@@ -33,6 +33,10 @@ class SchedulingResultOut(BaseModel):
     surgery_recommendation_json: List[str] = Field(default_factory=list)
     source_result_ids_json: Dict[str, str | None] = Field(default_factory=dict)
     source_availability_json: Dict[str, bool] = Field(default_factory=dict)
+    recommended_tests_json: List[str] = Field(default_factory=list)
+    recommended_imaging_json: List[str] = Field(default_factory=list)
+    recommended_medications_json: List[str] = Field(default_factory=list)
+    treatment_validation_status: str | None = None
     status: str = "Completed"
     warnings_json: List[str] = Field(default_factory=list)
     processing_time_ms: int | None = None
@@ -53,6 +57,10 @@ class SchedulingStartResponse(BaseModel):
     surgery_recommendation: List[str] = Field(default_factory=list)
     source_result_ids: Dict[str, str | None] = Field(default_factory=dict)
     source_availability: Dict[str, bool] = Field(default_factory=dict)
+    recommended_tests: List[str] = Field(default_factory=list)
+    recommended_imaging: List[str] = Field(default_factory=list)
+    recommended_medications: List[str] = Field(default_factory=list)
+    treatment_validation_status: str | None = None
     warnings: List[str] = Field(default_factory=list)
     doctor_assignment: DoctorAssignmentResult
     appointment_scheduling: AppointmentSchedulingResult
