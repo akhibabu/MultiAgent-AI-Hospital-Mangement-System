@@ -1,7 +1,7 @@
 """Domain models for the Scheduling Agent."""
 from __future__ import annotations
 from datetime import date, time, datetime, timezone
-from typing import List
+from typing import Dict, List
 from pydantic import BaseModel, Field
 
 class DoctorCandidate(BaseModel):
@@ -86,6 +86,16 @@ class SchedulingReport(BaseModel):
     engine: str = "deterministic_scheduling_rules_v1"
     emergency_priority_level: str = "Routine"
     emergency_priority_score: float = 0.0
+    visit_type: str = "Consultation"
+    derived_department: str | None = None
+    derived_specialists: List[str] = Field(default_factory=list)
+    surgery_recommendation: List[str] = Field(default_factory=list)
+    recommended_tests: List[str] = Field(default_factory=list)
+    recommended_imaging: List[str] = Field(default_factory=list)
+    recommended_medications: List[str] = Field(default_factory=list)
+    treatment_validation_status: str | None = None
+    source_result_ids: Dict[str, str | None] = Field(default_factory=dict)
+    source_availability: Dict[str, bool] = Field(default_factory=dict)
     doctor_assignment: DoctorAssignmentResult = Field(default_factory=DoctorAssignmentResult)
     appointment_scheduling: AppointmentSchedulingResult = Field(default_factory=AppointmentSchedulingResult)
     surgery_scheduling: SurgerySchedulingResult = Field(default_factory=SurgerySchedulingResult)
