@@ -29,10 +29,10 @@ class SchedulingResultOut(BaseModel):
     emergency_priority_score: float = 0.0
     visit_type: str = "Consultation"
     derived_department: str | None = None
-    derived_specialists: List[str] = Field(default_factory=list)
-    surgery_recommendation: List[str] = Field(default_factory=list)
-    source_result_ids: Dict[str, str | None] = Field(default_factory=dict)
-    source_availability: Dict[str, bool] = Field(default_factory=dict)
+    derived_specialists_json: List[str] = Field(default_factory=list)
+    surgery_recommendation_json: List[str] = Field(default_factory=list)
+    source_result_ids_json: Dict[str, str | None] = Field(default_factory=dict)
+    source_availability_json: Dict[str, bool] = Field(default_factory=dict)
     status: str = "Completed"
     warnings_json: List[str] = Field(default_factory=list)
     processing_time_ms: int | None = None
