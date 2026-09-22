@@ -84,6 +84,8 @@ class SchedulingReport(BaseModel):
     patient_name: str = "Patient"
     status: str = "Completed"
     engine: str = "deterministic_scheduling_rules_v1"
+    emergency_priority_level: str = "Routine"
+    emergency_priority_score: float = 0.0
     doctor_assignment: DoctorAssignmentResult = Field(default_factory=DoctorAssignmentResult)
     appointment_scheduling: AppointmentSchedulingResult = Field(default_factory=AppointmentSchedulingResult)
     surgery_scheduling: SurgerySchedulingResult = Field(default_factory=SurgerySchedulingResult)
