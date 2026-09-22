@@ -22,6 +22,7 @@ from app.routes import (
     prescription,
     research,
     resources,
+    scheduling,
 )
 
 api_router = APIRouter()
@@ -44,5 +45,6 @@ api_router.include_router(research.router)
 api_router.include_router(prescription.router)
 api_router.include_router(medical_report.router)
 api_router.include_router(emergency.router)
+api_router.include_router(scheduling.router)
 api_router.include_router(ai_orchestrator.router)
 api_router.include_router(ai_health.router)
