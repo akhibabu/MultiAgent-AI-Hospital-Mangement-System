@@ -100,6 +100,7 @@ class SchedulingReport(BaseModel):
     recommended_imaging: List[str] = Field(default_factory=list)
     recommended_medications: List[str] = Field(default_factory=list)
     treatment_modes: List[str] = Field(default_factory=list)
+    resource_requirements: List[str] = Field(default_factory=list)
     treatment_validation_status: str | None = None
     source_result_ids: Dict[str, str | None] = Field(default_factory=dict)
     source_availability: Dict[str, bool] = Field(default_factory=dict)
