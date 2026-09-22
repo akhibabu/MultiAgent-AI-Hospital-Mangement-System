@@ -172,6 +172,20 @@ class SchedulingSourceContext:
         if follow_up_text:
             treatment_modes.append("Follow-up")
 
+        resource_requirements: List[str] = []
+        if str(icu.get("signal") or "").strip() == "High":
+            resource_requirements.append("ICU Bed")
+        elif str(icu.get("signal") or "").strip() == "Moderate":
+            resource_requirements.append("Monitored Bed")
+        if surgery_required:
+            resource_requirements.append("Operating Theatre")
+        if specialists:
+            resource_requirements.append("Specialist Staff")
+        if recommended_tests:
+            resource_requirements.append("Laboratory Capacity")
+        if recommended_imaging:
+            resource_requirements.append("Imaging Capacity")
+
         clinical_parts = [
             *_strings(diagnosis.get("target_conditions_json")),
             *_strings(diagnosis.get("differential_diagnoses_json"), "condition"),
@@ -225,6 +239,7 @@ class SchedulingSourceContext:
             "recommended_imaging": recommended_imaging,
             "medications": medications,
             "treatment_modes": treatment_modes,
+            "resource_requirements": _unique(resource_requirements),
             "validation_status": str(validation.get("approval_status") or "").strip() or None,
         }
 
