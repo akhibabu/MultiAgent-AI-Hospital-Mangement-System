@@ -4,30 +4,13 @@ import ErrorBoundary from '@/components/common/ErrorBoundary';
 import Badge, { type BadgeTone } from '@/components/common/Badge';
 import Card from '@/components/common/Card';
 import Loading from '@/components/ui/Loading';
-import {
-  useSchedulingResult,
-  useStartScheduling,
-} from '@/hooks/useScheduling';
 import { usePatients } from '@/hooks/usePatients';
-import { useDepartments, useDoctors } from '@/hooks/useDoctors';
+import { useSchedulingResult, useStartScheduling } from '@/hooks/useScheduling';
 import { useCreateAppointment } from '@/hooks/useAppointments';
 import { getApiErrorMessage } from '@/services/apiClient';
-import {
-  APPOINTMENT_STATUSES,
-  VISIT_TYPES,
-  type AppointmentFormValues,
-} from '@/types/appointment';
-import type {
-  SchedulingStartResult,
-  SchedulingResult,
-  SlotRecommendation,
-} from '@/types/scheduling';
-import {
-  addDays,
-  formatDateLabel,
-  formatTimeLabel,
-  toDateInputValue,
-} from '@/utils/appointmentValidation';
+import { formatDateLabel, formatTimeLabel, toDateInputValue } from '@/utils/appointmentValidation';
+import type { AppointmentFormValues } from '@/types/appointment';
+import type { SchedulingResult, SchedulingStartResult, SlotRecommendation } from '@/types/scheduling';
 
 const STAGES = [
   'Doctor Assignment',
@@ -46,10 +29,7 @@ function tone(level?: string | null): BadgeTone {
   return 'green';
 }
 
-function normalizeResult(
-  live: SchedulingStartResult | undefined,
-  persisted: SchedulingResult | undefined,
-): {
+type SchedulingView = {
   doctor_assignment: SchedulingResult['doctor_assignment_json'] | undefined;
   appointment_scheduling: SchedulingResult['appointment_scheduling_json'] | undefined;
   surgery_scheduling: SchedulingResult['surgery_scheduling_json'] | undefined;
@@ -60,7 +40,14 @@ function normalizeResult(
   warnings: string[];
   emergency_priority_level: string;
   emergency_priority_score: number;
-} {
+  visit_type: string;
+  derived_department: string | null;
+  derived_specialists: string[];
+  surgery_recommendation: string[];
+  source_availability: Record<string, boolean>;
+};
+
+function buildView(live?: SchedulingStartResult, saved?: SchedulingResult): SchedulingView {
   if (live) {
     return {
       doctor_assignment: live.doctor_assignment,
@@ -73,33 +60,35 @@ function normalizeResult(
       warnings: live.warnings,
       emergency_priority_level: live.emergency_priority_level,
       emergency_priority_score: live.emergency_priority_score,
+      visit_type: live.visit_type,
+      derived_department: live.derived_department,
+      derived_specialists: live.derived_specialists,
+      surgery_recommendation: live.surgery_recommendation,
+      source_availability: live.source_availability,
     };
   }
   return {
-    doctor_assignment: persisted?.doctor_assignment_json,
-    appointment_scheduling: persisted?.appointment_scheduling_json,
-    surgery_scheduling: persisted?.surgery_scheduling_json,
-    follow_up_planning: persisted?.follow_up_planning_json,
-    queue_optimization: persisted?.queue_optimization_json,
-    workload_balancing: persisted?.workload_balancing_json,
-    summary: persisted?.summary,
-    warnings: persisted?.warnings_json ?? [],
-    emergency_priority_level: persisted?.emergency_priority_level || 'Routine',
-    emergency_priority_score: persisted?.emergency_priority_score || 0,
+    doctor_assignment: saved?.doctor_assignment_json,
+    appointment_scheduling: saved?.appointment_scheduling_json,
+    surgery_scheduling: saved?.surgery_scheduling_json,
+    follow_up_planning: saved?.follow_up_planning_json,
+    queue_optimization: saved?.queue_optimization_json,
+    workload_balancing: saved?.workload_balancing_json,
+    summary: saved?.summary,
+    warnings: saved?.warnings_json ?? [],
+    emergency_priority_level: saved?.emergency_priority_level ?? 'Routine',
+    emergency_priority_score: saved?.emergency_priority_score ?? 0,
+    visit_type: saved?.visit_type ?? 'Consultation',
+    derived_department: saved?.derived_department ?? null,
+    derived_specialists: saved?.derived_specialists_json ?? [],
+    surgery_recommendation: saved?.surgery_recommendation_json ?? [],
+    source_availability: saved?.source_availability_json ?? {},
   };
 }
 
 export default function SchedulingAgentPage() {
-  const tomorrow = useMemo(() => toDateInputValue(addDays(new Date(), 1)), []);
   const [patientId, setPatientId] = useState('');
-  const [preferredDate, setPreferredDate] = useState(tomorrow);
-  const [visitType, setVisitType] = useState<(typeof VISIT_TYPES)[number]>('Consultation');
-  const [departmentId, setDepartmentId] = useState('');
-  const [preferredDoctorId, setPreferredDoctorId] = useState('');
-  const [reason, setReason] = useState('');
-  const [surgeryRequired, setSurgeryRequired] = useState(false);
-  const [surgeryDuration, setSurgeryDuration] = useState('120');
-  const [followUpDays, setFollowUpDays] = useState('14');
+  const [preferredDate, setPreferredDate] = useState(toDateInputValue(new Date()));
 
   const patientsQuery = usePatients({
     page: 1,
@@ -107,52 +96,45 @@ export default function SchedulingAgentPage() {
     sort_by: 'created_at',
     sort_order: 'desc',
   });
-  const doctorsQuery = useDoctors({
-    page: 1,
-    page_size: 100,
-    sort_by: 'last_name',
-    sort_order: 'asc',
-  });
-  const departmentsQuery = useDepartments();
   const resultQuery = useSchedulingResult(patientId || undefined);
   const startMutation = useStartScheduling();
   const createAppointment = useCreateAppointment();
 
   const live = startMutation.data;
-  const persisted = resultQuery.data;
-  const data = normalizeResult(live, persisted);
-  const hasResult = Boolean(live || persisted);
+  const saved = resultQuery.data;
+  const data = buildView(live, saved);
+  const hasResult = Boolean(live || saved);
 
-  async function handleRun() {
+  const selectedPatient = useMemo(
+    () => patientsQuery.data?.items.find((p) => p.id === patientId),
+    [patientsQuery.data, patientId],
+  );
+
+  async function runScheduling() {
     if (!patientId) return;
     await startMutation.mutateAsync({
       patient_id: patientId,
       preferred_date: preferredDate,
-      visit_type: visitType,
-      reason_for_visit: reason.trim() || null,
-      department_id: departmentId || null,
-      preferred_doctor_id: preferredDoctorId || null,
-      surgery_required: surgeryRequired,
-      surgery_duration_minutes: Number(surgeryDuration) || 120,
-      follow_up_days: Number(followUpDays) || 14,
     });
   }
 
-  async function handleBook(slot: SlotRecommendation) {
-    const department = data.doctor_assignment?.candidates.find(
-      (c) => c.doctor_id === slot.doctor_id,
-    )?.department_id;
+  async function bookSlot(slot: SlotRecommendation) {
+    const candidate = data.doctor_assignment?.candidates.find(
+      (item) => item.doctor_id === slot.doctor_id,
+    );
     const values: AppointmentFormValues = {
       patient_id: patientId,
       doctor_id: slot.doctor_id,
-      department_id: department || departmentId || '',
+      department_id: candidate?.department_id || '',
       appointment_date: slot.appointment_date,
       start_time: slot.start_time.slice(0, 5),
       end_time: slot.end_time.slice(0, 5),
-      visit_type: visitType,
-      reason_for_visit: reason.trim(),
-      notes: 'Booked from Scheduling Agent recommendation.',
-      status: APPOINTMENT_STATUSES[0],
+      visit_type: data.visit_type as AppointmentFormValues['visit_type'],
+      reason_for_visit: data.derived_specialists.length
+        ? `Scheduling based on prior recommendations: ${data.derived_specialists.join(', ')}.`
+        : 'Scheduling based on prior clinical agent recommendations.',
+      notes: 'Appointment created from Scheduling Agent recommendation. Staff/physician review completed before booking.',
+      status: 'Scheduled',
     };
     await createAppointment.mutateAsync(values);
   }
@@ -170,9 +152,10 @@ export default function SchedulingAgentPage() {
                 Scheduling Agent
               </h1>
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)]">
-                Assigns doctors, finds open appointment windows, prepares surgery and
-                follow-up plans, recommends queue ordering, and balances workload.
-                Booking remains an explicit staff action.
+                Scheduling is driven by the patient’s existing Diagnosis, Emergency,
+                Prescription, and Medical Report results. The patient supplies only
+                the scheduling date; clinical treatment and surgery decisions come
+                from upstream agents.
               </p>
             </div>
             <Link
@@ -196,9 +179,11 @@ export default function SchedulingAgentPage() {
                 <Badge tone={tone(data.emergency_priority_level)}>
                   {data.emergency_priority_level} · {data.emergency_priority_score}/100
                 </Badge>
-              ) : (
-                <p className="mt-1 text-sm font-semibold">—</p>
-              )}
+              ) : <p className="mt-1 text-sm font-semibold">—</p>}
+            </Card>
+            <Card>
+              <p className="text-xs text-[var(--text-secondary)]">Derived visit type</p>
+              <p className="mt-1 text-sm font-semibold">{hasResult ? data.visit_type : '—'}</p>
             </Card>
             <Card>
               <p className="text-xs text-[var(--text-secondary)]">Assigned doctor</p>
@@ -206,26 +191,12 @@ export default function SchedulingAgentPage() {
                 {data.doctor_assignment?.selected_doctor_name || '—'}
               </p>
             </Card>
-            <Card>
-              <p className="text-xs text-[var(--text-secondary)]">Recommended slot</p>
-              {data.appointment_scheduling?.recommended_slot ? (
-                <p className="mt-1 text-sm font-semibold">
-                  {formatDateLabel(data.appointment_scheduling.recommended_slot.appointment_date)}
-                  <br />
-                  <span className="text-xs font-normal">
-                    {formatTimeLabel(data.appointment_scheduling.recommended_slot.start_time)}
-                  </span>
-                </p>
-              ) : (
-                <p className="mt-1 text-sm font-semibold">—</p>
-              )}
-            </Card>
           </div>
         </header>
 
         <Card>
-          <div className="grid gap-4 lg:grid-cols-6">
-            <label className="lg:col-span-2 text-sm">
+          <div className="flex flex-wrap items-end gap-3">
+            <label className="min-w-[260px] flex-1 text-sm">
               <span className="mb-1.5 block text-[var(--text-secondary)]">Patient</span>
               {patientsQuery.isLoading ? (
                 <Loading message="Loading patients…" />
@@ -245,9 +216,8 @@ export default function SchedulingAgentPage() {
                 </select>
               )}
             </label>
-
-            <label className="text-sm">
-              <span className="mb-1.5 block text-[var(--text-secondary)]">Preferred date</span>
+            <label className="w-48 text-sm">
+              <span className="mb-1.5 block text-[var(--text-secondary)]">Planning date</span>
               <input
                 type="date"
                 value={preferredDate}
@@ -255,106 +225,20 @@ export default function SchedulingAgentPage() {
                 className="w-full rounded-xl border border-[var(--border-color)] bg-transparent px-3 py-2.5"
               />
             </label>
-
-            <label className="text-sm">
-              <span className="mb-1.5 block text-[var(--text-secondary)]">Visit type</span>
-              <select
-                value={visitType}
-                onChange={(e) => setVisitType(e.target.value as typeof visitType)}
-                className="w-full rounded-xl border border-[var(--border-color)] bg-transparent px-3 py-2.5"
-              >
-                {VISIT_TYPES.map((type) => <option key={type}>{type}</option>)}
-              </select>
-            </label>
-
-            <label className="text-sm">
-              <span className="mb-1.5 block text-[var(--text-secondary)]">Department</span>
-              <select
-                value={departmentId}
-                onChange={(e) => setDepartmentId(e.target.value)}
-                className="w-full rounded-xl border border-[var(--border-color)] bg-transparent px-3 py-2.5"
-              >
-                <option value="">Auto-select</option>
-                {(departmentsQuery.data?.items ?? []).map((d) => (
-                  <option key={d.id} value={d.id}>{d.name}</option>
-                ))}
-              </select>
-            </label>
-
-            <label className="text-sm">
-              <span className="mb-1.5 block text-[var(--text-secondary)]">Preferred doctor</span>
-              <select
-                value={preferredDoctorId}
-                onChange={(e) => setPreferredDoctorId(e.target.value)}
-                className="w-full rounded-xl border border-[var(--border-color)] bg-transparent px-3 py-2.5"
-              >
-                <option value="">Auto-select</option>
-                {(doctorsQuery.data?.items ?? []).map((d) => (
-                  <option key={d.id} value={d.id}>Dr. {d.first_name} {d.last_name}</option>
-                ))}
-              </select>
-            </label>
-
-            <label className="text-sm lg:col-span-3">
-              <span className="mb-1.5 block text-[var(--text-secondary)]">Reason for visit</span>
-              <input
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                placeholder="Optional scheduling context"
-                className="w-full rounded-xl border border-[var(--border-color)] bg-transparent px-3 py-2.5"
-              />
-            </label>
-
-            <label className="flex items-center gap-2 text-sm lg:col-span-1">
-              <input
-                type="checkbox"
-                checked={surgeryRequired}
-                onChange={(e) => setSurgeryRequired(e.target.checked)}
-              />
-              Surgery required
-            </label>
-
-            <label className="text-sm">
-              <span className="mb-1.5 block text-[var(--text-secondary)]">Surgery duration</span>
-              <input
-                type="number"
-                min={30}
-                max={480}
-                step={30}
-                value={surgeryDuration}
-                onChange={(e) => setSurgeryDuration(e.target.value)}
-                disabled={!surgeryRequired}
-                className="w-full rounded-xl border border-[var(--border-color)] bg-transparent px-3 py-2.5 disabled:opacity-50"
-              />
-            </label>
-
-            <label className="text-sm">
-              <span className="mb-1.5 block text-[var(--text-secondary)]">Follow-up days</span>
-              <input
-                type="number"
-                min={1}
-                max={180}
-                value={followUpDays}
-                onChange={(e) => setFollowUpDays(e.target.value)}
-                className="w-full rounded-xl border border-[var(--border-color)] bg-transparent px-3 py-2.5"
-              />
-            </label>
-          </div>
-
-          <div className="mt-4 flex flex-wrap items-center gap-3">
             <button
               type="button"
               disabled={!patientId || startMutation.isPending}
-              onClick={handleRun}
+              onClick={runScheduling}
               className="rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-medium text-white disabled:opacity-50"
             >
               {startMutation.isPending ? 'Running Scheduling Agent…' : 'Run Scheduling Agent'}
             </button>
-            {resultQuery.isFetching ? (
-              <span className="text-xs text-[var(--text-secondary)]">Loading saved result…</span>
+            {selectedPatient ? (
+              <span className="text-xs text-[var(--text-secondary)]">
+                Clinical inputs are read from saved agent results for {selectedPatient.first_name} {selectedPatient.last_name}.
+              </span>
             ) : null}
           </div>
-
           {startMutation.isError ? (
             <p className="mt-3 text-sm text-red-600">
               {getApiErrorMessage(startMutation.error, 'Scheduling Agent failed')}
@@ -368,13 +252,9 @@ export default function SchedulingAgentPage() {
             <ol className="mt-5 space-y-3">
               {STAGES.map((stage, index) => (
                 <li key={stage} className="flex gap-3">
-                  <span
-                    className={
-                      hasResult
-                        ? 'flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white'
-                        : 'flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[var(--border-color)] text-[10px] text-[var(--text-secondary)]'
-                    }
-                  >
+                  <span className={hasResult
+                    ? 'flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white'
+                    : 'flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[var(--border-color)] text-[10px] text-[var(--text-secondary)]'}>
                     {hasResult ? '✓' : index + 1}
                   </span>
                   <span className="text-sm">{stage}</span>
@@ -387,7 +267,8 @@ export default function SchedulingAgentPage() {
             {!patientId ? (
               <Card>
                 <p className="text-sm text-[var(--text-secondary)]">
-                  Select a patient to load a previous scheduling result or generate a new plan.
+                  Select a patient. Scheduling will collect the latest upstream agent
+                  outputs automatically.
                 </p>
               </Card>
             ) : null}
@@ -395,20 +276,53 @@ export default function SchedulingAgentPage() {
             {hasResult ? (
               <>
                 <Card>
-                  <h2 className="text-sm font-semibold">Scheduling Summary</h2>
-                  <p className="mt-2 text-sm leading-relaxed">{data.summary}</p>
-                  {data.warnings.length ? (
-                    <ul className="mt-3 space-y-1 text-sm text-amber-800 dark:text-amber-200">
-                      {data.warnings.map((warning) => <li key={warning}>• {warning}</li>)}
-                    </ul>
-                  ) : null}
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <h2 className="text-sm font-semibold">Cross-Agent Clinical Context</h2>
+                      <p className="mt-1 text-xs text-[var(--text-secondary)]">
+                        Scheduling inputs are derived, not manually entered.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {Object.entries(data.source_availability).map(([source, available]) => (
+                        <span
+                          key={source}
+                          className={`rounded-md border px-2 py-1 text-[11px] ${available
+                            ? 'border-emerald-500/40 text-emerald-700 dark:text-emerald-300'
+                            : 'border-[var(--border-color)] text-[var(--text-secondary)]'}`}
+                        >
+                          {available ? '✓' : '○'} {source.replace('_', ' ')}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mt-4 grid gap-3 md:grid-cols-3">
+                    <div className="rounded-lg border border-[var(--border-color)] p-3">
+                      <p className="text-xs text-[var(--text-secondary)]">Recommended department</p>
+                      <p className="mt-1 text-sm font-semibold">{data.derived_department || 'Not specified by Diagnosis Agent'}</p>
+                    </div>
+                    <div className="rounded-lg border border-[var(--border-color)] p-3">
+                      <p className="text-xs text-[var(--text-secondary)]">Recommended specialists</p>
+                      <p className="mt-1 text-sm">{data.derived_specialists.join(', ') || 'No specialist recommendation'}</p>
+                    </div>
+                    <div className="rounded-lg border border-[var(--border-color)] p-3">
+                      <p className="text-xs text-[var(--text-secondary)]">Follow-up / urgency</p>
+                      <p className="mt-1 text-sm"><strong>{data.visit_type}</strong> · {data.follow_up_planning?.interval_days ?? '—'} day plan</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 rounded-xl border border-primary-500/30 bg-primary-500/5 p-4">
+                    <p className="text-sm font-medium">Downstream scheduling inputs</p>
+                    <p className="mt-1 text-xs text-[var(--text-secondary)]">
+                      Diagnosis treatment path, Emergency priority/triage, Prescription treatment plan,
+                      and Medical Report documentation are combined before doctor and slot selection.
+                    </p>
+                  </div>
                 </Card>
 
                 <Card>
                   <h2 className="text-sm font-semibold">1. Doctor Assignment</h2>
                   <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                    Selected: {data.doctor_assignment?.selected_doctor_name || 'No doctor'}
-                    {' · '}score {data.doctor_assignment?.selection_score ?? 0}/100
+                    Selected: {data.doctor_assignment?.selected_doctor_name || 'No doctor'} · score {data.doctor_assignment?.selection_score ?? 0}/100
                   </p>
                   <div className="mt-4 grid gap-3">
                     {(data.doctor_assignment?.candidates ?? []).map((candidate) => (
@@ -424,11 +338,11 @@ export default function SchedulingAgentPage() {
                           <Badge tone={tone(candidate.availability_status)}>{candidate.score}/100</Badge>
                         </div>
                         <p className="mt-2 text-xs text-[var(--text-secondary)]">
-                          Workload: {candidate.workload_count} active appointment(s) in the horizon
+                          Workload: {candidate.workload_count} active appointment(s)
                         </p>
                         <div className="mt-2 flex flex-wrap gap-1.5">
-                          {candidate.reasons.slice(0, 5).map((r) => (
-                            <span key={r} className="rounded-md bg-black/5 px-2 py-1 text-[11px] dark:bg-white/5">{r}</span>
+                          {candidate.reasons.slice(0, 5).map((reason) => (
+                            <span key={reason} className="rounded-md bg-black/5 px-2 py-1 text-[11px] dark:bg-white/5">{reason}</span>
                           ))}
                         </div>
                       </div>
@@ -440,58 +354,40 @@ export default function SchedulingAgentPage() {
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
                       <h2 className="text-sm font-semibold">2. Appointment Scheduling</h2>
-                      <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                        {data.appointment_scheduling?.booking_status}
-                      </p>
+                      <p className="mt-1 text-xs text-[var(--text-secondary)]">Recommendation only until staff explicitly books.</p>
                     </div>
                     {data.appointment_scheduling?.recommended_slot ? (
                       <button
                         type="button"
                         disabled={createAppointment.isPending}
-                        onClick={() => handleBook(data.appointment_scheduling!.recommended_slot!)}
+                        onClick={() => bookSlot(data.appointment_scheduling!.recommended_slot!)}
                         className="rounded-lg bg-primary-600 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
                       >
                         {createAppointment.isPending ? 'Booking…' : 'Book recommended slot'}
                       </button>
                     ) : null}
                   </div>
-
                   {data.appointment_scheduling?.recommended_slot ? (
                     <div className="mt-4 rounded-xl border border-primary-500/40 bg-primary-500/5 p-4">
                       <p className="text-sm font-semibold">
                         {formatDateLabel(data.appointment_scheduling.recommended_slot.appointment_date)}
-                        {' · '}
-                        {formatTimeLabel(data.appointment_scheduling.recommended_slot.start_time)}
-                        {'–'}
-                        {formatTimeLabel(data.appointment_scheduling.recommended_slot.end_time)}
+                        {' · '}{formatTimeLabel(data.appointment_scheduling.recommended_slot.start_time)}
+                        {'–'}{formatTimeLabel(data.appointment_scheduling.recommended_slot.end_time)}
                       </p>
                       <p className="mt-1 text-xs text-[var(--text-secondary)]">
                         {data.appointment_scheduling.recommended_slot.doctor_name}
-                        {' · score '}
-                        {data.appointment_scheduling.recommended_slot.score}
                       </p>
                     </div>
                   ) : (
-                    <p className="mt-4 text-sm text-[var(--text-secondary)]">
-                      No open appointment slot found in the planning horizon.
-                    </p>
+                    <p className="mt-4 text-sm text-[var(--text-secondary)]">No open appointment slot found.</p>
                   )}
-
-                  {(data.appointment_scheduling?.alternatives ?? []).length ? (
+                  {data.appointment_scheduling?.alternatives?.length ? (
                     <div className="mt-4">
-                      <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">Alternatives</p>
+                      <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">Alternative slots</p>
                       <div className="mt-2 grid gap-2 md:grid-cols-2">
-                        {data.appointment_scheduling!.alternatives.map((slot) => (
-                          <button
-                            type="button"
-                            key={slot.appointment_date + slot.start_time}
-                            onClick={() => handleBook(slot)}
-                            disabled={createAppointment.isPending}
-                            className="rounded-lg border border-[var(--border-color)] p-3 text-left hover:border-primary-500/50 disabled:opacity-50"
-                          >
-                            <p className="text-sm font-medium">
-                              {formatDateLabel(slot.appointment_date)} · {formatTimeLabel(slot.start_time)}
-                            </p>
+                        {data.appointment_scheduling.alternatives.map((slot) => (
+                          <button key={slot.appointment_date + slot.start_time} type="button" onClick={() => bookSlot(slot)} className="rounded-lg border border-[var(--border-color)] p-3 text-left hover:border-primary-500/50">
+                            <p className="text-sm font-medium">{formatDateLabel(slot.appointment_date)} · {formatTimeLabel(slot.start_time)}</p>
                             <p className="mt-1 text-xs text-[var(--text-secondary)]">{slot.doctor_name}</p>
                           </button>
                         ))}
@@ -503,38 +399,49 @@ export default function SchedulingAgentPage() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <Card>
                     <h2 className="text-sm font-semibold">3. Surgery Scheduling</h2>
-                    <p className="mt-2 text-sm">
-                      {data.surgery_scheduling?.required ? 'Surgery planning requested' : 'No surgery requested'}
-                    </p>
-                    {data.surgery_scheduling?.recommended_slot ? (
-                      <p className="mt-3 text-sm">
-                        {formatDateLabel(data.surgery_scheduling.recommended_slot.appointment_date)}
-                        {' · '}
-                        {formatTimeLabel(data.surgery_scheduling.recommended_slot.start_time)}
-                      </p>
-                    ) : null}
-                    <p className="mt-3 text-xs text-[var(--text-secondary)]">
-                      {data.surgery_scheduling?.operation_theatre_status}
-                    </p>
-                    <ul className="mt-3 space-y-1 text-xs text-[var(--text-secondary)]">
-                      {(data.surgery_scheduling?.notes ?? []).map((n) => <li key={n}>• {n}</li>)}
-                    </ul>
+                    <div className="mt-3">
+                      {data.surgery_scheduling?.required ? (
+                        <>
+                          <Badge tone="amber">Upstream recommendation detected</Badge>
+                          <p className="mt-2 text-sm">Surgery/procedure planning was derived from prior agent recommendations.</p>
+                          {data.surgery_recommendation.length ? (
+                            <ul className="mt-3 space-y-1 text-xs text-[var(--text-secondary)]">
+                              {data.surgery_recommendation.map((evidence) => <li key={evidence}>• {evidence}</li>)}
+                            </ul>
+                          ) : null}
+                          {data.surgery_scheduling.recommended_slot ? (
+                            <p className="mt-3 text-sm">
+                              Candidate window: {formatDateLabel(data.surgery_scheduling.recommended_slot.appointment_date)}
+                              {' · '}{formatTimeLabel(data.surgery_scheduling.recommended_slot.start_time)}
+                            </p>
+                          ) : (
+                            <p className="mt-3 text-sm text-[var(--text-secondary)]">No open planning window found.</p>
+                          )}
+                          <p className="mt-3 text-xs text-[var(--text-secondary)]">
+                            {data.surgery_scheduling.operation_theatre_status}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <Badge tone="green">No explicit surgery recommendation</Badge>
+                          <p className="mt-2 text-sm text-[var(--text-secondary)]">
+                            No upstream agent currently contains explicit surgery/operative recommendation language.
+                          </p>
+                        </>
+                      )}
+                    </div>
                   </Card>
 
                   <Card>
                     <h2 className="text-sm font-semibold">4. Follow-Up Planning</h2>
                     <p className="mt-3 text-sm">
                       Recommended date:{' '}
-                      <strong>{data.follow_up_planning?.recommended_date
-                        ? formatDateLabel(data.follow_up_planning.recommended_date)
-                        : '—'}</strong>
+                      <strong>{data.follow_up_planning?.recommended_date ? formatDateLabel(data.follow_up_planning.recommended_date) : '—'}</strong>
                     </p>
                     <p className="mt-2 text-sm">
                       Interval: <strong>{data.follow_up_planning?.interval_days ?? '—'} day(s)</strong>
                     </p>
-                    <p className="mt-2 text-xs text-[var(--text-secondary)]">
-                      {data.follow_up_planning?.reason}
-                    </p>
+                    <p className="mt-2 text-xs text-[var(--text-secondary)]">{data.follow_up_planning?.reason}</p>
                   </Card>
                 </div>
 
@@ -547,28 +454,12 @@ export default function SchedulingAgentPage() {
                     <div className="mt-4 space-y-2">
                       {(data.queue_optimization?.ordered_queue ?? []).map((item) => (
                         <div key={item.appointment_id} className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border-color)] p-3">
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium">
-                              #{item.position} · {item.patient_name}
-                            </p>
-                            <p className="text-xs text-[var(--text-secondary)]">
-                              {formatTimeLabel(item.start_time)}–{formatTimeLabel(item.end_time)}
-                            </p>
-                          </div>
-                          <Badge tone={tone(item.priority_level)}>
-                            {item.priority_level} · {item.priority_score}
-                          </Badge>
+                          <div><p className="text-sm font-medium">#{item.position} · {item.patient_name}</p><p className="text-xs text-[var(--text-secondary)]">{formatTimeLabel(item.start_time)}–{formatTimeLabel(item.end_time)}</p></div>
+                          <Badge tone={tone(item.priority_level)}>{item.priority_level} · {item.priority_score}</Badge>
                         </div>
                       ))}
-                      {!data.queue_optimization?.ordered_queue?.length ? (
-                        <p className="text-sm text-[var(--text-secondary)]">
-                          No existing appointments for the selected doctor/date.
-                        </p>
-                      ) : null}
+                      {!data.queue_optimization?.ordered_queue?.length ? <p className="text-sm text-[var(--text-secondary)]">No existing appointments for the selected doctor/date.</p> : null}
                     </div>
-                    <ul className="mt-3 space-y-1 text-xs text-[var(--text-secondary)]">
-                      {(data.queue_optimization?.rationale ?? []).map((r) => <li key={r}>• {r}</li>)}
-                    </ul>
                   </Card>
 
                   <Card>
@@ -581,21 +472,25 @@ export default function SchedulingAgentPage() {
                         <div key={doctor.doctor_id} className="rounded-lg border border-[var(--border-color)] p-3">
                           <div className="flex items-center justify-between gap-2">
                             <p className="text-sm font-medium">{doctor.doctor_name}</p>
-                            <Badge tone={tone(doctor.availability_status)}>
-                              {doctor.active_appointments} appointment(s)
-                            </Badge>
+                            <Badge tone={tone(doctor.availability_status)}>{doctor.active_appointments} appointment(s)</Badge>
                           </div>
-                          <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                            Workload score: {doctor.workload_score}/100
-                          </p>
+                          <p className="mt-1 text-xs text-[var(--text-secondary)]">Workload score: {doctor.workload_score}/100</p>
                         </div>
                       ))}
                     </div>
-                    <p className="mt-3 text-xs text-[var(--text-secondary)]">
-                      {data.workload_balancing?.recommendation}
-                    </p>
+                    <p className="mt-3 text-xs text-[var(--text-secondary)]">{data.workload_balancing?.recommendation}</p>
                   </Card>
                 </div>
+
+                <Card>
+                  <h2 className="text-sm font-semibold">Scheduling Summary</h2>
+                  <p className="mt-2 text-sm leading-relaxed">{data.summary}</p>
+                  {data.warnings.length ? (
+                    <ul className="mt-3 space-y-1 text-sm text-amber-800 dark:text-amber-200">
+                      {data.warnings.map((warning) => <li key={warning}>• {warning}</li>)}
+                    </ul>
+                  ) : null}
+                </Card>
               </>
             ) : null}
           </div>
