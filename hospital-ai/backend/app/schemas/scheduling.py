@@ -49,6 +49,7 @@ class SchedulingResultOut(BaseModel):
     recommended_imaging_json: List[str] = Field(default_factory=list)
     recommended_medications_json: List[str] = Field(default_factory=list)
     treatment_modes_json: List[str] = Field(default_factory=list)
+    resource_requirements_json: List[str] = Field(default_factory=list)
     treatment_validation_status: str | None = None
     status: str = "Completed"
     warnings_json: List[str] = Field(default_factory=list)
@@ -78,6 +79,7 @@ class SchedulingStartResponse(BaseModel):
     recommended_imaging: List[str] = Field(default_factory=list)
     recommended_medications: List[str] = Field(default_factory=list)
     treatment_modes: List[str] = Field(default_factory=list)
+    resource_requirements: List[str] = Field(default_factory=list)
     treatment_validation_status: str | None = None
     warnings: List[str] = Field(default_factory=list)
     doctor_assignment: DoctorAssignmentResult
