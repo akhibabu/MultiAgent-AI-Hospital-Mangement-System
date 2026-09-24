@@ -42,7 +42,33 @@ def main():
     args=ap.parse_args(); src=Path(args.admissions); out=Path(args.output); out.mkdir(parents=True,exist_ok=True)
     if not src.is_file(): raise SystemExit(f'Missing admissions file: {src}')
     monitor=VitalMonitor(); detector=CriticalEventDetector(); triage=EmergencyTriageClassifier(); icu=ICURequirementPredictor(); alerts=EmergencyAlertGenerator(); ranker=PatientPriorityRanker()
-    rows=[row for row in csv.DictReader(src.open(encoding='utf-8',newline='')) if str(row.get('esi_level') or '').strip() in {'1','2','3','4','5'}]\n    if args.max_cases:\n        # Stratify by ESI so a small benchmark does not accidentally contain only one acuity class.\n        groups={level:[] for level in (1,2,3,4,5)}\n        for row in rows:\n            groups[int(float(row['esi_level']))].append(row)\n        selected=[]\n        per_level=args.max_cases//5\n        remainder=args.max_cases%5\n        for level in (1,2,3,4,5):\n            take=per_level+(1 if level<=remainder else 0)\n            selected.extend(groups[level][:take])\n        if len(selected)<args.max_cases:\n            used={str(r.get('admission_id') or r.get('patient_id')) for r in selected}\n            for row in rows:\n                key=str(row.get('admission_id') or row.get('patient_id'))\n                if key not in used:\n                    selected.append(row)\n                    used.add(key)\n                if len(selected)>=args.max_cases: break\n        rows=selected[:args.max_cases]\n    tri_true=[]; tri_pred=[]; icu_true=[]; icu_pred=[]; pri_true=[]; pri_pred=[]; alert_true=[]; alert_pred=[]; cases=[]
+    rows = [
+        row
+        for row in csv.DictReader(src.open(encoding="utf-8", newline=""))
+        if str(row.get("esi_level") or "").strip() in {"1", "2", "3", "4", "5"}
+    ]
+    if args.max_cases:
+        # Stratify by ESI so a small benchmark covers every acuity class.
+        groups = {level: [] for level in (1, 2, 3, 4, 5)}
+        for row in rows:
+            groups[int(float(row["esi_level"]))].append(row)
+        selected = []
+        per_level = args.max_cases // 5
+        remainder = args.max_cases % 5
+        for level in (1, 2, 3, 4, 5):
+            take = per_level + (1 if level <= remainder else 0)
+            selected.extend(groups[level][:take])
+        if len(selected) < args.max_cases:
+            used = {str(r.get("admission_id") or r.get("patient_id")) for r in selected}
+            for row in rows:
+                key = str(row.get("admission_id") or row.get("patient_id"))
+                if key not in used:
+                    selected.append(row)
+                    used.add(key)
+                if len(selected) >= args.max_cases:
+                    break
+        rows = selected[:args.max_cases]
+    tri_true=[]; tri_pred=[]; icu_true=[]; icu_pred=[]; pri_true=[]; pri_pred=[]; alert_true=[]; alert_pred=[]; cases=[]
     for row in rows:
         try: esi=int(float(row.get('esi_level','')))
         except (TypeError,ValueError): continue
