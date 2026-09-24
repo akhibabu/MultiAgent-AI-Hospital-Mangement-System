@@ -58,10 +58,10 @@ def main():
         tri_true.append(gt); tri_pred.append(tri.category); icu_true.append(ic_gt); icu_pred.append(ic.signal=='High'); pri_true.append(gt); pri_pred.append(pr.priority_level); alert_true.append(alert_gt); alert_pred.append(al.alert_count>0)
         cases.append({'case_id':str(row.get('admission_id') or row.get('patient_id')),'task_ids':['emergency_triage_classification','emergency_icu_requirement_prediction','emergency_patient_priority_ranking','emergency_alert_generation'],'input':{'esi_hidden':True,'vitals':vital_rows(row)},'ground_truth':{'triage':gt,'icu_required':ic_gt,'alert_expected':alert_gt,'priority_level':gt},'prediction':{'triage':tri.category,'icu_signal':ic.signal,'priority_level':pr.priority_level,'alert_generated':al.alert_count>0},'metrics':{'triage_match':tri.category==gt,'icu_match':(ic.signal=='High')==ic_gt,'priority_match':pr.priority_level==gt,'alert_match':(al.alert_count>0)==alert_gt}})
     task_summaries={
-      'emergency_triage_classification':{'accuracy':sum(a==b for a,b in zip(tri_true,tri_pred))/len(tri_true),'macro_f1':macro_f1(tri_true,tri_pred)},
-      'emergency_icu_requirement_prediction':binary_metrics(icu_true,icu_pred),
-      'emergency_patient_priority_ranking':{'accuracy':sum(a==b for a,b in zip(pri_true,pri_pred))/len(pri_true),'macro_f1':macro_f1(pri_true,pri_pred)},
-      'emergency_alert_generation':binary_metrics(alert_true,alert_pred),
+      'emergency_triage_classification':{'accuracy':sum(a==b for a,b in zip(tri_true,tri_pred))/len(tri_true),'macro_f1':macro_f1(tri_true,tri_pred),'headline_metric':'Accuracy','headline_value':sum(a==b for a,b in zip(tri_true,tri_pred))/len(tri_true)},
+      'emergency_icu_requirement_prediction':{**binary_metrics(icu_true,icu_pred),'headline_metric':'F1','headline_value':binary_metrics(icu_true,icu_pred)['f1_score']},
+      'emergency_patient_priority_ranking':{'accuracy':sum(a==b for a,b in zip(pri_true,pri_pred))/len(pri_true),'macro_f1':macro_f1(pri_true,pri_pred),'headline_metric':'Accuracy','headline_value':sum(a==b for a,b in zip(pri_true,pri_pred))/len(pri_true)},
+      'emergency_alert_generation':{**binary_metrics(alert_true,alert_pred),'headline_metric':'F1','headline_value':binary_metrics(alert_true,alert_pred)['f1_score']},
     }
     with (out/'cases.jsonl').open('w',encoding='utf-8') as f:
         for case in cases: f.write(json.dumps(case)+'\n')
