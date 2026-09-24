@@ -77,8 +77,8 @@ const AGENTS = [
   {
     path: '/ai/resource-allocation',
     name: 'Resource Allocation Agent',
-    description: 'Bed, staff, and equipment allocation optimization. (Coming Soon)',
-    ready: false,
+    description: 'Derives bed, staff, theatre, laboratory, and equipment allocation from Scheduling and hospital inventory.',
+    ready: true,
   },
 ];
 
