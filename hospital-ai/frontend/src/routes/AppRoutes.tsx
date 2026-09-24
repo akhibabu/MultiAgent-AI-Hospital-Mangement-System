@@ -48,6 +48,9 @@ const AnnouncementsPage = lazy(
 );
 const ProfilePage = lazy(() => import('@/pages/Profile/ProfilePage'));
 const SettingsPage = lazy(() => import('@/pages/Settings/SettingsPage'));
+const ValidationCenterPage = lazy(
+  () => import('@/pages/validation/ValidationCenterPage'),
+);
 const IntakeAgentPage = lazy(() => import('@/pages/AI/IntakeAgentPage'));
 const DiagnosisAgentPage = lazy(() => import('@/pages/AI/DiagnosisAgentPage'));
 const ResearchAgentPage = lazy(() => import('@/pages/AI/ResearchAgentPage'));
