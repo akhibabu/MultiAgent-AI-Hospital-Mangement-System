@@ -228,10 +228,10 @@ def main() -> int:
 
     with (vital_dir / "cases.jsonl").open("w", encoding="utf-8") as handle:
         for case in vital_cases:
-            handle.write(json.dumps(case) + "\n")
+            handle.write(json.dumps(case) + chr(10))
     with (event_dir / "cases.jsonl").open("w", encoding="utf-8") as handle:
         for case in event_cases:
-            handle.write(json.dumps(case) + "\n")
+            handle.write(json.dumps(case) + chr(10))
 
     vital_accuracy = accuracy(abnormal_true, abnormal_pred)
     vital_f1 = f1(abnormal_true, abnormal_pred)
