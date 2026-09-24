@@ -79,6 +79,8 @@ jobs:
 
       - name: Run targeted agent tests
         working-directory: hospital-ai/backend
+        env:
+          PYTHONPATH: ${{ github.workspace }}/hospital-ai/backend
         run: pytest -q tests/test_emergency_agent.py tests/test_scheduling_agent.py tests/test_resource_allocation_agent.py
 
       - name: Upload dataset validation reports
