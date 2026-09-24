@@ -548,9 +548,15 @@ def run_scheduling(cases: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
 
     records=[];matches=[];gap_errors=[]
     for b in bundles:
-        gt=b["case"]["ground_truth"]["workload_balancing"]; pred_id=b["balance"].doctor_loads[0].doctor_id if b["balance"].doctor_loads else None
+        gt=b["case"]["ground_truth"]["workload_balancing"]
+        pred_id=None
+        recommendation=str(b["balance"].recommendation or "")
+        for doctor in b["balance"].doctor_loads:
+            if doctor.doctor_name and doctor.doctor_name in recommendation:
+                pred_id=doctor.doctor_id
+                break
         matches.append(pred_id==gt["doctor_id"]);gap_errors.append(abs(float(b["balance"].balance_gap)-float(gt["balance_gap"])))
-        records.append(case_result(agent="Scheduling",task_id="scheduling_workload_balancing",case_id=b["case"]["case_id"],prediction={"doctor_id":pred_id,"balance_gap":b["balance"].balance_gap},ground_truth=gt,metrics={"match":pred_id==gt["doctor_id"],"gap_abs_error":gap_errors[-1]}))
+        records.append(case_result(agent="Scheduling",task_id="scheduling_workload_balancing",case_id=b["case"]["case_id"],prediction={"doctor_id":pred_id,"balance_gap":b["balance"].balance_gap,"recommendation":recommendation},ground_truth=gt,metrics={"match":pred_id==gt["doctor_id"],"gap_abs_error":gap_errors[-1]}))
     acc=accuracy(matches); mae=sum(gap_errors)/len(gap_errors) if gap_errors else 0
     summary=base_summary(task_id="scheduling_workload_balancing",task="Workload Balancing",metric="Recommendation Accuracy",value=acc,cases=len(cases),
         note=f"Reference recommends the lowest-load available doctor in the supplied workload set. Recommendation accuracy {acc*100:.1f}%; mean workload-gap error {mae:.2f}.",accuracy=acc,secondary_metrics={"mean_gap_absolute_error":mae})
