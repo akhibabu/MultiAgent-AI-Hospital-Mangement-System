@@ -66,7 +66,7 @@ def main():
         cases.append({'case_id':task['id'],'task_id':'scheduling_appointment_scheduling','status':'SCORED','input':{'benchmark_task':task['name'],'constraints':task.get('constraints',{}),'candidate_count':len(candidates)},'prediction':predicted_slot,'ground_truth':{'slot_id':expected_id,'start':expected.get('start') if expected else None,'action':task.get('expected',{}).get('action')},'metrics':{'match':match}})
         if len(cases)>=a.max_cases: break
     accuracy=sum(c['metrics']['match'] for c in cases)/len(cases) if cases else 0.0
-    payload={'task_id':'scheduling_appointment_scheduling','dataset':'AISmithLab Appointment Scheduling Benchmark (synthetic)','cases_evaluated':len(cases),'accuracy':accuracy,'clinical_accuracy_claim':False,'note':'Measures earliest-valid-slot selection after benchmark constraints are resolved; it does not evaluate unsupported insurance/policy mutation behavior.'}
+    payload={'task_id':'scheduling_appointment_scheduling','dataset':'AISmithLab Appointment Scheduling Benchmark (synthetic)','cases_evaluated':len(cases),'accuracy':accuracy,'headline_metric':'Accuracy','headline_value':accuracy,'clinical_accuracy_claim':False,'note':'Measures earliest-valid-slot selection after benchmark constraints are resolved. The production AppointmentSlotEngine receives already-valid candidate windows, so this does not claim full policy/insurance/booking-mutation validation.'}
     (out/'cases.jsonl').write_text('\n'.join(json.dumps(c) for c in cases)+'\n',encoding='utf-8')
     (out/'summary.json').write_text(json.dumps(payload,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(payload,indent=2))
