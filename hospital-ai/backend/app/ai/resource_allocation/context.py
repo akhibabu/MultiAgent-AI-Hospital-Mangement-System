@@ -113,13 +113,6 @@ class ResourceAllocationContext:
                 priority=_requirement_priority("Operating Theatre", priority_level),
             )
 
-        if procedures and bool(surgery.get("required")):
-            add(
-                "Procedure Support Equipment",
-                "Medical Equipment",
-                "Scheduling Agent",
-                "Procedure/surgery recommendation requires equipment capacity to be validated downstream.",
-            )
 
         if not scheduling and icu_signal == "High":
             add(
