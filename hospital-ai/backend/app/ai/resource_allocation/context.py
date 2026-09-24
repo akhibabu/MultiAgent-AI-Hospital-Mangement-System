@@ -4,10 +4,10 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional
 from uuid import UUID
 
+from app.ai.resource_allocation.models import ResourceRequirement
 from app.repositories.emergency_repository import EmergencyResultRepository
 from app.repositories.patient_context_repository import PatientClinicalContextRepository
 from app.repositories.scheduling_result_repository import SchedulingResultRepository
-from app.ai.resource_allocation.models import ResourceRequirement
 
 
 def _unique(values: List[str]) -> List[str]:
@@ -52,6 +52,7 @@ class ResourceAllocationContext:
         procedures = scheduling.get("procedures_json") or []
         surgery = scheduling.get("surgery_scheduling_json") or {}
         surgery_recommendation = scheduling.get("surgery_recommendation_json") or []
+        specialists = scheduling.get("derived_specialists_json") or []
         priority_level = str(
             scheduling.get("emergency_priority_level")
             or ((emergency.get("patient_priority_json") or {}).get("priority_level"))
@@ -96,10 +97,9 @@ class ResourceAllocationContext:
             label = str(raw or "").strip()
             if not label:
                 continue
-            mapped_type = _resource_type_for(label)
             add(
                 label,
-                mapped_type,
+                _resource_type_for(label),
                 "Scheduling Agent",
                 "Derived from the Scheduling Agent downstream resource requirements.",
             )
@@ -152,6 +152,7 @@ class ResourceAllocationContext:
             "priority_score": min(100.0, max(0.0, priority_score)),
             "requirements": requirements,
             "procedures": _unique(procedures if isinstance(procedures, list) else []),
+            "specialists": _unique(specialists if isinstance(specialists, list) else []),
             "surgery_required": bool(surgery.get("required")),
             "surgery_recommendation": _unique(
                 surgery_recommendation if isinstance(surgery_recommendation, list) else []
@@ -182,6 +183,7 @@ def _resource_type_for(label: str) -> Optional[str]:
         "pharmacy": "Pharmacy",
         "imaging capacity": "Medical Equipment",
         "medical equipment": "Medical Equipment",
+        "procedure support equipment": "Medical Equipment",
         "specialist staff": None,
     }
     return mappings.get(key)
