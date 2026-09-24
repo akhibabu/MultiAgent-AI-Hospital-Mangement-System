@@ -1,0 +1,54 @@
+name: Operational Agent Validation
+
+on:
+  pull_request:
+    paths:
+      - "hospital-ai/backend/app/ai/emergency/**"
+      - "hospital-ai/backend/app/ai/scheduling/**"
+      - "hospital-ai/backend/app/ai/resource_allocation/**"
+      - "hospital-ai/backend/app/schemas/resource_allocation.py"
+      - "hospital-ai/validation/pipeline/run_operational_validation.py"
+      - ".github/workflows/operational-validation.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "hospital-ai/backend/app/ai/emergency/**"
+      - "hospital-ai/backend/app/ai/scheduling/**"
+      - "hospital-ai/backend/app/ai/resource_allocation/**"
+      - "hospital-ai/backend/app/schemas/resource_allocation.py"
+      - "hospital-ai/validation/pipeline/run_operational_validation.py"
+      - ".github/workflows/operational-validation.yml"
+
+jobs:
+  operational-validation:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hospital-ai/backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install backend dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install email-validator
+
+      - name: Run operational validation
+        working-directory: hospital-ai
+        run: |
+          python validation/pipeline/run_operational_validation.py             --output validation/results/operational/report.json
+
+      - name: Upload validation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: operational-validation-report
+          path: hospital-ai/validation/results/operational/report.json
