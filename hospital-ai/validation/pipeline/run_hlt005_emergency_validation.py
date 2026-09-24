@@ -65,10 +65,29 @@ def main():
     }
     with (out/'cases.jsonl').open('w',encoding='utf-8') as f:
         for case in cases: f.write(json.dumps(case)+'\n')
+    task_field_map = {
+        'emergency_triage_classification': ('triage', 'triage_match', 'triage'),
+        'emergency_icu_requirement_prediction': ('icu_required', 'icu_match', 'icu_signal'),
+        'emergency_patient_priority_ranking': ('priority_level', 'priority_match', 'priority_level'),
+        'emergency_alert_generation': ('alert_expected', 'alert_match', 'alert_generated'),
+    }
     for task_id,metrics in task_summaries.items():
-        taskdir=out/task_id; taskdir.mkdir(parents=True,exist_ok=True); payload={'task_id':task_id,'dataset':'HLT-005 Synthetic Hospital Admission Dataset','cases_evaluated':len(cases),'metrics':metrics,'clinical_accuracy_claim':False}
-        payload.update(metrics); (taskdir/'cases.jsonl').write_text((out/'cases.jsonl').read_text(encoding='utf-8'),encoding='utf-8'); (taskdir/'summary.json').write_text(json.dumps(payload,indent=2)+'\n',encoding='utf-8')
-    unsupported={'emergency_vital_monitoring':{'status':'NOT_VALIDATABLE','reason':'No independent label; validated by deterministic rule-conformance tests.'},'emergency_critical_event_detection':{'status':'NOT_VALIDATABLE','reason':'HLT-005 does not provide independent event annotations.'}}
+        taskdir=out/task_id; taskdir.mkdir(parents=True,exist_ok=True)
+        truth_field, match_field, prediction_field = task_field_map[task_id]
+        task_cases=[]
+        for case in cases:
+            task_cases.append({
+                'case_id':case['case_id'],
+                'task_id':task_id,
+                'status':'SCORED',
+                'input':case['input'],
+                'prediction':case['prediction'].get(prediction_field),
+                'ground_truth':case['ground_truth'].get(truth_field),
+                'metrics':{'match':bool(case['metrics'][match_field])},
+            })
+        (taskdir/'cases.jsonl').write_text('\\n'.join(json.dumps(x) for x in task_cases)+'\\n',encoding='utf-8')
+        payload={'task_id':task_id,'dataset':'HLT-005 Synthetic Hospital Admission Dataset','cases_evaluated':len(task_cases),'metrics':metrics,'clinical_accuracy_claim':False}
+        payload.update(metrics); (taskdir/'summary.json').write_text(json.dumps(payload,indent=2)+'\\n',encoding='utf-8')
     summary={'dataset':'HLT-005 Synthetic Hospital Admission Dataset','cases_evaluated':len(cases),'task_summaries':task_summaries,'not_validatable':unsupported,'clinical_accuracy_claim':False}
     (out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8'); print(json.dumps(summary,indent=2))
 if __name__=='__main__': main()
