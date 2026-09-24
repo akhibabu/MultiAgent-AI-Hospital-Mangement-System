@@ -30,7 +30,7 @@ jobs:
           pip install email-validator
       - name: Validation API import
         working-directory: hospital-ai/backend
-        run: python -c "from app.routes.validation import router; from app.schemas.validation import ValidationOverview; print(len(router.routes))"
+        run: python -c "from app.routes.validation import router, FROZEN_PATH, _load; from app.schemas.validation import ValidationOverview; data=_load(); assert FROZEN_PATH.is_file(); assert len(data.get(\"agents\", [])) >= 8; print(len(router.routes), len(data[\"agents\"]))"
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
