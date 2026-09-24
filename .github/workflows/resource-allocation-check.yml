@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - feature/resource-allocation-agent
+  pull_request:
+    branches:
+      - main
 
 jobs:
   backend:
