@@ -89,7 +89,7 @@ def main():
       'emergency_alert_generation':{**binary_metrics(alert_true,alert_pred),'headline_metric':'F1','headline_value':binary_metrics(alert_true,alert_pred)['f1_score']},
     }
     with (out/'cases.jsonl').open('w',encoding='utf-8') as f:
-        for case in cases: f.write(json.dumps(case)+'\n')
+        for case in cases: f.write(json.dumps(case) + chr(10))
     task_field_map = {
         'emergency_triage_classification': ('triage', 'triage_match', 'triage'),
         'emergency_icu_requirement_prediction': ('icu_required', 'icu_match', 'icu_signal'),
