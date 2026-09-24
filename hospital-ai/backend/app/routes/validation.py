@@ -33,7 +33,7 @@ def _dataset_overrides() -> dict[str, dict[str, Any]]:
     overrides: dict[str, dict[str, Any]] = {}
     if not CASE_ROOT.exists():
         return overrides
-    for summary_path in CASE_ROOT.rglob("summary.json"):
+    for summary_path in CASE_ROOT.rglob("*.summary.json"):
         try:
             payload = json.loads(summary_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
