@@ -1,0 +1,89 @@
+name: Dataset Agent Validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "hospital-ai/backend/app/ai/emergency/**"
+      - "hospital-ai/backend/app/ai/scheduling/**"
+      - "hospital-ai/backend/app/ai/resource_allocation/**"
+      - "hospital-ai/validation/pipeline/run_*validation.py"
+      - "hospital-ai/validation/pipeline/run_*_validation.py"
+      - "hospital-ai/validation/pipeline/run_scheduling_benchmark_validation.py"
+      - ".github/workflows/dataset-agent-validation.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install backend dependencies
+        working-directory: hospital-ai/backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install email-validator
+
+      - name: Download HLT-005
+        env:
+          OUT: ${{ runner.temp }}/hlt005
+        run: |
+          mkdir -p "$OUT"
+          curl -fL --retry 3 --retry-all-errors "https://huggingface.co/datasets/xpertsystems/hlt005-sample/resolve/main/admissions.csv?download=true" -o "$OUT/admissions.csv"
+
+      - name: Download HLT-010
+        env:
+          OUT: ${{ runner.temp }}/hlt010
+        run: |
+          mkdir -p "$OUT"
+          curl -fL --retry 3 --retry-all-errors "https://huggingface.co/datasets/xpertsystems/hlt010-sample/resolve/main/hospital_resources.csv?download=true" -o "$OUT/hospital_resources.csv"
+          curl -fL --retry 3 --retry-all-errors "https://huggingface.co/datasets/xpertsystems/hlt010-sample/resolve/main/equipment.csv?download=true" -o "$OUT/equipment.csv"
+
+      - name: Download scheduling benchmark
+        run: |
+          git clone --depth 1 https://github.com/AISmithLab/appointment-scheduling-benchmark.git "${{ runner.temp }}/appointment-benchmark"
+
+      - name: Emergency dataset validation
+        working-directory: hospital-ai
+        run: |
+          python validation/pipeline/run_hlt005_emergency_validation.py \
+            --admissions "${{ runner.temp }}/hlt005/admissions.csv" \
+            --max-cases 1000 \
+            --output validation/results/dataset/emergency_hlt005
+
+      - name: Scheduling dataset validation
+        working-directory: hospital-ai
+        run: |
+          python validation/pipeline/run_scheduling_benchmark_validation.py \
+            --tasks "${{ runner.temp }}/appointment-benchmark/tasks/tasks.json" \
+            --snapshot "${{ runner.temp }}/appointment-benchmark/data/snapshot.json" \
+            --max-cases 6 \
+            --output validation/results/dataset/scheduling_benchmark
+
+      - name: Resource availability validation
+        working-directory: hospital-ai
+        run: |
+          python validation/pipeline/run_hlt010_resource_validation.py \
+            --hospital-resources "${{ runner.temp }}/hlt010/hospital_resources.csv" \
+            --equipment "${{ runner.temp }}/hlt010/equipment.csv" \
+            --max-cases 500 \
+            --output validation/results/dataset/resource_hlt010
+
+      - name: Run targeted agent tests
+        working-directory: hospital-ai/backend
+        run: pytest -q tests/test_emergency_agent.py tests/test_scheduling_agent.py tests/test_resource_allocation_agent.py
+
+      - name: Upload dataset validation reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: dataset-agent-validation-reports
+          path: hospital-ai/validation/results/dataset/
+          if-no-files-found: error
