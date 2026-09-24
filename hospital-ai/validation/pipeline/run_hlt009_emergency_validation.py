@@ -154,8 +154,8 @@ def main() -> int:
 
     monitor = VitalMonitor()
     detector = CriticalEventDetector()
-    severity_true: list[str] = []
-    severity_pred: list[str] = []
+    abnormal_true: list[bool] = []
+    abnormal_pred: list[bool] = []
     event_true: list[bool] = []
     event_pred: list[bool] = []
     vital_cases = []
@@ -178,33 +178,35 @@ def main() -> int:
             risk_alerts=[],
         )
 
-        observed = monitoring.observations[0].severity if monitoring.observations else "unknown"
-        expected = expected_vital_severity(alarm)
-        severity_true.append(expected)
-        severity_pred.append(observed)
+        expected_abnormal = binary_truth(alarm)
+        predicted_abnormal = any(
+            obs.severity in {"warning", "critical"} for obs in monitoring.observations
+        )
+        abnormal_true.append(expected_abnormal)
+        abnormal_pred.append(predicted_abnormal)
 
-        vital_case = {
-            "case_id": f"HLT009-VITAL-{index:03d}",
-            "task_id": "emergency_vital_monitoring",
-            "status": "SCORED",
-            "input": inputs,
-            "prediction": {
-                "monitoring_status": monitoring.monitoring_status,
-                "severity": observed,
-            },
-            "ground_truth": {
-                "severity": expected,
-                "alarm_type": alarm.get("alarm_type"),
-                "alarm_priority": alarm.get("alarm_priority"),
-            },
-            "metrics": {"match": observed == expected},
-        }
-        vital_cases.append(vital_case)
+        vital_cases.append(
+            {
+                "case_id": f"HLT009-VITAL-{index:03d}",
+                "task_id": "emergency_vital_monitoring",
+                "status": "SCORED",
+                "input": inputs,
+                "prediction": {
+                    "monitoring_status": monitoring.monitoring_status,
+                    "abnormal": predicted_abnormal,
+                },
+                "ground_truth": {
+                    "abnormal": expected_abnormal,
+                    "true_alarm_flag": alarm.get("true_alarm_flag"),
+                    "alarm_type": alarm.get("alarm_type"),
+                },
+                "metrics": {"match": predicted_abnormal == expected_abnormal},
+            }
+        )
 
-        truth = binary_truth(alarm)
-        predicted = detected.detected_event_count > 0
-        event_true.append(truth)
-        event_pred.append(predicted)
+        event_true.append(expected_abnormal)
+        predicted_event = detected.detected_event_count > 0
+        event_pred.append(predicted_event)
         event_cases.append(
             {
                 "case_id": f"HLT009-EVENT-{index:03d}",
@@ -212,15 +214,15 @@ def main() -> int:
                 "status": "SCORED",
                 "input": inputs,
                 "prediction": {
-                    "event_detected": predicted,
+                    "event_detected": predicted_event,
                     "event_count": detected.detected_event_count,
                 },
                 "ground_truth": {
-                    "actionable_alarm": truth,
-                    "alarm_type": alarm.get("alarm_type"),
+                    "actionable_alarm": expected_abnormal,
                     "true_alarm_flag": alarm.get("true_alarm_flag"),
+                    "alarm_type": alarm.get("alarm_type"),
                 },
-                "metrics": {"match": predicted == truth},
+                "metrics": {"match": predicted_event == expected_abnormal},
             }
         )
 
@@ -231,25 +233,24 @@ def main() -> int:
         for case in event_cases:
             handle.write(json.dumps(case) + "\n")
 
-    severity_accuracy = (
-        sum(a == b for a, b in zip(severity_true, severity_pred))
-        / len(severity_true)
-        if severity_true
-        else 0.0
-    )
+    vital_accuracy = accuracy(abnormal_true, abnormal_pred)
+    vital_f1 = f1(abnormal_true, abnormal_pred)
     event_f1 = f1(event_true, event_pred)
 
     vital_summary = {
         "task_id": "emergency_vital_monitoring",
         "dataset": "HLT-009 Synthetic Continuous Vital Sign Monitoring Dataset",
         "cases_evaluated": len(vital_cases),
-        "headline_metric": "Severity Accuracy",
-        "headline_value": severity_accuracy,
-        "accuracy": severity_accuracy,
+        "headline_metric": "F1 (alarm proxy)",
+        "headline_value": vital_f1,
+        "f1_score": vital_f1,
+        "accuracy": vital_accuracy,
         "clinical_accuracy_claim": False,
+        "status": "VALIDATED_WITH_PROXY",
         "note": (
-            "Measured against the dataset's labelled alarm type/priority for "
-            "supported vital streams. HLT-009 is synthetic."
+            "Proxy evaluation: HLT-009 true_alarm_flag is used as a binary "
+            "physiological-abnormality proxy for supported vital streams. "
+            "It is not a clinician-labelled threshold-correctness benchmark."
         ),
     }
     event_summary = {
