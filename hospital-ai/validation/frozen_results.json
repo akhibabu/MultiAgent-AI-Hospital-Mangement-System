@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "source": "existing_project_validation_results",
-  "as_of": "2026-09-20",
+  "source": "Existing benchmark results + dataset runs executed in GitHub Actions on 24 Sep 2026",
+  "as_of": "2026-09-24",
   "agents": [
     {
       "agent_id": "intake",
@@ -283,11 +283,13 @@
         {
           "task_id": "emergency_triage_classification",
           "task": "Triage Classification",
-          "status": "PENDING_DATASET",
-          "cases_evaluated": 0,
-          "cases_in_benchmark": 0,
-          "metric": "Accuracy + Macro F1",
-          "dataset": "MIMIC-IV-ED triage.acuity"
+          "status": "VALIDATED",
+          "cases_evaluated": 1000,
+          "cases_in_benchmark": 1000,
+          "metric": "Accuracy",
+          "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
+          "value": 16.5,
+          "note": "Measured on 1,000 cases. Accuracy 16.5%; Macro F1 17.0%. ESI 1-2→Critical, 3→Urgent, 4→Semi-Urgent, 5→Routine is a project evaluation mapping."
         },
         {
           "task_id": "emergency_vital_monitoring",
@@ -307,23 +309,35 @@
         {
           "task_id": "emergency_icu_requirement_prediction",
           "task": "ICU Requirement Prediction",
-          "status": "NOT_VALIDATABLE",
-          "cases_evaluated": 0,
-          "cases_in_benchmark": 0
+          "status": "VALIDATED",
+          "cases_evaluated": 1000,
+          "cases_in_benchmark": 1000,
+          "metric": "F1",
+          "value": 18.9,
+          "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
+          "note": "Measured on 1,000 cases against dataset ICU flag. Accuracy 82.8%; Precision 80.0%; Recall 10.7%; F1 18.9%."
         },
         {
           "task_id": "emergency_alert_generation",
           "task": "Emergency Alert Generation",
-          "status": "NOT_VALIDATABLE",
-          "cases_evaluated": 0,
-          "cases_in_benchmark": 0
+          "status": "VALIDATED_WITH_PROXY",
+          "cases_evaluated": 1000,
+          "cases_in_benchmark": 1000,
+          "metric": "F1",
+          "value": 62.6,
+          "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
+          "note": "Proxy evaluation only. Ground truth proxy is ESI≤3, not an independently annotated alert label. Accuracy 54.1%; Precision 70.5%; Recall 56.3%; F1 62.6%."
         },
         {
           "task_id": "emergency_patient_priority_ranking",
           "task": "Patient Priority Ranking",
-          "status": "NOT_VALIDATABLE",
-          "cases_evaluated": 0,
-          "cases_in_benchmark": 0
+          "status": "VALIDATED",
+          "cases_evaluated": 1000,
+          "cases_in_benchmark": 1000,
+          "metric": "Accuracy",
+          "value": 16.5,
+          "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
+          "note": "Measured on 1,000 cases using the same ESI-derived project priority taxonomy. Accuracy 16.5%; Macro F1 17.0%."
         }
       ]
     },
@@ -342,10 +356,13 @@
         {
           "task_id": "scheduling_appointment_scheduling",
           "task": "Appointment Scheduling",
-          "status": "PENDING_DATASET",
-          "cases_evaluated": 0,
-          "cases_in_benchmark": 0,
-          "metric": "Slot agreement + constraint satisfaction"
+          "status": "VALIDATED",
+          "cases_evaluated": 6,
+          "cases_in_benchmark": 6,
+          "metric": "Accuracy",
+          "value": 100,
+          "dataset": "AISmithLab Appointment Scheduling Benchmark (synthetic)",
+          "note": "6/6 easy cases passed for earliest-valid-slot selection after benchmark constraints are resolved. This does not validate full policy/insurance/referral/mutation behavior of the production scheduling workflow."
         },
         {
           "task_id": "scheduling_surgery_scheduling",
@@ -388,26 +405,35 @@
         {
           "task_id": "resource_allocation_bed_allocation",
           "task": "Bed Allocation",
-          "status": "PENDING_DATASET",
-          "cases_evaluated": 0,
-          "cases_in_benchmark": 0,
-          "metric": "Allocation accuracy + shortage F1"
+          "status": "AVAILABILITY_ALIGNED",
+          "cases_evaluated": 500,
+          "cases_in_benchmark": 500,
+          "metric": "F1",
+          "value": 100,
+          "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
+          "note": "Availability-alignment evaluation for Bed Allocation. Accuracy 100.0%; Precision 100.0%; Recall 100.0%; F1 100.0%. This compares allocation decisions with recorded resource availability, not historical patient-to-resource assignments."
         },
         {
           "task_id": "resource_allocation_icu_allocation",
           "task": "ICU Allocation",
-          "status": "PENDING_DATASET",
-          "cases_evaluated": 0,
-          "cases_in_benchmark": 0,
-          "metric": "Allocation accuracy + shortage F1"
+          "status": "AVAILABILITY_ALIGNED",
+          "cases_evaluated": 500,
+          "cases_in_benchmark": 500,
+          "metric": "F1",
+          "value": 100,
+          "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
+          "note": "Availability-alignment evaluation for ICU Allocation. Accuracy 100.0%; Precision 100.0%; Recall 100.0%; F1 100.0%. This compares allocation decisions with recorded resource availability, not historical patient-to-resource assignments."
         },
         {
           "task_id": "resource_allocation_ventilator_allocation",
           "task": "Ventilator Allocation",
-          "status": "PENDING_DATASET",
-          "cases_evaluated": 0,
-          "cases_in_benchmark": 0,
-          "metric": "Allocation accuracy + shortage F1"
+          "status": "AVAILABILITY_ALIGNED",
+          "cases_evaluated": 500,
+          "cases_in_benchmark": 500,
+          "metric": "F1",
+          "value": 100,
+          "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
+          "note": "Availability-alignment evaluation for Ventilator Allocation. Accuracy 100.0%; Precision 100.0%; Recall 100.0%; F1 100.0%. This compares allocation decisions with recorded resource availability, not historical patient-to-resource assignments."
         },
         {
           "task_id": "resource_allocation_staff_allocation",
@@ -420,10 +446,13 @@
         {
           "task_id": "resource_allocation_equipment_allocation",
           "task": "Equipment Allocation",
-          "status": "PENDING_DATASET",
-          "cases_evaluated": 0,
-          "cases_in_benchmark": 0,
-          "metric": "Allocation accuracy + shortage F1"
+          "status": "AVAILABILITY_ALIGNED",
+          "cases_evaluated": 500,
+          "cases_in_benchmark": 500,
+          "metric": "F1",
+          "value": 100,
+          "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
+          "note": "Availability-alignment evaluation for Equipment Allocation. Accuracy 100.0%; Precision 100.0%; Recall 100.0%; F1 100.0%. This compares allocation decisions with recorded resource availability, not historical patient-to-resource assignments."
         },
         {
           "task_id": "resource_allocation_demand_forecasting",
