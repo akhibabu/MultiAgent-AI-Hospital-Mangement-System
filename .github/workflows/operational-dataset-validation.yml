@@ -1,0 +1,42 @@
+name: Operational Dataset Validation
+
+on:
+  push:
+    branches:
+      - feat/complete-dataset-validation-ops-agents
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hospital-ai
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependency
+        run: python -m pip install -r backend/requirements.txt
+
+      - name: Run dataset validation
+        env:
+          PYTHONPATH: backend
+        run: python validation/pipeline/run_operational_dataset_validation.py --cases 25
+
+      - name: Record validation results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add validation/results/dataset/operational_agents_v1
+          git diff --cached --quiet && echo "No validation result changes." && exit 0
+          git commit -m "chore: record operational validation results [skip ci]"
+          git push

@@ -1,0 +1,15 @@
+{
+  "task_id": "resource_allocation_staff_allocation",
+  "task": "Staff Allocation",
+  "status": "VALIDATED",
+  "cases_evaluated": 25,
+  "cases_in_benchmark": 25,
+  "headline_metric": "Assignment Accuracy",
+  "headline_value": 1.0,
+  "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+  "note": "Specialist assignment benchmark using explicit selected-doctor and specialization references. Exact assignment accuracy 100.0%.",
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0
+}

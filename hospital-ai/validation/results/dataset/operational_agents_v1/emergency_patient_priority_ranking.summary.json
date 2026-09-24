@@ -1,0 +1,14 @@
+{
+  "task_id": "emergency_patient_priority_ranking",
+  "task": "Patient Priority Ranking",
+  "status": "VALIDATED",
+  "cases_evaluated": 25,
+  "cases_in_benchmark": 25,
+  "headline_metric": "Accuracy",
+  "headline_value": 1.0,
+  "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+  "note": "Synthetic project-reference priority taxonomy benchmark. Accuracy 100.0%; Macro F1 100.0%.",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "f1_score": 1.0
+}
