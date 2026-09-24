@@ -63,6 +63,9 @@ const AIOrchestratorPage = lazy(
 const EmergencyAgentPage = lazy(
   () => import('@/pages/AI/EmergencyAgentPage'),
 );
+const ResourceAllocationAgentPage = lazy(
+  () => import('@/pages/AI/ResourceAllocationAgentPage'),
+);
 const SchedulingAgentPage = lazy(
   () => import('@/pages/AI/SchedulingAgentPage'),
 );
