@@ -39,7 +39,7 @@ function mainMetricLabel(row: MedicalReportTaskHeadline) {
     row.evaluated_cases && row.total_cases
       ? `${row.evaluated_cases}/${row.total_cases} cases`
       : null;
-  return cases || row.human_summary || row.status.replaceAll('_', ' ');
+  return cases || row.human_summary || row.status.replace(/_/g, ' ');
 }
 
 export default function MedicalReportValidationResults() {
