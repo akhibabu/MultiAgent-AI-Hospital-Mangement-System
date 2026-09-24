@@ -1,0 +1,439 @@
+{
+  "version": 1,
+  "source": "existing_project_validation_results",
+  "as_of": "2026-09-20",
+  "agents": [
+    {
+      "agent_id": "intake",
+      "agent": "Intake Agent",
+      "tasks": [
+        {
+          "task_id": "intake_patient_registration",
+          "task": "Patient Registration",
+          "status": "VALIDATED",
+          "cases_evaluated": 25,
+          "cases_in_benchmark": 25,
+          "metric": "Precision",
+          "value": 100
+        },
+        {
+          "task_id": "intake_medical_history_extraction",
+          "task": "Medical History Extraction",
+          "status": "VALIDATED",
+          "cases_evaluated": 100,
+          "cases_in_benchmark": 100,
+          "metric": "History Item F1",
+          "value": 84.3
+        },
+        {
+          "task_id": "intake_ocr_on_reports",
+          "task": "OCR on Reports",
+          "status": "VALIDATED",
+          "cases_evaluated": 100,
+          "cases_in_benchmark": 100,
+          "metric": "Field F1",
+          "value": 99.8
+        },
+        {
+          "task_id": "intake_medical_entity_recognition",
+          "task": "Medical Entity Recognition",
+          "status": "VALIDATED",
+          "cases_evaluated": 200,
+          "cases_in_benchmark": 200,
+          "metric": "Entity F1",
+          "value": 15.1
+        },
+        {
+          "task_id": "intake_patient_risk_profiling",
+          "task": "Patient Risk Profiling",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "note": "No defensible benchmark reference was available."
+        },
+        {
+          "task_id": "intake_patient_knowledge_graph_creation",
+          "task": "Patient Knowledge Graph Creation",
+          "status": "VALIDATED",
+          "cases_evaluated": 100,
+          "cases_in_benchmark": 100,
+          "metric": "Entity F1",
+          "value": 82.8
+        }
+      ]
+    },
+    {
+      "agent_id": "diagnosis",
+      "agent": "Diagnosis Agent",
+      "tasks": [
+        {
+          "task_id": "diagnosis_symptom_analysis",
+          "task": "Symptom Analysis",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "diagnosis_differential_diagnosis",
+          "task": "Differential Diagnosis",
+          "status": "VALIDATED",
+          "cases_evaluated": 100,
+          "cases_in_benchmark": 100,
+          "metric": "Top-1 Accuracy",
+          "value": 5
+        },
+        {
+          "task_id": "diagnosis_disease_probability_scoring",
+          "task": "Disease Probability Scoring",
+          "status": "VALIDATED",
+          "cases_evaluated": 100,
+          "cases_in_benchmark": 100,
+          "metric": "Top-1 Accuracy",
+          "value": 6
+        },
+        {
+          "task_id": "diagnosis_severity_prediction",
+          "task": "Severity Prediction",
+          "status": "VALIDATED",
+          "cases_evaluated": 56,
+          "cases_in_benchmark": 56,
+          "metric": "Macro F1",
+          "value": 44.7
+        },
+        {
+          "task_id": "diagnosis_treatment_path_recommendation",
+          "task": "Treatment Path Recommendation",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "diagnosis_clinical_decision_support",
+          "task": "Clinical Decision Support",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        }
+      ]
+    },
+    {
+      "agent_id": "research",
+      "agent": "Research Agent",
+      "tasks": [
+        {
+          "task_id": "research_pubmed_search",
+          "task": "PubMed Search",
+          "status": "VALIDATED",
+          "cases_evaluated": 50,
+          "cases_in_benchmark": 50,
+          "metric": "Recall@5",
+          "value": 50.5
+        },
+        {
+          "task_id": "research_clinical_trial_search",
+          "task": "Clinical Trial Search",
+          "status": "VALIDATED",
+          "cases_evaluated": 50,
+          "cases_in_benchmark": 50,
+          "metric": "Recall@5",
+          "value": 84
+        },
+        {
+          "task_id": "research_treatment_guideline_retrieval",
+          "task": "Treatment Guideline Retrieval",
+          "status": "VALIDATED",
+          "cases_evaluated": 17,
+          "cases_in_benchmark": 17,
+          "metric": "Recall@5",
+          "value": 46.3
+        },
+        {
+          "task_id": "research_drug_efficacy_analysis",
+          "task": "Drug Efficacy Analysis",
+          "status": "VALIDATED",
+          "cases_evaluated": 30,
+          "cases_in_benchmark": 30,
+          "metric": "Recall@5",
+          "value": 98.3
+        },
+        {
+          "task_id": "research_evidence_ranking",
+          "task": "Evidence Ranking",
+          "status": "VALIDATED",
+          "cases_evaluated": 50,
+          "cases_in_benchmark": 50,
+          "metric": "NDCG@5",
+          "value": 67.2
+        },
+        {
+          "task_id": "research_recommendation_generation",
+          "task": "Recommendation Generation",
+          "status": "VALIDATED",
+          "cases_evaluated": 20,
+          "cases_in_benchmark": 20,
+          "metric": "NDCG@5",
+          "value": 91.5
+        }
+      ]
+    },
+    {
+      "agent_id": "prescription",
+      "agent": "Prescription Agent",
+      "tasks": [
+        {
+          "task_id": "prescription_medication_selection",
+          "task": "Medication Selection",
+          "status": "VALIDATED",
+          "cases_evaluated": 100,
+          "cases_in_benchmark": 100,
+          "metric": "Recall",
+          "value": 0
+        },
+        {
+          "task_id": "prescription_drug_interaction_check",
+          "task": "Drug Interaction Check",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "prescription_allergy_verification",
+          "task": "Allergy Verification",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "prescription_dosage_optimization",
+          "task": "Dosage Optimization",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "prescription_treatment_plan_creation",
+          "task": "Treatment Plan Creation",
+          "status": "PENDING_HUMAN_REVIEW",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25
+        },
+        {
+          "task_id": "prescription_validation",
+          "task": "Prescription Validation",
+          "status": "VALIDATED",
+          "cases_evaluated": 100,
+          "cases_in_benchmark": 100,
+          "metric": "Field Accuracy",
+          "value": 100
+        }
+      ]
+    },
+    {
+      "agent_id": "medical_report",
+      "agent": "Medical Report Agent",
+      "tasks": [
+        {
+          "task_id": "medical_report_clinical_summary",
+          "task": "Clinical Summary",
+          "status": "IN_PROGRESS",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "medical_report_doctor_notes",
+          "task": "Doctor Notes Generation",
+          "status": "IN_PROGRESS",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "medical_report_discharge_summary",
+          "task": "Discharge Summary",
+          "status": "IN_PROGRESS",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "medical_report_referral_letter",
+          "task": "Referral Letter Creation",
+          "status": "IN_PROGRESS",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "medical_report_insurance_documentation",
+          "task": "Insurance Documentation",
+          "status": "IN_PROGRESS",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "medical_report_patient_report",
+          "task": "Patient Report Generation",
+          "status": "IN_PROGRESS",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        }
+      ]
+    },
+    {
+      "agent_id": "emergency",
+      "agent": "Emergency Agent",
+      "tasks": [
+        {
+          "task_id": "emergency_triage_classification",
+          "task": "Triage Classification",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Accuracy + Macro F1",
+          "dataset": "MIMIC-IV-ED triage.acuity"
+        },
+        {
+          "task_id": "emergency_vital_monitoring",
+          "task": "Real-Time Vital Monitoring",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "note": "Threshold logic is better assessed against explicit rules than empirical labels."
+        },
+        {
+          "task_id": "emergency_critical_event_detection",
+          "task": "Critical Event Detection",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "emergency_icu_requirement_prediction",
+          "task": "ICU Requirement Prediction",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "emergency_alert_generation",
+          "task": "Emergency Alert Generation",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        },
+        {
+          "task_id": "emergency_patient_priority_ranking",
+          "task": "Patient Priority Ranking",
+          "status": "NOT_VALIDATABLE",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0
+        }
+      ]
+    },
+    {
+      "agent_id": "scheduling",
+      "agent": "Scheduling Agent",
+      "tasks": [
+        {
+          "task_id": "scheduling_doctor_assignment",
+          "task": "Doctor Assignment",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Exact-match accuracy + specialty consistency"
+        },
+        {
+          "task_id": "scheduling_appointment_scheduling",
+          "task": "Appointment Scheduling",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Slot agreement + constraint satisfaction"
+        },
+        {
+          "task_id": "scheduling_surgery_scheduling",
+          "task": "Surgery Scheduling",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Constraint satisfaction / schedule regret"
+        },
+        {
+          "task_id": "scheduling_follow_up_planning",
+          "task": "Follow-Up Planning",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Interval/date agreement"
+        },
+        {
+          "task_id": "scheduling_queue_optimization",
+          "task": "Queue Optimization",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Ordering agreement / weighted rank"
+        },
+        {
+          "task_id": "scheduling_workload_balancing",
+          "task": "Workload Balancing",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Workload gap / utilization"
+        }
+      ]
+    },
+    {
+      "agent_id": "resource_allocation",
+      "agent": "Resource Allocation Agent",
+      "tasks": [
+        {
+          "task_id": "resource_allocation_bed_allocation",
+          "task": "Bed Allocation",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Allocation accuracy + shortage F1"
+        },
+        {
+          "task_id": "resource_allocation_icu_allocation",
+          "task": "ICU Allocation",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Allocation accuracy + shortage F1"
+        },
+        {
+          "task_id": "resource_allocation_ventilator_allocation",
+          "task": "Ventilator Allocation",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Allocation accuracy + shortage F1"
+        },
+        {
+          "task_id": "resource_allocation_staff_allocation",
+          "task": "Staff Allocation",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Assignment accuracy + workload deviation"
+        },
+        {
+          "task_id": "resource_allocation_equipment_allocation",
+          "task": "Equipment Allocation",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "Allocation accuracy + shortage F1"
+        },
+        {
+          "task_id": "resource_allocation_demand_forecasting",
+          "task": "Demand Forecasting",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 0,
+          "metric": "MAE + RMSE + R²"
+        }
+      ]
+    }
+  ]
+}
