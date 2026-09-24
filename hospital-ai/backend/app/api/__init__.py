@@ -22,6 +22,7 @@ from app.routes import (
     prescription,
     research,
     resource_allocation,
+    validation,
     resources,
     scheduling,
 )
@@ -48,5 +49,6 @@ api_router.include_router(medical_report.router)
 api_router.include_router(emergency.router)
 api_router.include_router(scheduling.router)
 api_router.include_router(resource_allocation.router)
+api_router.include_router(validation.router)
 api_router.include_router(ai_orchestrator.router)
 api_router.include_router(ai_health.router)

@@ -1,30 +1,35 @@
-# Operational Validation
+# Dataset-grounded Validation
 
-This directory contains **deterministic operational verification** for the Emergency, Scheduling, and Resource Allocation agents.
+The Validation Center follows the benchmark design used for the original five-agent validation work: each task is evaluated independently. A dataset row becomes a benchmark case, the task implementation produces a prediction, the prediction is compared with the task-specific ground truth, and the per-case result is stored before aggregate metrics are calculated.
 
-These checks are deliberately separate from the dataset-grounded validation framework used for Intake, Diagnosis, Research, and Prescription. The three agents in this suite are currently deterministic planning/rule engines, and the repository does not contain clinician-labelled ground truth for measuring real-world clinical accuracy.
+Task-appropriate metrics are used rather than one project-wide score:
 
-The suite validates:
+- Classification: Accuracy, Macro F1, or task-specific class metrics.
+- Extraction: precision, recall, and F1 on annotated entities or fields.
+- Retrieval/ranking: Recall@K and NDCG@K.
+- Structured outputs: field-level accuracy or exact match where appropriate.
+- Numerical forecasting: MAE, RMSE, and R2.
 
-- Emergency vital thresholds, critical-event detection, triage escalation, ICU signalling, alert generation, and bounded patient priority scores.
-- Scheduling specialty matching, appointment-slot recommendation, surgery planning semantics, follow-up intervals, queue ordering, and workload balancing.
-- Resource Allocation upstream-context consumption, resource/staff matching, shortage detection, conflict detection, priority ordering, and allocation-score invariants.
+Tasks with no defensible reference are marked NOT_VALIDATABLE or PENDING_HUMAN_REVIEW. They are never assigned an artificial score.
 
-Run from `hospital-ai/`:
+## Emergency
+
+`pipeline/run_emergency_mimic_validation.py` supports MIMIC-IV-ED triage data. It accepts `triage.csv` or `triage.csv.gz`, creates one stored result per eligible case, and computes Accuracy and Macro F1.
+
+MIMIC-IV-ED triage includes vital signs, chief complaint, and a 1-5 acuity label. This project benchmark maps 1-2 to Critical, 3 to Urgent, 4 to Semi-Urgent, and 5 to Routine. The mapping is an evaluation convention for this project, not an official clinical triage replacement.
+
+Example:
 
 ```powershell
-python validation/pipeline/run_operational_validation.py
+python validation/pipeline/run_emergency_mimic_validation.py --triage path/to/triage.csv.gz --max-cases 100
 ```
 
-Write an auditable JSON report:
+The command writes `validation/results/dataset/emergency_triage/cases.jsonl` and `summary.json`. The Validation Center reads these results and replaces the pending Emergency triage row with the measured benchmark result.
 
-```powershell
-python validation/pipeline/run_operational_validation.py --output validation/results/operational/report.json
-```
+## Scheduling and Resource Allocation
 
-Interpretation:
+These agents require operational datasets with defensible target outcomes. The GitHub repository does not currently contain such labelled historical data, so their rows remain PENDING_DATASET rather than showing invented accuracy or F1.
 
-- **PASS** means the implementation satisfied the specified deterministic invariant for that verification fixture.
-- It does **not** mean the agent is clinically validated or that the policy is correct for every hospital.
-- Emergency triage and ICU outputs remain project-level decision-support signals and require clinician-led validation before clinical deployment.
-- A future empirical validation phase should use clinician-labelled emergency cases and hospital operational logs or simulation benchmarks for scheduling/resource allocation.
+Scheduling needs historical doctor/appointment/queue records. Resource Allocation needs historical bed/ICU/equipment/staff allocation records or a resource-demand time series. Once those datasets are supplied, the same per-case prediction/ground-truth/result structure is used.
+
+The existing 44 deterministic engineering checks remain supplemental CI evidence. They are intentionally not treated as dataset accuracy or F1.
