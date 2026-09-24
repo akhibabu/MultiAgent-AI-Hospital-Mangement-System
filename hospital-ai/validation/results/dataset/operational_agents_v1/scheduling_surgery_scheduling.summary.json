@@ -1,0 +1,15 @@
+{
+  "task_id": "scheduling_surgery_scheduling",
+  "task": "Surgery Scheduling",
+  "status": "VALIDATED",
+  "cases_evaluated": 25,
+  "cases_in_benchmark": 25,
+  "headline_metric": "Constraint/Plan Accuracy",
+  "headline_value": 1.0,
+  "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+  "note": "Reference checks required/not-required state, available doctor, procedure duration and feasible window. Exact plan agreement 100.0%.",
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0
+}

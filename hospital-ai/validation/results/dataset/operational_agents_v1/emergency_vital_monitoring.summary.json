@@ -1,0 +1,15 @@
+{
+  "task_id": "emergency_vital_monitoring",
+  "task": "Real-Time Vital Monitoring",
+  "status": "VALIDATED",
+  "cases_evaluated": 25,
+  "cases_in_benchmark": 25,
+  "headline_metric": "Macro F1",
+  "headline_value": 1.0,
+  "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+  "note": "Vital severity agreement across 75 labelled vital observations. Overall monitoring-status accuracy: 100.0%.",
+  "secondary_metrics": {
+    "status_accuracy": 1.0,
+    "label_count": 75
+  }
+}

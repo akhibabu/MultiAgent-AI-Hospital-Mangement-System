@@ -1,0 +1,15 @@
+{
+  "task_id": "scheduling_queue_optimization",
+  "task": "Queue Optimization",
+  "status": "VALIDATED",
+  "cases_evaluated": 25,
+  "cases_in_benchmark": 25,
+  "headline_metric": "Queue Position Accuracy",
+  "headline_value": 1.0,
+  "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+  "note": "Position agreement across generated patient queues is 100.0%; full-sequence accuracy is 100.0%.",
+  "accuracy": 1.0,
+  "secondary_metrics": {
+    "exact_sequence_accuracy": 1.0
+  }
+}

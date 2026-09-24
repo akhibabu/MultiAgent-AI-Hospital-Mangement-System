@@ -1,0 +1,15 @@
+{
+  "task_id": "scheduling_workload_balancing",
+  "task": "Workload Balancing",
+  "status": "VALIDATED",
+  "cases_evaluated": 25,
+  "cases_in_benchmark": 25,
+  "headline_metric": "Recommendation Accuracy",
+  "headline_value": 0.36,
+  "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+  "note": "Reference recommends the lowest-load available doctor in the supplied workload set. Recommendation accuracy 36.0%; mean workload-gap error 0.00.",
+  "accuracy": 0.36,
+  "secondary_metrics": {
+    "mean_gap_absolute_error": 0.0
+  }
+}

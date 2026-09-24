@@ -1,0 +1,9 @@
+{
+  "task_id": "resource_allocation_demand_forecasting",
+  "task": "Demand Forecasting",
+  "status": "NOT_IMPLEMENTED",
+  "cases_evaluated": 0,
+  "cases_in_benchmark": 25,
+  "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+  "note": "The current Resource Allocation Agent implementation is planning/allocation only; no demand forecasting model is present, so no score is produced."
+}

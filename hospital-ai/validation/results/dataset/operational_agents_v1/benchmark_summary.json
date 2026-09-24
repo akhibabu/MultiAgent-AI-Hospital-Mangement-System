@@ -1,0 +1,273 @@
+{
+  "benchmark_id": "HOS-OPS-REF-25-v1",
+  "benchmark_type": "synthetic_project_reference",
+  "cases_per_agent": 25,
+  "agents": {
+    "emergency": {
+      "emergency_vital_monitoring": {
+        "task_id": "emergency_vital_monitoring",
+        "task": "Real-Time Vital Monitoring",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Macro F1",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Vital severity agreement across 75 labelled vital observations. Overall monitoring-status accuracy: 100.0%.",
+        "secondary_metrics": {
+          "status_accuracy": 1.0,
+          "label_count": 75
+        }
+      },
+      "emergency_triage_classification": {
+        "task_id": "emergency_triage_classification",
+        "task": "Triage Classification",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Synthetic project-reference triage benchmark. Accuracy 100.0%; Macro F1 100.0%.",
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "f1_score": 1.0
+      },
+      "emergency_critical_event_detection": {
+        "task_id": "emergency_critical_event_detection",
+        "task": "Critical Event Detection",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "F1",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Micro-averaged event-set evaluation over explicit project-reference event labels. Precision 100.0%; Recall 100.0%; F1 100.0%.",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      },
+      "emergency_icu_requirement_prediction": {
+        "task_id": "emergency_icu_requirement_prediction",
+        "task": "ICU Requirement Prediction",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Macro F1",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Synthetic project-reference acuity signal benchmark. Accuracy 100.0%; Macro F1 100.0%.",
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "f1_score": 1.0
+      },
+      "emergency_alert_generation": {
+        "task_id": "emergency_alert_generation",
+        "task": "Emergency Alert Generation",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "F1",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Alert-code set evaluation against explicit project-reference alert labels. Precision 100.0%; Recall 100.0%; F1 100.0%.",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      },
+      "emergency_patient_priority_ranking": {
+        "task_id": "emergency_patient_priority_ranking",
+        "task": "Patient Priority Ranking",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Synthetic project-reference priority taxonomy benchmark. Accuracy 100.0%; Macro F1 100.0%.",
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "f1_score": 1.0
+      }
+    },
+    "scheduling": {
+      "scheduling_doctor_assignment": {
+        "task_id": "scheduling_doctor_assignment",
+        "task": "Doctor Assignment",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Exact-match Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Reference assignment requires a suitable available specialist; exact-match accuracy 100.0%.",
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      },
+      "scheduling_appointment_scheduling": {
+        "task_id": "scheduling_appointment_scheduling",
+        "task": "Appointment Scheduling",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Exact-slot Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Reference slot is the earliest feasible slot in the supplied availability window. Exact-slot accuracy 100.0%.",
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      },
+      "scheduling_surgery_scheduling": {
+        "task_id": "scheduling_surgery_scheduling",
+        "task": "Surgery Scheduling",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Constraint/Plan Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Reference checks required/not-required state, available doctor, procedure duration and feasible window. Exact plan agreement 100.0%.",
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      },
+      "scheduling_follow_up_planning": {
+        "task_id": "scheduling_follow_up_planning",
+        "task": "Follow-Up Planning",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Interval/Date Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Reference follows the implemented priority-aware interval cap rules. Exact interval/date agreement 100.0%.",
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      },
+      "scheduling_queue_optimization": {
+        "task_id": "scheduling_queue_optimization",
+        "task": "Queue Optimization",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Queue Position Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Position agreement across generated patient queues is 100.0%; full-sequence accuracy is 100.0%.",
+        "accuracy": 1.0,
+        "secondary_metrics": {
+          "exact_sequence_accuracy": 1.0
+        }
+      },
+      "scheduling_workload_balancing": {
+        "task_id": "scheduling_workload_balancing",
+        "task": "Workload Balancing",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Recommendation Accuracy",
+        "headline_value": 0.36,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Reference recommends the lowest-load available doctor in the supplied workload set. Recommendation accuracy 36.0%; mean workload-gap error 0.00.",
+        "accuracy": 0.36,
+        "secondary_metrics": {
+          "mean_gap_absolute_error": 0.0
+        }
+      }
+    },
+    "resource_allocation": {
+      "resource_allocation_bed_allocation": {
+        "task_id": "resource_allocation_bed_allocation",
+        "task": "Bed Allocation",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Allocation Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Availability-based allocation benchmark for bed: exact agreement with the explicit resource-capacity reference rule. Accuracy 100.0%.",
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      },
+      "resource_allocation_icu_allocation": {
+        "task_id": "resource_allocation_icu_allocation",
+        "task": "ICU Bed Allocation",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Allocation Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Availability-based allocation benchmark for icu bed: exact agreement with the explicit resource-capacity reference rule. Accuracy 100.0%.",
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      },
+      "resource_allocation_ventilator_allocation": {
+        "task_id": "resource_allocation_ventilator_allocation",
+        "task": "Ventilator Allocation",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Allocation Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Availability-based allocation benchmark for ventilator: exact agreement with the explicit resource-capacity reference rule. Accuracy 100.0%.",
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      },
+      "resource_allocation_equipment_allocation": {
+        "task_id": "resource_allocation_equipment_allocation",
+        "task": "Equipment Allocation",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Allocation Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Availability-based allocation benchmark for equipment: exact agreement with the explicit resource-capacity reference rule. Accuracy 100.0%.",
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      },
+      "resource_allocation_staff_allocation": {
+        "task_id": "resource_allocation_staff_allocation",
+        "task": "Staff Allocation",
+        "status": "VALIDATED",
+        "cases_evaluated": 25,
+        "cases_in_benchmark": 25,
+        "headline_metric": "Assignment Accuracy",
+        "headline_value": 1.0,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "Specialist assignment benchmark using explicit selected-doctor and specialization references. Exact assignment accuracy 100.0%.",
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      },
+      "resource_allocation_demand_forecasting": {
+        "task_id": "resource_allocation_demand_forecasting",
+        "task": "Demand Forecasting",
+        "status": "NOT_IMPLEMENTED",
+        "cases_evaluated": 0,
+        "cases_in_benchmark": 25,
+        "dataset": "HOS-OPS-REF-25-v1 (synthetic project reference)",
+        "note": "The current Resource Allocation Agent implementation is planning/allocation only; no demand forecasting model is present, so no score is produced."
+      }
+    }
+  },
+  "note": "Synthetic project-reference dataset; metrics validate deterministic rule/constraint agreement, not clinical accuracy."
+}
