@@ -103,6 +103,25 @@ jobs:
         run: |
           pytest -q             tests/test_emergency_agent.py             tests/test_scheduling_agent.py             tests/test_resource_allocation_agent.py
 
+      - name: Inspect generated validation summaries
+        working-directory: hospital-ai
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in sorted(Path("validation/results/dataset").rglob("summary.json")):
+              payload = json.loads(path.read_text(encoding="utf-8"))
+              print(
+                  path.as_posix(),
+                  "task=", payload.get("task_id"),
+                  "cases=", payload.get("cases_evaluated"),
+                  "metric=", payload.get("headline_metric"),
+                  "value=", payload.get("headline_value"),
+                  "accuracy=", payload.get("accuracy"),
+                  "f1=", payload.get("f1_score"),
+              )
+          PY
+
       - name: Merge measured results into Validation Center snapshot
         working-directory: hospital-ai
         run: |
