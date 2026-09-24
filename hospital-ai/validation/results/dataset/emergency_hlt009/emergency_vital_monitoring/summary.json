@@ -1,0 +1,12 @@
+{
+  "task_id": "emergency_vital_monitoring",
+  "dataset": "HLT-009 Synthetic Continuous Vital Sign Monitoring Dataset",
+  "cases_evaluated": 25,
+  "headline_metric": "F1 (alarm proxy)",
+  "headline_value": 0.48484848484848486,
+  "f1_score": 0.48484848484848486,
+  "accuracy": 0.32,
+  "clinical_accuracy_claim": false,
+  "status": "VALIDATED_WITH_PROXY",
+  "note": "Proxy evaluation: HLT-009 true_alarm_flag is used as a binary physiological-abnormality proxy for supported vital streams. It is not a clinician-labelled threshold-correctness benchmark."
+}

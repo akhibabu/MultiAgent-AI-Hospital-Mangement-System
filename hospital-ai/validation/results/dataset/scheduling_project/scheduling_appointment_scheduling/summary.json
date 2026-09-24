@@ -1,0 +1,10 @@
+{
+  "task_id": "scheduling_appointment_scheduling",
+  "dataset": "AISmithLab Appointment Scheduling Benchmark + Project Synthetic Functional Extension",
+  "cases_evaluated": 25,
+  "clinical_accuracy_claim": false,
+  "note": "14 public benchmark cases plus project-labelled synthetic extension to 25 cases.",
+  "accuracy": 1.0,
+  "headline_metric": "Accuracy",
+  "headline_value": 1.0
+}

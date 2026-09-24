@@ -1,0 +1,10 @@
+{
+  "task_id": "scheduling_queue_optimization",
+  "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
+  "cases_evaluated": 25,
+  "clinical_accuracy_claim": false,
+  "note": "Synthetic labelled functional benchmark; not historical hospital performance.",
+  "accuracy": 1.0,
+  "headline_metric": "Accuracy",
+  "headline_value": 1.0
+}

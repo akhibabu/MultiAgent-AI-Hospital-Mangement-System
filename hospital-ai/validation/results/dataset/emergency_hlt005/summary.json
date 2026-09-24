@@ -1,0 +1,46 @@
+{
+  "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
+  "cases_evaluated": 25,
+  "sampling": "ESI-stratified benchmark sample",
+  "task_summaries": {
+    "emergency_triage_classification": {
+      "accuracy": 0.52,
+      "macro_f1": 0.32957393483709274,
+      "headline_metric": "Accuracy",
+      "headline_value": 0.52
+    },
+    "emergency_icu_requirement_prediction": {
+      "accuracy": 0.72,
+      "precision": 1.0,
+      "recall": 0.3,
+      "f1_score": 0.4615384615384615,
+      "headline_metric": "F1",
+      "headline_value": 0.4615384615384615
+    },
+    "emergency_patient_priority_ranking": {
+      "accuracy": 0.52,
+      "macro_f1": 0.32957393483709274,
+      "headline_metric": "Accuracy",
+      "headline_value": 0.52
+    },
+    "emergency_alert_generation": {
+      "accuracy": 0.72,
+      "precision": 0.7222222222222222,
+      "recall": 0.8666666666666667,
+      "f1_score": 0.7878787878787877,
+      "headline_metric": "F1",
+      "headline_value": 0.7878787878787877
+    }
+  },
+  "not_validatable": {
+    "emergency_vital_monitoring": {
+      "status": "NOT_VALIDATABLE",
+      "reason": "No independent ground-truth label for threshold correctness."
+    },
+    "emergency_critical_event_detection": {
+      "status": "NOT_VALIDATABLE",
+      "reason": "HLT-005 does not provide independent event annotations."
+    }
+  },
+  "clinical_accuracy_claim": false
+}

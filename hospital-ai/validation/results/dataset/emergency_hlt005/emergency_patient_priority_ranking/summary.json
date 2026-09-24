@@ -1,0 +1,16 @@
+{
+  "task_id": "emergency_patient_priority_ranking",
+  "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
+  "cases_evaluated": 25,
+  "metrics": {
+    "accuracy": 0.52,
+    "macro_f1": 0.32957393483709274,
+    "headline_metric": "Accuracy",
+    "headline_value": 0.52
+  },
+  "clinical_accuracy_claim": false,
+  "accuracy": 0.52,
+  "macro_f1": 0.32957393483709274,
+  "headline_metric": "Accuracy",
+  "headline_value": 0.52
+}

@@ -1,0 +1,20 @@
+{
+  "task_id": "emergency_icu_requirement_prediction",
+  "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
+  "cases_evaluated": 25,
+  "metrics": {
+    "accuracy": 0.72,
+    "precision": 1.0,
+    "recall": 0.3,
+    "f1_score": 0.4615384615384615,
+    "headline_metric": "F1",
+    "headline_value": 0.4615384615384615
+  },
+  "clinical_accuracy_claim": false,
+  "accuracy": 0.72,
+  "precision": 1.0,
+  "recall": 0.3,
+  "f1_score": 0.4615384615384615,
+  "headline_metric": "F1",
+  "headline_value": 0.4615384615384615
+}
