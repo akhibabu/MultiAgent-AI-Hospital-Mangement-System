@@ -199,7 +199,7 @@ jobs:
           PY
 
       - name: Commit measured validation results
-        if: ${{  event_name == 'push' && ${{  ref == 'refs/heads/feat/complete-3-agent-dataset-validation'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feat/complete-3-agent-dataset-validation'
         working-directory: hospital-ai
         run: |
           git config user.name "github-actions[bot]"
