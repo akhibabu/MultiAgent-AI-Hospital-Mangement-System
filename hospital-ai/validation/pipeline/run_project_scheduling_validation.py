@@ -390,12 +390,12 @@ def build_workload_cases(count: int = 25) -> tuple[List[Dict[str, Any]], Dict[st
     cases = []
     for i in range(count):
         doctors = [
-            DoctorWorkload("D-A", "Dr. A", 2 + (i % 3), 20 + (i % 7) * 2, "Available"),
-            DoctorWorkload("D-B", "Dr. B", 7 + (i % 2), 70 + (i % 5) * 3, "Available"),
-            DoctorWorkload("D-C", "Dr. C", 4 + (i % 4), 40 + (i % 4) * 3, "Available"),
+            DoctorWorkload(doctor_id="D-A", doctor_name="Dr. A", active_appointments=2 + (i % 3), workload_score=20 + (i % 7) * 2, availability_status="Available"),
+            DoctorWorkload(doctor_id="D-B", doctor_name="Dr. B", active_appointments=7 + (i % 2), workload_score=70 + (i % 5) * 3, availability_status="Available"),
+            DoctorWorkload(doctor_id="D-C", doctor_name="Dr. C", active_appointments=4 + (i % 4), workload_score=40 + (i % 4) * 3, availability_status="Available"),
         ]
         if i % 8 == 0:
-            doctors.append(DoctorWorkload("D-L", "Dr. Leave", 0, 0, "On Leave"))
+            doctors.append(DoctorWorkload(doctor_id="D-L", doctor_name="Dr. Leave", active_appointments=0, workload_score=0, availability_status="On Leave"))
         result = balancer.balance(doctors=doctors)
         expected = min(
             [d for d in doctors if d.availability_status != "On Leave"],
