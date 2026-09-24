@@ -135,6 +135,7 @@ export default function AppRoutes() {
             <Route path="ai/scheduling" element={<SchedulingAgentPage />} />
             <Route path="ai/emergency" element={<EmergencyAgentPage />} />
             <Route path="ai/resource-allocation" element={<ResourceAllocationAgentPage />} />
+            <Route path="validation" element={<ValidationCenterPage />} />
             <Route
               path="ai/digital-twin"
               element={
