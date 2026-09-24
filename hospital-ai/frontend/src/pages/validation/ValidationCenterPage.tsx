@@ -22,6 +22,8 @@ function statusClass(status: string) {
   if (status === 'PENDING_HUMAN_REVIEW') return 'border-amber-500/30 bg-amber-500/10 text-amber-600';
   if (status === 'PENDING_DATASET') return 'border-blue-500/30 bg-blue-500/10 text-blue-600';
   if (status === 'IN_PROGRESS') return 'border-violet-500/30 bg-violet-500/10 text-violet-600';
+  if (status === 'VALIDATED_WITH_PROXY') return 'border-amber-500/30 bg-amber-500/10 text-amber-600';
+  if (status === 'AVAILABILITY_ALIGNED') return 'border-cyan-500/30 bg-cyan-500/10 text-cyan-600';
   return 'border-slate-500/30 bg-slate-500/10 text-[var(--text-secondary)]';
 }
 
@@ -90,7 +92,7 @@ export default function ValidationCenterPage() {
             className={`rounded-xl border p-3 text-left transition ${selectedAgent === item.agent_id ? 'border-primary-500 bg-primary-500/5' : 'border-[var(--border-color)] hover:bg-[var(--bg-navbar)]'}`}
           >
             <div className="text-sm font-semibold">{item.agent.replace(' Agent', '')}</div>
-            <div className="mt-1 text-xs text-[var(--text-secondary)]">{item.tasks.filter((task) => task.status === 'VALIDATED').length}/{item.tasks.length} validated</div>
+            <div className="mt-1 text-xs text-[var(--text-secondary)]">{item.tasks.filter((task) => task.status === 'VALIDATED').length}/{item.tasks.length} dataset validated</div>
             <div className="mt-1 text-xs text-[var(--text-secondary)]">{item.tasks.reduce((s, task) => s + task.cases_evaluated, 0).toLocaleString()} cases</div>
           </button>
         ))}

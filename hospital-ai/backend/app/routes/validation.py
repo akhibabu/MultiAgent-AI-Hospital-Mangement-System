@@ -58,14 +58,33 @@ def _agents() -> list[ValidationAgent]:
             metric_text = task.metric or task.planned_metric
             value = task.value
             note = task.note
+            headline_metric = override.get("headline_metric")
+            headline_value = override.get("headline_value")
             accuracy = override.get("accuracy")
             macro_f1 = override.get("macro_f1")
-            if accuracy is not None and macro_f1 is not None:
+            f1_score = override.get("f1_score")
+            if headline_metric is not None and headline_value is not None:
+                metric_text = str(headline_metric)
+                value = float(headline_value) * 100.0
+                secondary = []
+                if accuracy is not None:
+                    secondary.append(f"Accuracy: {float(accuracy) * 100.0:.1f}%")
+                if macro_f1 is not None:
+                    secondary.append(f"Macro F1: {float(macro_f1) * 100.0:.1f}%")
+                if f1_score is not None and macro_f1 is None:
+                    secondary.append(f"F1: {float(f1_score) * 100.0:.1f}%")
+                note = "; ".join(secondary) or note
+            elif accuracy is not None and macro_f1 is not None:
                 metric_text = "Accuracy / Macro F1"
                 value = float(accuracy) * 100.0
                 note = f"Accuracy: {float(accuracy) * 100.0:.1f}%; Macro F1: {float(macro_f1) * 100.0:.1f}%."
+            elif accuracy is not None and f1_score is not None:
+                metric_text = "Accuracy / F1"
+                value = float(accuracy) * 100.0
+                note = f"Accuracy: {float(accuracy) * 100.0:.1f}%; F1: {float(f1_score) * 100.0:.1f}%."
+            status_override = override.get("status")
             updated_tasks.append(task.model_copy(update={
-                "status": "VALIDATED",
+                "status": status_override or "VALIDATED",
                 "cases_evaluated": int(override.get("cases_evaluated") or 0),
                 "cases_in_benchmark": int(override.get("cases_evaluated") or 0),
                 "metric": metric_text,
