@@ -112,3 +112,39 @@ def test_medical_report_endpoints(tmp_path: Path, monkeypatch) -> None:
     )
     assert case.status_code == 200
     assert case.json()["case_id"] == "VC-medical_report_insurance_documentation-00001"
+
+
+def test_operational_validation_results_are_canonical() -> None:
+    from app.routes.validation import _agents, _load_cases
+
+    agents = {item.agent_id: item for item in _agents()}
+
+    emergency = agents["emergency"]
+    assert len(emergency.tasks) == 6
+    assert all(task.cases_evaluated == 25 for task in emergency.tasks)
+    assert all(task.cases_in_benchmark == 25 for task in emergency.tasks)
+    assert all(task.status == "VALIDATED" for task in emergency.tasks)
+
+    scheduling = agents["scheduling"]
+    assert len(scheduling.tasks) == 6
+    assert all(task.cases_evaluated == 25 for task in scheduling.tasks)
+    assert all(task.status == "VALIDATED" for task in scheduling.tasks)
+
+    resource = agents["resource_allocation"]
+    assert len(resource.tasks) == 6
+    measured = [task for task in resource.tasks if task.cases_evaluated == 25]
+    assert len(measured) == 5
+    demand = next(
+        task
+        for task in resource.tasks
+        if task.task_id == "resource_allocation_demand_forecasting"
+    )
+    assert demand.status == "NOT_IMPLEMENTED"
+    assert demand.cases_evaluated == 0
+    assert demand.cases_in_benchmark == 25
+
+    # A task exists in multiple historical result directories. The Validation
+    # Center must expose only the canonical operational benchmark cases.
+    triage_cases = _load_cases("emergency_triage_classification")
+    assert len(triage_cases) == 25
+    assert all(case.task_id == "emergency_triage_classification" for case in triage_cases)
