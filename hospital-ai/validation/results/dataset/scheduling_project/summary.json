@@ -1,0 +1,49 @@
+{
+  "dataset": "Scheduling Agent benchmark suite",
+  "cases_per_task": 25,
+  "task_summaries": {
+    "scheduling_doctor_assignment": {
+      "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
+      "cases_evaluated": 25,
+      "accuracy": 0.72,
+      "headline_metric": "Accuracy",
+      "headline_value": 0.72
+    },
+    "scheduling_appointment_scheduling": {
+      "dataset": "AISmithLab Appointment Scheduling Benchmark + Project Synthetic Functional Extension",
+      "cases_evaluated": 25,
+      "accuracy": 1.0,
+      "headline_metric": "Accuracy",
+      "headline_value": 1.0
+    },
+    "scheduling_surgery_scheduling": {
+      "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
+      "cases_evaluated": 25,
+      "accuracy": 1.0,
+      "headline_metric": "Accuracy",
+      "headline_value": 1.0
+    },
+    "scheduling_follow_up_planning": {
+      "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
+      "cases_evaluated": 25,
+      "accuracy": 1.0,
+      "headline_metric": "Accuracy",
+      "headline_value": 1.0
+    },
+    "scheduling_queue_optimization": {
+      "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
+      "cases_evaluated": 25,
+      "accuracy": 1.0,
+      "headline_metric": "Accuracy",
+      "headline_value": 1.0
+    },
+    "scheduling_workload_balancing": {
+      "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
+      "cases_evaluated": 25,
+      "accuracy": 0.84,
+      "headline_metric": "Accuracy",
+      "headline_value": 0.84
+    }
+  },
+  "clinical_accuracy_claim": false
+}

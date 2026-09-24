@@ -1,0 +1,10 @@
+{
+  "task_id": "resource_allocation_staff_allocation",
+  "dataset": "Project Synthetic Resource Allocation Staff Benchmark v1",
+  "cases_evaluated": 25,
+  "headline_metric": "Assignment Accuracy",
+  "headline_value": 1.0,
+  "accuracy": 1.0,
+  "clinical_accuracy_claim": false,
+  "note": "Synthetic labelled functional benchmark because HLT-010 has no patient-specific staff assignment ground truth."
+}

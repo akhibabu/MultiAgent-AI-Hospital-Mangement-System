@@ -42,7 +42,32 @@ def main():
     args=ap.parse_args(); src=Path(args.admissions); out=Path(args.output); out.mkdir(parents=True,exist_ok=True)
     if not src.is_file(): raise SystemExit(f'Missing admissions file: {src}')
     monitor=VitalMonitor(); detector=CriticalEventDetector(); triage=EmergencyTriageClassifier(); icu=ICURequirementPredictor(); alerts=EmergencyAlertGenerator(); ranker=PatientPriorityRanker()
-    rows=list(csv.DictReader(src.open(encoding='utf-8',newline=''))); rows=rows[:args.max_cases] if args.max_cases else rows
+    rows = [
+        row
+        for row in csv.DictReader(src.open(encoding="utf-8", newline=""))
+        if str(row.get("esi_level") or "").strip() in {"1", "2", "3", "4", "5"}
+    ]
+    if args.max_cases:
+        # Stratify by ESI so a small benchmark covers every acuity class.
+        groups = {level: [] for level in (1, 2, 3, 4, 5)}
+        for row in rows:
+            groups[int(float(row["esi_level"]))].append(row)
+        selected = []
+        per_level = args.max_cases // 5
+        remainder = args.max_cases % 5
+        for level in (1, 2, 3, 4, 5):
+            take = per_level + (1 if level <= remainder else 0)
+            selected.extend(groups[level][:take])
+        if len(selected) < args.max_cases:
+            used = {str(r.get("admission_id") or r.get("patient_id")) for r in selected}
+            for row in rows:
+                key = str(row.get("admission_id") or row.get("patient_id"))
+                if key not in used:
+                    selected.append(row)
+                    used.add(key)
+                if len(selected) >= args.max_cases:
+                    break
+        rows = selected[:args.max_cases]
     tri_true=[]; tri_pred=[]; icu_true=[]; icu_pred=[]; pri_true=[]; pri_pred=[]; alert_true=[]; alert_pred=[]; cases=[]
     for row in rows:
         try: esi=int(float(row.get('esi_level','')))
@@ -64,7 +89,7 @@ def main():
       'emergency_alert_generation':{**binary_metrics(alert_true,alert_pred),'headline_metric':'F1','headline_value':binary_metrics(alert_true,alert_pred)['f1_score']},
     }
     with (out/'cases.jsonl').open('w',encoding='utf-8') as f:
-        for case in cases: f.write(json.dumps(case)+'\n')
+        for case in cases: f.write(json.dumps(case) + chr(10))
     task_field_map = {
         'emergency_triage_classification': ('triage', 'triage_match', 'triage'),
         'emergency_icu_requirement_prediction': ('icu_required', 'icu_match', 'icu_signal'),
@@ -85,10 +110,11 @@ def main():
                 'ground_truth':case['ground_truth'].get(truth_field),
                 'metrics':{'match':bool(case['metrics'][match_field])},
             })
-        (taskdir/'cases.jsonl').write_text('\\n'.join(json.dumps(x) for x in task_cases)+'\\n',encoding='utf-8')
+        (taskdir/'cases.jsonl').write_text(chr(10).join(json.dumps(x) for x in task_cases) + chr(10), encoding='utf-8')
         payload={'task_id':task_id,'dataset':'HLT-005 Synthetic Hospital Admission Dataset','cases_evaluated':len(task_cases),'metrics':metrics,'clinical_accuracy_claim':False}
-        payload.update(metrics); (taskdir/'summary.json').write_text(json.dumps(payload,indent=2)+'\\n',encoding='utf-8')
+        payload.update(metrics)
+        (taskdir/'summary.json').write_text(json.dumps(payload, indent=2) + chr(10), encoding='utf-8')
     unsupported={'emergency_vital_monitoring':{'status':'NOT_VALIDATABLE','reason':'No independent ground-truth label for threshold correctness.'},'emergency_critical_event_detection':{'status':'NOT_VALIDATABLE','reason':'HLT-005 does not provide independent event annotations.'}}
-    summary={'dataset':'HLT-005 Synthetic Hospital Admission Dataset','cases_evaluated':len(cases),'task_summaries':task_summaries,'not_validatable':unsupported,'clinical_accuracy_claim':False}
+    summary={'dataset':'HLT-005 Synthetic Hospital Admission Dataset','cases_evaluated':len(cases), 'sampling':'ESI-stratified benchmark sample','task_summaries':task_summaries,'not_validatable':unsupported,'clinical_accuracy_claim':False}
     (out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8'); print(json.dumps(summary,indent=2))
 if __name__=='__main__': main()

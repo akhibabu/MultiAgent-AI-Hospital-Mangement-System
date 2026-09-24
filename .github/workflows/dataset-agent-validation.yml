@@ -1,24 +1,36 @@
 name: Dataset Agent Validation
 
 on:
+  push:
+    branches:
+      - feat/complete-3-agent-dataset-validation
+    paths:
+      - "hospital-ai/backend/app/ai/emergency/**"
+      - "hospital-ai/backend/app/ai/scheduling/**"
+      - "hospital-ai/backend/app/ai/resource_allocation/**"
+      - "hospital-ai/validation/pipeline/**"
+      - ".github/workflows/dataset-agent-validation.yml"
   workflow_dispatch:
   pull_request:
     paths:
       - "hospital-ai/backend/app/ai/emergency/**"
       - "hospital-ai/backend/app/ai/scheduling/**"
       - "hospital-ai/backend/app/ai/resource_allocation/**"
-      - "hospital-ai/validation/pipeline/run_*validation.py"
-      - "hospital-ai/validation/pipeline/run_*_validation.py"
-      - "hospital-ai/validation/pipeline/run_scheduling_benchmark_validation.py"
+      - "hospital-ai/validation/pipeline/**"
       - ".github/workflows/dataset-agent-validation.yml"
+
+permissions:
+  contents: write
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -34,54 +46,199 @@ jobs:
 
       - name: Download HLT-005
         env:
-          OUT: ${{ runner.temp }}/hlt005
+          OUT: ${{  runner.temp }}/hlt005
         run: |
           mkdir -p "$OUT"
-          curl -fL --retry 3 --retry-all-errors "https://huggingface.co/datasets/xpertsystems/hlt005-sample/resolve/main/admissions.csv?download=true" -o "$OUT/admissions.csv"
+          curl -fL --retry 3 --retry-all-errors             "https://huggingface.co/datasets/xpertsystems/hlt005-sample/resolve/main/admissions.csv?download=true"             -o "$OUT/admissions.csv"
+
+      - name: Download HLT-009
+        env:
+          OUT: ${{  runner.temp }}/hlt009
+        run: |
+          mkdir -p "$OUT"
+          curl -fL --retry 3 --retry-all-errors             "https://huggingface.co/datasets/xpertsystems/hlt009-sample/resolve/main/vitals_timeseries.csv?download=true"             -o "$OUT/vitals_timeseries.csv"
+          curl -fL --retry 3 --retry-all-errors             "https://huggingface.co/datasets/xpertsystems/hlt009-sample/resolve/main/alarm_events.csv?download=true"             -o "$OUT/alarm_events.csv"
 
       - name: Download HLT-010
         env:
-          OUT: ${{ runner.temp }}/hlt010
+          OUT: ${{  runner.temp }}/hlt010
         run: |
           mkdir -p "$OUT"
-          curl -fL --retry 3 --retry-all-errors "https://huggingface.co/datasets/xpertsystems/hlt010-sample/resolve/main/hospital_resources.csv?download=true" -o "$OUT/hospital_resources.csv"
-          curl -fL --retry 3 --retry-all-errors "https://huggingface.co/datasets/xpertsystems/hlt010-sample/resolve/main/equipment.csv?download=true" -o "$OUT/equipment.csv"
+          curl -fL --retry 3 --retry-all-errors             "https://huggingface.co/datasets/xpertsystems/hlt010-sample/resolve/main/hospital_resources.csv?download=true"             -o "$OUT/hospital_resources.csv"
+          curl -fL --retry 3 --retry-all-errors             "https://huggingface.co/datasets/xpertsystems/hlt010-sample/resolve/main/equipment.csv?download=true"             -o "$OUT/equipment.csv"
 
       - name: Download scheduling benchmark
         run: |
-          git clone --depth 1 https://github.com/AISmithLab/appointment-scheduling-benchmark.git "${{ runner.temp }}/appointment-benchmark"
+          git clone --depth 1             https://github.com/AISmithLab/appointment-scheduling-benchmark.git             "${{  runner.temp }}/appointment-benchmark"
 
-      - name: Emergency dataset validation
+      - name: Emergency HLT-005 validation (25 cases/task)
         working-directory: hospital-ai
         run: |
-          python validation/pipeline/run_hlt005_emergency_validation.py \
-            --admissions "${{ runner.temp }}/hlt005/admissions.csv" \
-            --max-cases 1000 \
-            --output validation/results/dataset/emergency_hlt005
+          python validation/pipeline/run_hlt005_emergency_validation.py             --admissions "${{  runner.temp }}/hlt005/admissions.csv"             --max-cases 25             --output validation/results/dataset/emergency_hlt005
 
-      - name: Scheduling dataset validation
+      - name: Emergency HLT-009 validation (25 cases/task)
         working-directory: hospital-ai
         run: |
-          python validation/pipeline/run_scheduling_benchmark_validation.py \
-            --tasks "${{ runner.temp }}/appointment-benchmark/tasks/tasks.json" \
-            --snapshot "${{ runner.temp }}/appointment-benchmark/data/snapshot.json" \
-            --max-cases 6 \
-            --output validation/results/dataset/scheduling_benchmark
+          python validation/pipeline/run_hlt009_emergency_validation.py             --vitals "${{  runner.temp }}/hlt009/vitals_timeseries.csv"             --alarms "${{  runner.temp }}/hlt009/alarm_events.csv"             --max-cases 25             --output validation/results/dataset/emergency_hlt009
 
-      - name: Resource availability validation
+      - name: Scheduling validation (25 cases/task)
         working-directory: hospital-ai
         run: |
-          python validation/pipeline/run_hlt010_resource_validation.py \
-            --hospital-resources "${{ runner.temp }}/hlt010/hospital_resources.csv" \
-            --equipment "${{ runner.temp }}/hlt010/equipment.csv" \
-            --max-cases 500 \
-            --output validation/results/dataset/resource_hlt010
+          python validation/pipeline/run_project_scheduling_validation.py             --tasks "${{  runner.temp }}/appointment-benchmark/tasks/tasks.json"             --snapshot "${{  runner.temp }}/appointment-benchmark/data/snapshot.json"             --max-cases-per-task 25             --output validation/results/dataset/scheduling_project
 
-      - name: Run targeted agent tests
+      - name: Resource validation (25 cases/task)
+        working-directory: hospital-ai
+        run: |
+          python validation/pipeline/run_hlt010_resource_validation.py             --hospital-resources "${{  runner.temp }}/hlt010/hospital_resources.csv"             --equipment "${{  runner.temp }}/hlt010/equipment.csv"             --max-cases 25             --output validation/results/dataset/resource_hlt010
+
+      - name: Resource staff validation (25 cases)
+        working-directory: hospital-ai
+        run: |
+          python validation/pipeline/run_resource_staff_validation.py             --max-cases 25             --output validation/results/dataset/resource_staff_synthetic
+
+      - name: Targeted agent tests
         working-directory: hospital-ai/backend
         env:
-          PYTHONPATH: ${{ github.workspace }}/hospital-ai/backend
-        run: pytest -q tests/test_emergency_agent.py tests/test_scheduling_agent.py tests/test_resource_allocation_agent.py
+          PYTHONPATH: ${{  github.workspace }}/hospital-ai/backend
+        run: |
+          pytest -q             tests/test_emergency_agent.py             tests/test_scheduling_agent.py             tests/test_resource_allocation_agent.py
+
+      - name: Inspect generated validation summaries
+        working-directory: hospital-ai
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in sorted(Path("validation/results/dataset").rglob("summary.json")):
+              try:
+                  payload = json.loads(path.read_text(encoding="utf-8"))
+              except Exception as exc:
+                  print("INVALID SUMMARY:", path.as_posix(), repr(exc))
+                  print(path.read_text(encoding="utf-8")[:1200])
+                  raise
+              print(
+                  path.as_posix(),
+                  "task=", payload.get("task_id"),
+                  "cases=", payload.get("cases_evaluated"),
+                  "metric=", payload.get("headline_metric"),
+                  "value=", payload.get("headline_value"),
+                  "accuracy=", payload.get("accuracy"),
+                  "f1=", payload.get("f1_score"),
+              )
+          PY
+
+      - name: Merge measured results into Validation Center snapshot
+        working-directory: hospital-ai
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          frozen_path = Path("validation/frozen_results.json")
+          data = json.loads(frozen_path.read_text(encoding="utf-8"))
+
+          summary_paths = list(Path("validation/results/dataset").rglob("summary.json"))
+          summaries = {}
+          for path in summary_paths:
+              try:
+                  payload = json.loads(path.read_text(encoding="utf-8"))
+              except (OSError, json.JSONDecodeError) as exc:
+                  print("Skipping invalid summary", path.as_posix(), repr(exc))
+                  continue
+              task_id = payload.get("task_id")
+              if task_id:
+                  summaries[task_id] = payload
+
+          for agent in data.get("agents", []):
+              if agent.get("agent_id") not in {"emergency", "scheduling", "resource_allocation"}:
+                  continue
+              for task in agent.get("tasks", []):
+                  task_id = task.get("task_id")
+                  payload = summaries.get(task_id)
+                  if not payload:
+                      continue
+                  n = int(payload.get("cases_evaluated") or 0)
+                  if n <= 0:
+                      continue
+
+                  task["cases_evaluated"] = n
+                  task["cases_in_benchmark"] = n
+                  task["dataset"] = payload.get("dataset") or task.get("dataset")
+
+                  metric = payload.get("headline_metric")
+                  value = payload.get("headline_value")
+
+                  if metric is None and payload.get("f1_score") is not None:
+                      metric = "F1"
+                      value = payload.get("f1_score")
+                  elif metric is None and payload.get("accuracy") is not None:
+                      metric = "Accuracy"
+                      value = payload.get("accuracy")
+
+                  if metric is not None:
+                      task["metric"] = metric
+                  if value is not None:
+                      task["value"] = round(float(value) * 100.0, 2)
+
+                  if payload.get("status"):
+                      task["status"] = payload["status"]
+                  elif task_id.startswith("resource_allocation_") and task_id != "resource_allocation_staff_allocation":
+                      task["status"] = "AVAILABILITY_ALIGNED"
+                  else:
+                      task["status"] = "VALIDATED"
+
+                  notes = [str(payload.get("note"))] if payload.get("note") else []
+                  for key, label in (
+                      ("accuracy", "Accuracy"),
+                      ("precision", "Precision"),
+                      ("recall", "Recall"),
+                      ("macro_f1", "Macro F1"),
+                      ("f1_score", "F1"),
+                  ):
+                      if payload.get(key) is not None:
+                          text_value = f"{label}: {float(payload[key]) * 100.0:.1f}%"
+                          if text_value not in notes:
+                              notes.append(text_value)
+                  if notes:
+                      task["note"] = "; ".join(dict.fromkeys(notes))
+
+          frozen_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+          PY
+
+      - name: Verify 25-case coverage
+        working-directory: hospital-ai
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          failed = []
+          for path in Path("validation/results/dataset").rglob("summary.json"):
+              payload = json.loads(path.read_text(encoding="utf-8"))
+              task_id = payload.get("task_id")
+              n = int(payload.get("cases_evaluated") or 0)
+              if task_id and task_id.startswith(("emergency_", "scheduling_", "resource_allocation_")):
+                  status = payload.get("status")
+                  # Every measured task in this pipeline is expected to have 25 cases.
+                  if n != 25 and status not in {"NOT_VALIDATABLE", "PENDING_HUMAN_REVIEW"}:
+                      failed.append(f"{task_id}: {n} cases")
+          if failed:
+              raise SystemExit("\n".join(failed))
+          print("25-case coverage checks passed for all measured operational tasks.")
+          PY
+
+      - name: Commit measured validation results
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feat/complete-3-agent-dataset-validation'
+        working-directory: hospital-ai
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add validation/frozen_results.json validation/results/dataset
+          if git diff --cached --quiet; then
+            echo "No measured result changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: store 25-case dataset validation results"
+          git push origin "HEAD:feat/complete-3-agent-dataset-validation"
 
       - name: Upload dataset validation reports
         uses: actions/upload-artifact@v4

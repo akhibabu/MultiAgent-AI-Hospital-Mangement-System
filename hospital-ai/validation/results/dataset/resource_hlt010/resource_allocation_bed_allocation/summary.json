@@ -1,0 +1,11 @@
+{
+  "task_id": "resource_allocation_bed_allocation",
+  "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
+  "cases_evaluated": 25,
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0,
+  "clinical_accuracy_claim": false,
+  "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment."
+}

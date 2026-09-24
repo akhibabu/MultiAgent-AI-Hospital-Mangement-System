@@ -1,0 +1,34 @@
+{
+  "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
+  "task_summaries": {
+    "resource_allocation_bed_allocation": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0
+    },
+    "resource_allocation_icu_allocation": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0
+    },
+    "resource_allocation_ventilator_allocation": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0
+    },
+    "resource_allocation_equipment_allocation": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0
+    }
+  },
+  "not_validatable": {
+    "resource_allocation_staff_allocation": "No patient-specific staff assignment ground truth in HLT-010.",
+    "resource_allocation_demand_forecasting": "Demand forecasting is not implemented in the current Resource Allocation Agent."
+  },
+  "clinical_accuracy_claim": false
+}
