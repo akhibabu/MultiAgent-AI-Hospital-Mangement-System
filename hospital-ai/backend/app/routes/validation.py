@@ -60,10 +60,15 @@ def _agents() -> list[ValidationAgent]:
             note = task.note
             accuracy = override.get("accuracy")
             macro_f1 = override.get("macro_f1")
+            f1_score = override.get("f1_score")
             if accuracy is not None and macro_f1 is not None:
                 metric_text = "Accuracy / Macro F1"
                 value = float(accuracy) * 100.0
                 note = f"Accuracy: {float(accuracy) * 100.0:.1f}%; Macro F1: {float(macro_f1) * 100.0:.1f}%."
+            elif accuracy is not None and f1_score is not None:
+                metric_text = "Accuracy / F1"
+                value = float(accuracy) * 100.0
+                note = f"Accuracy: {float(accuracy) * 100.0:.1f}%; F1: {float(f1_score) * 100.0:.1f}%."
             updated_tasks.append(task.model_copy(update={
                 "status": "VALIDATED",
                 "cases_evaluated": int(override.get("cases_evaluated") or 0),
