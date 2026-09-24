@@ -1,6 +1,5 @@
 import type { AgentDetail } from '@/types/validation';
 import type {
-  MedicalReportTaskHeadline,
   MedicalReportValidationSummary,
 } from '@/types/executionValidation';
 
