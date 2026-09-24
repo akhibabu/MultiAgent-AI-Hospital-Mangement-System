@@ -12,7 +12,7 @@ from app.schemas.validation import (
     ValidationTaskDetail,
 )
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 FROZEN_PATH = PROJECT_ROOT / "validation" / "frozen_results.json"
 CASE_ROOT = PROJECT_ROOT / "validation" / "results" / "dataset"
 
