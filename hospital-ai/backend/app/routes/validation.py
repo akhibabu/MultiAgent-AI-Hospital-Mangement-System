@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from fastapi import APIRouter, HTTPException, Query
 
@@ -29,8 +29,52 @@ def _load() -> dict:
         return {"agents": []}
     return json.loads(FROZEN_PATH.read_text(encoding="utf-8"))
 
+def _dataset_overrides() -> dict[str, dict[str, Any]]:
+    overrides: dict[str, dict[str, Any]] = {}
+    if not CASE_ROOT.exists():
+        return overrides
+    for summary_path in CASE_ROOT.rglob("summary.json"):
+        try:
+            payload = json.loads(summary_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        task_id = payload.get("task_id")
+        if not task_id:
+            continue
+        overrides[str(task_id)] = payload
+    return overrides
+
 def _agents() -> list[ValidationAgent]:
-    return [ValidationAgent.model_validate(x) for x in _load().get("agents", [])]
+    overrides = _dataset_overrides()
+    agents = []
+    for raw_agent in _load().get("agents", []):
+        agent = ValidationAgent.model_validate(raw_agent)
+        updated_tasks = []
+        for task in agent.tasks:
+            override = overrides.get(task.task_id)
+            if not override:
+                updated_tasks.append(task)
+                continue
+            metric_text = task.metric or task.planned_metric
+            value = task.value
+            note = task.note
+            accuracy = override.get("accuracy")
+            macro_f1 = override.get("macro_f1")
+            if accuracy is not None and macro_f1 is not None:
+                metric_text = "Accuracy / Macro F1"
+                value = float(accuracy) * 100.0
+                note = f"Accuracy: {float(accuracy) * 100.0:.1f}%; Macro F1: {float(macro_f1) * 100.0:.1f}%."
+            updated_tasks.append(task.model_copy(update={
+                "status": "VALIDATED",
+                "cases_evaluated": int(override.get("cases_evaluated") or 0),
+                "cases_in_benchmark": int(override.get("cases_evaluated") or 0),
+                "metric": metric_text,
+                "value": value,
+                "dataset": override.get("dataset") or task.dataset,
+                "note": note,
+            }))
+        agents.append(agent.model_copy(update={"tasks": updated_tasks}))
+    return agents
 
 @router.get("/overview", response_model=ValidationOverview)
 def overview(_current_user: CurrentUser) -> ValidationOverview:
@@ -75,7 +119,7 @@ def cases(
 ) -> ValidationCaseList:
     items: list[ValidationCase] = []
     if CASE_ROOT.exists():
-        for path in sorted(CASE_ROOT.glob("*.jsonl")):
+        for path in sorted(CASE_ROOT.rglob("*.jsonl")):
             for line in path.read_text(encoding="utf-8").splitlines():
                 if not line.strip():
                     continue
