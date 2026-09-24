@@ -110,7 +110,12 @@ jobs:
           import json
           from pathlib import Path
           for path in sorted(Path("validation/results/dataset").rglob("summary.json")):
-              payload = json.loads(path.read_text(encoding="utf-8"))
+              try:
+                  payload = json.loads(path.read_text(encoding="utf-8"))
+              except Exception as exc:
+                  print("INVALID SUMMARY:", path.as_posix(), repr(exc))
+                  print(path.read_text(encoding="utf-8")[:1200])
+                  raise
               print(
                   path.as_posix(),
                   "task=", payload.get("task_id"),
@@ -135,7 +140,11 @@ jobs:
           summary_paths = list(Path("validation/results/dataset").rglob("summary.json"))
           summaries = {}
           for path in summary_paths:
-              payload = json.loads(path.read_text(encoding="utf-8"))
+              try:
+                  payload = json.loads(path.read_text(encoding="utf-8"))
+              except (OSError, json.JSONDecodeError) as exc:
+                  print("Skipping invalid summary", path.as_posix(), repr(exc))
+                  continue
               task_id = payload.get("task_id")
               if task_id:
                   summaries[task_id] = payload
