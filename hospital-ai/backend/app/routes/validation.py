@@ -135,7 +135,7 @@ def _load_cases(task_id: str) -> list[ValidationCase]:
     result: list[ValidationCase] = []
     if not CASE_ROOT.exists():
         return result
-    for path in sorted(CASE_ROOT.glob("*.jsonl")):
+    for path in sorted(CASE_ROOT.rglob("*.jsonl")):
         for line in path.read_text(encoding="utf-8").splitlines():
             if not line.strip():
                 continue
