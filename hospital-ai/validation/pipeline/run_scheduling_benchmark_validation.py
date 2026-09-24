@@ -46,14 +46,22 @@ def main():
         candidates=valid_slots(task,snap)
         appointment=next(x for x in task['initial_ledger']['appointments'] if x['appointment_id']==task['appointment_id'])
         if candidates:
-            first=candidates[0]; end=start=datetime.fromisoformat(first['start'])
-            # The current scheduler operates on appointment windows; represent a benchmark slot as 30 minutes.
-            slot_input=[{'appointment_date':start.date().isoformat(),'start_time':start.strftime('%H:%M:%S'),'end_time':(start.replace(minute=(start.minute+30)%60,hour=start.hour+(start.minute+30)//60)).strftime('%H:%M:%S')}]
+            first=candidates[0]
+            slot_input=[]
+            for candidate in candidates:
+                start=datetime.fromisoformat(candidate['start'])
+                end_minutes=start.minute+30
+                end=start.replace(minute=end_minutes%60,hour=start.hour+(end_minutes//60))
+                slot_input.append({'appointment_date':start.date().isoformat(),'start_time':start.strftime('%H:%M:%S'),'end_time':end.strftime('%H:%M:%S')})
         else: first=None; slot_input=[]
         prediction=engine.recommend(slots=slot_input,doctor_id=str(first['provider_id']) if first else appointment['provider_id'],doctor_name='Benchmark Provider',priority_level='Routine')
         predicted_slot=None if prediction.recommended_slot is None else {'provider_id':first['provider_id'],'start':f"{prediction.recommended_slot.appointment_date}T{prediction.recommended_slot.start_time}"}
         expected_id=task.get('expected',{}).get('new_slot_id'); expected=next((s for s in snap['slots'] if s['slot_id']==expected_id),None)
-        predicted_id=first['slot_id'] if prediction.recommended_slot is not None and first else None
+        predicted_id=None
+        if prediction.recommended_slot is not None:
+            predicted_start=f"{prediction.recommended_slot.appointment_date}T{prediction.recommended_slot.start_time}"
+            matched=next((s for s in candidates if s['start'].startswith(predicted_start)),None)
+            predicted_id=matched['slot_id'] if matched else None
         match=(predicted_id==expected_id) if expected_id else (prediction.recommended_slot is None)
         cases.append({'case_id':task['id'],'task_id':'scheduling_appointment_scheduling','status':'SCORED','input':{'benchmark_task':task['name'],'constraints':task.get('constraints',{}),'candidate_count':len(candidates)},'prediction':predicted_slot,'ground_truth':{'slot_id':expected_id,'start':expected.get('start') if expected else None,'action':task.get('expected',{}).get('action')},'metrics':{'match':match}})
         if len(cases)>=a.max_cases: break
