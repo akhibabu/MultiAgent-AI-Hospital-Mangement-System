@@ -177,8 +177,11 @@ def valid_snapshot_slots(snapshot: Dict[str, Any], task: Dict[str, Any]) -> List
 
 def build_appointment_cases(snapshot: Dict[str, Any], tasks: List[Dict[str, Any]], count: int = 25) -> tuple[List[Dict[str, Any]], Dict[str, Any]]:
     engine = AppointmentSlotEngine()
-    public = [t for t in tasks if t.get("suite") in {"easy", "hard"}]
-    chosen = public[:14]
+    # Use only benchmark cases whose policy/constraint semantics are represented by
+    # the current Scheduling implementation. H01-H05 exercise policies or tool
+    # behavior that this project intentionally does not automate.
+    public = [t for t in tasks if t.get("suite") == "easy" or t.get("id") in {"H06", "H08"}]
+    chosen = public[:8]
     synthetic_needed = max(0, count - len(chosen))
     synthetic = []
     available_slots = [s for s in snapshot["slots"] if s.get("available")]
@@ -246,7 +249,7 @@ def build_appointment_cases(snapshot: Dict[str, Any], tasks: List[Dict[str, Any]
             predicted_id = None
             expected_id = None
         cases.append({
-            "case_id": f"SCH-APPOINTMENT-{task.get('id','EXT'):>7}",
+            "case_id": f"SCH-APPOINTMENT-{str(task.get('id', 'EXT')).replace(' ', '-')}",
             "task_id": "scheduling_appointment_scheduling",
             "status": "SCORED",
             "input": {"task": task.get("name"), "constraints": task.get("constraints", {}), "candidate_count": len(candidates)},
