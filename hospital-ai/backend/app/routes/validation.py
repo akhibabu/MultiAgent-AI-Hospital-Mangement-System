@@ -12,7 +12,7 @@ from app.schemas.validation import (
     ValidationTaskDetail,
 )
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 FROZEN_PATH = PROJECT_ROOT / "validation" / "frozen_results.json"
 CASE_ROOT = PROJECT_ROOT / "validation" / "results" / "dataset"
 
@@ -86,7 +86,7 @@ def _agents() -> list[ValidationAgent]:
             updated_tasks.append(task.model_copy(update={
                 "status": status_override or "VALIDATED",
                 "cases_evaluated": int(override.get("cases_evaluated") or 0),
-                "cases_in_benchmark": int(override.get("cases_evaluated") or 0),
+                "cases_in_benchmark": int(override.get("cases_in_benchmark") or override.get("cases_evaluated") or 0),
                 "metric": metric_text,
                 "value": value,
                 "dataset": override.get("dataset") or task.dataset,
