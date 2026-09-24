@@ -24,3 +24,4 @@ export type RunListResponse = { items: RunSummary[]; total: number; executed_but
 export type CompareResponse = { [key: string]: unknown };
 export type MethodologyResponse = { [key: string]: unknown };
 export type ValidationOverview = { run_id?: string | null; evaluated_at?: string | null; has_results?: boolean; counters?: Record<string, number | null>; status_counts?: Record<string, number>; agents: AgentSummary[]; coverage?: unknown[]; metric_groups?: unknown[]; flow?: unknown[]; provider_summary?: unknown; notice?: string | null; [key: string]: unknown };
+export type ErrorListParams = { run_id?: string; agent?: string; task?: string; error_type?: string; severity?: string; page?: number; page_size?: number };
