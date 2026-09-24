@@ -112,7 +112,8 @@ def main():
             })
         (taskdir/'cases.jsonl').write_text(chr(10).join(json.dumps(x) for x in task_cases) + chr(10), encoding='utf-8')
         payload={'task_id':task_id,'dataset':'HLT-005 Synthetic Hospital Admission Dataset','cases_evaluated':len(task_cases),'metrics':metrics,'clinical_accuracy_claim':False}
-        payload.update(metrics); (taskdir/'summary.json').write_text(json.dumps(payload,indent=2)+'\\n',encoding='utf-8')
+        payload.update(metrics)
+        (taskdir/'summary.json').write_text(json.dumps(payload, indent=2) + chr(10), encoding='utf-8')
     unsupported={'emergency_vital_monitoring':{'status':'NOT_VALIDATABLE','reason':'No independent ground-truth label for threshold correctness.'},'emergency_critical_event_detection':{'status':'NOT_VALIDATABLE','reason':'HLT-005 does not provide independent event annotations.'}}
     summary={'dataset':'HLT-005 Synthetic Hospital Admission Dataset','cases_evaluated':len(cases), 'sampling':'ESI-stratified benchmark sample','task_summaries':task_summaries,'not_validatable':unsupported,'clinical_accuracy_claim':False}
     (out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8'); print(json.dumps(summary,indent=2))
