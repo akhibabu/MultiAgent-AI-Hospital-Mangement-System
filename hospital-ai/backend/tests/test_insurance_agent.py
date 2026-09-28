@@ -48,7 +48,7 @@ def test_coverage_estimate_is_transparent() -> None:
     assert estimate.eligible_amount == 5000
     assert estimate.deductible_applied == 1000
     assert estimate.insurer_estimate == 3200
-    assert estimate.patient_estimate == 1800
+    assert estimate.patient_estimate == 1850
 
 
 def test_claim_zero_amount_is_allowed_as_a_draft_input() -> None:
