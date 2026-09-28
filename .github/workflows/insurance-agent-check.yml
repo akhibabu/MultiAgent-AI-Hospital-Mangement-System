@@ -39,6 +39,7 @@ jobs:
       - name: Test Insurance Agent
         working-directory: hospital-ai/backend
         env:
+          PYTHONPATH: ${{ github.workspace }}/hospital-ai/backend
           SUPABASE_URL: "https://example.supabase.co"
           SUPABASE_ANON_KEY: "test-anon-key"
           SUPABASE_SERVICE_ROLE_KEY: "test-service-role-key"
