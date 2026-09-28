@@ -1,0 +1,63 @@
+name: Insurance Agent Check
+
+on:
+  pull_request:
+    paths:
+      - "hospital-ai/backend/app/ai/insurance/**"
+      - "hospital-ai/backend/app/routes/insurance.py"
+      - "hospital-ai/backend/app/services/insurance_service.py"
+      - "hospital-ai/backend/app/repositories/insurance_repository.py"
+      - "hospital-ai/backend/app/schemas/insurance.py"
+      - "hospital-ai/backend/app/ai/orchestrator/router.py"
+      - "hospital-ai/backend/app/ai/orchestrator/prompts/insurance/**"
+      - "hospital-ai/backend/app/config/settings.py"
+      - "hospital-ai/backend/providers.yaml"
+      - "hospital-ai/backend/migrations/023_create_insurance_agent.sql"
+      - "hospital-ai/backend/tests/test_insurance_agent.py"
+      - "hospital-ai/frontend/src/pages/AI/InsuranceAgentPage.tsx"
+      - "hospital-ai/frontend/src/hooks/useInsurance.ts"
+      - "hospital-ai/frontend/src/services/insuranceService.ts"
+      - "hospital-ai/frontend/src/types/insurance.ts"
+      - "hospital-ai/frontend/src/routes/AppRoutes.tsx"
+      - "hospital-ai/frontend/src/pages/AI/AICenterPage.tsx"
+      - ".github/workflows/insurance-agent-check.yml"
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install backend dependencies
+        working-directory: hospital-ai/backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install email-validator pytest
+      - name: Test Insurance Agent
+        working-directory: hospital-ai/backend
+        env:
+          PYTHONPATH: ${{ github.workspace }}/hospital-ai/backend
+          SUPABASE_URL: "https://example.supabase.co"
+          SUPABASE_ANON_KEY: "test-anon-key"
+          SUPABASE_SERVICE_ROLE_KEY: "test-service-role-key"
+          SUPABASE_JWT_SECRET: "test-jwt-secret"
+        run: pytest -q tests/test_insurance_agent.py
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: hospital-ai/frontend/package-lock.json
+      - name: Install frontend dependencies
+        working-directory: hospital-ai/frontend
+        run: npm ci
+      - name: Build frontend
+        working-directory: hospital-ai/frontend
+        run: npm run build

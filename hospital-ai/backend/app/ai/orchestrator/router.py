@@ -6,6 +6,7 @@ ModelRouter — decides which model serves a given agent on a given provider.
     Research Agent       -> RESEARCH_MODEL
     Prescription Agent   -> PRESCRIPTION_MODEL
     Medical Report Agent -> REPORT_MODEL
+    Insurance Agent      -> INSURANCE_MODEL
 
 Model selection is per (agent, provider), not just per agent, because the
 failover chain spans vendors with completely different model catalogues:
@@ -38,6 +39,7 @@ class ModelRouter(IModelRouter):
         "research": "research_model",
         "prescription": "prescription_model",
         "medical_report": "report_model",
+        "insurance": "insurance_model",
     }
 
     def __init__(

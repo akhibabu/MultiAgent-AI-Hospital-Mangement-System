@@ -91,6 +91,7 @@ class Settings(BaseSettings):
         default="llama-3.3-70b-versatile", alias="PRESCRIPTION_MODEL"
     )
     report_model: str = Field(default="llama-3.3-70b-versatile", alias="REPORT_MODEL")
+    insurance_model: str = Field(default="llama-3.3-70b-versatile", alias="INSURANCE_MODEL")
 
     # Generation defaults (per-call overridable)
     ai_temperature: float = Field(default=0.2, alias="TEMPERATURE")
