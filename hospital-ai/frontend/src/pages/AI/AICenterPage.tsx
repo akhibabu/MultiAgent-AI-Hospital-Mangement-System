@@ -71,8 +71,8 @@ const AGENTS = [
   {
     path: '/ai/insurance',
     name: 'Insurance Agent',
-    description: 'Coverage checks and claim assistance. (Coming Soon)',
-    ready: false,
+    description: 'Policy verification, coverage estimation, claim drafting, fraud screening, and preauthorization review.',
+    ready: true,
   },
   {
     path: '/ai/resource-allocation',
@@ -110,6 +110,9 @@ export default function AICenterPage() {
             </li>
             <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
               ✓ Medical Report Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Insurance Agent
             </li>
             {AGENTS.filter((a) => !a.ready).map((a) => (
               <li

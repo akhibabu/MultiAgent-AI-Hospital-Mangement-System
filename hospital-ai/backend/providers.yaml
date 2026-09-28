@@ -83,6 +83,7 @@ providers:
       research: ${RESEARCH_MODEL:-llama-3.3-70b-versatile}
       prescription: ${PRESCRIPTION_MODEL:-llama-3.3-70b-versatile}
       medical_report: ${REPORT_MODEL:-llama-3.3-70b-versatile}
+      insurance: ${INSURANCE_MODEL:-llama-3.3-70b-versatile}
     capabilities:
       streaming: true
       vision: false

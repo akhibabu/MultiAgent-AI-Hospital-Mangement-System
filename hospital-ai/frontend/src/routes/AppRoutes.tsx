@@ -69,6 +69,7 @@ const EmergencyAgentPage = lazy(
 const ResourceAllocationAgentPage = lazy(
   () => import('@/pages/AI/ResourceAllocationAgentPage'),
 );
+const InsuranceAgentPage = lazy(() => import('@/pages/AI/InsuranceAgentPage'));
 const SchedulingAgentPage = lazy(
   () => import('@/pages/AI/SchedulingAgentPage'),
 );
@@ -148,15 +149,7 @@ export default function AppRoutes() {
                 />
               }
             />
-            <Route
-              path="ai/insurance"
-              element={
-                <AIAgentPlaceholderPage
-                  title="Insurance Agent"
-                  description="Coverage checks and claim assistance."
-                />
-              }
-            />
+            <Route path="ai/insurance" element={<InsuranceAgentPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>
