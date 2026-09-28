@@ -35,7 +35,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install email-validator
+          pip install email-validator pytest
       - name: Test Insurance Agent
         working-directory: hospital-ai/backend
         env:
