@@ -12,6 +12,7 @@ from app.routes import (
     dashboard,
     departments,
     diagnosis,
+    digital_twin,
     doctors,
     emergency,
     health,
@@ -45,6 +46,7 @@ api_router.include_router(dashboard.search_router)
 api_router.include_router(intake.router)
 api_router.include_router(insurance.router)
 api_router.include_router(diagnosis.router)
+api_router.include_router(digital_twin.router)
 api_router.include_router(research.router)
 api_router.include_router(prescription.router)
 api_router.include_router(medical_report.router)
