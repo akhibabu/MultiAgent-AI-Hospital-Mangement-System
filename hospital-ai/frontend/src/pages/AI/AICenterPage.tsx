@@ -115,14 +115,23 @@ export default function AICenterPage() {
               ✓ Insurance Agent
             </li>
             <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Scheduling Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Emergency Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Resource Allocation Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
               ✓ Digital Twin
             </li>
-            {AGENTS.map((a) => (
+            {AGENTS.filter((a) => !a.ready).map((a) => (
               <li
                 key={a.path}
                 className="rounded-md border border-dashed border-[var(--border-color)] px-2.5 py-1 text-[var(--text-secondary)]"
               >
-                {a.ready ? '✓ ' + a.name : a.name + ' (Coming Soon)'}
+                {a.name} (Coming Soon)
               </li>
             ))}
           </ul>
