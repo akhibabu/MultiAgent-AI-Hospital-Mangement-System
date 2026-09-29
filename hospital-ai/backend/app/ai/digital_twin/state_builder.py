@@ -174,8 +174,8 @@ class DigitalTwinStateBuilder:
             if level in {"high", "critical"}:
                 high_critical += 1
             icu = row.get("icu_requirement_json") or {}
-            required = icu.get("required")
-            if required is True or str(icu.get("level") or "").lower() in {"high", "critical", "required"}:
+            signal = str(icu.get("signal") or "").strip().lower()
+            if signal in {"high", "critical"}:
                 icu_signals += 1
 
         conflict_count = 0
