@@ -141,15 +141,7 @@ export default function AppRoutes() {
             <Route path="ai/emergency" element={<EmergencyAgentPage />} />
             <Route path="ai/resource-allocation" element={<ResourceAllocationAgentPage />} />
             <Route path="validation" element={<ValidationCenterPage />} />
-            <Route
-              path="ai/digital-twin"
-              element={
-                <AIAgentPlaceholderPage
-                  title="Digital Twin"
-                  description="Hospital capacity and flow simulation."
-                />
-              }
-            />
+            <Route path="ai/digital-twin" element={<DigitalTwinPage />} />
             <Route path="ai/insurance" element={<InsuranceAgentPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="settings" element={<SettingsPage />} />
