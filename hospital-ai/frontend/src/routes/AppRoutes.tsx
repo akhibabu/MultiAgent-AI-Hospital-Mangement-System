@@ -4,9 +4,7 @@ import ProtectedRoute from '@/components/common/ProtectedRoute';
 import PublicOnlyRoute from '@/components/common/PublicOnlyRoute';
 import MainLayout from '@/layouts/MainLayout';
 import Loading from '@/components/ui/Loading';
-import AICenterPage, {
-  AIAgentPlaceholderPage,
-} from '@/pages/AI/AICenterPage';
+import AICenterPage from '@/pages/AI/AICenterPage';
 
 const LoginPage = lazy(() => import('@/pages/Login/LoginPage'));
 const DashboardPage = lazy(() => import('@/pages/Dashboard/DashboardPage'));
