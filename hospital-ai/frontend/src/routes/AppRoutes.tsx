@@ -70,6 +70,7 @@ const ResourceAllocationAgentPage = lazy(
   () => import('@/pages/AI/ResourceAllocationAgentPage'),
 );
 const InsuranceAgentPage = lazy(() => import('@/pages/AI/InsuranceAgentPage'));
+const DigitalTwinPage = lazy(() => import('@/pages/AI/DigitalTwinPage'));
 const SchedulingAgentPage = lazy(
   () => import('@/pages/AI/SchedulingAgentPage'),
 );
