@@ -34,6 +34,8 @@ def test_simulation_includes_discharges_and_staff_absence():
     result = DigitalTwinSimulator().run(state(), DigitalTwinScenario(expected_discharges=10, icu_discharges=1, staff_absent=20))
     beds = next(x for x in result.resource_projections if x.resource_type == "Bed")
     assert beds.projected_available == 30
-    assert not any(b.resource_type == "Bed" for b in result.bottlenecks)
+    bed_signal = next(b for b in result.bottlenecks if b.resource_type == "Bed")
+    assert bed_signal.projected_utilization_percent == 70.0
+    assert bed_signal.severity == "High"
     staff = next(b for b in result.bottlenecks if b.resource_type == "Clinical Staff")
     assert staff.shortage == 8
