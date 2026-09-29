@@ -4,9 +4,7 @@ import ProtectedRoute from '@/components/common/ProtectedRoute';
 import PublicOnlyRoute from '@/components/common/PublicOnlyRoute';
 import MainLayout from '@/layouts/MainLayout';
 import Loading from '@/components/ui/Loading';
-import AICenterPage, {
-  AIAgentPlaceholderPage,
-} from '@/pages/AI/AICenterPage';
+import AICenterPage from '@/pages/AI/AICenterPage';
 
 const LoginPage = lazy(() => import('@/pages/Login/LoginPage'));
 const DashboardPage = lazy(() => import('@/pages/Dashboard/DashboardPage'));
@@ -70,6 +68,7 @@ const ResourceAllocationAgentPage = lazy(
   () => import('@/pages/AI/ResourceAllocationAgentPage'),
 );
 const InsuranceAgentPage = lazy(() => import('@/pages/AI/InsuranceAgentPage'));
+const DigitalTwinPage = lazy(() => import('@/pages/AI/DigitalTwinPage'));
 const SchedulingAgentPage = lazy(
   () => import('@/pages/AI/SchedulingAgentPage'),
 );
@@ -140,15 +139,7 @@ export default function AppRoutes() {
             <Route path="ai/emergency" element={<EmergencyAgentPage />} />
             <Route path="ai/resource-allocation" element={<ResourceAllocationAgentPage />} />
             <Route path="validation" element={<ValidationCenterPage />} />
-            <Route
-              path="ai/digital-twin"
-              element={
-                <AIAgentPlaceholderPage
-                  title="Digital Twin"
-                  description="Hospital capacity and flow simulation."
-                />
-              }
-            />
+            <Route path="ai/digital-twin" element={<DigitalTwinPage />} />
             <Route path="ai/insurance" element={<InsuranceAgentPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="settings" element={<SettingsPage />} />

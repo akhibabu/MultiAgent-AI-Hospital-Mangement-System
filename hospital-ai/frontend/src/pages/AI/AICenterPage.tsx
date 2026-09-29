@@ -65,8 +65,8 @@ const AGENTS = [
   {
     path: '/ai/digital-twin',
     name: 'Digital Twin',
-    description: 'Hospital capacity and flow simulation. (Coming Soon)',
-    ready: false,
+    description: 'Live hospital state, capacity simulation, bottleneck detection, and feedback to operational agents.',
+    ready: true,
   },
   {
     path: '/ai/insurance',
@@ -113,6 +113,18 @@ export default function AICenterPage() {
             </li>
             <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
               ✓ Insurance Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Scheduling Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Emergency Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Resource Allocation Agent
+            </li>
+            <li className="rounded-md border border-emerald-500/40 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-300">
+              ✓ Digital Twin
             </li>
             {AGENTS.filter((a) => !a.ready).map((a) => (
               <li
@@ -274,6 +286,28 @@ export default function AICenterPage() {
             </div>
           </Link>
         </div>
+
+        <Link
+          to="/ai/digital-twin"
+          className="block rounded-xl border border-[var(--border-color)] bg-[var(--bg-navbar)] p-5 transition hover:border-primary-500/50"
+        >
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wider text-primary-600">
+                Digital Twin · Hospital Operations
+              </p>
+              <h3 className="mt-1 text-lg font-semibold text-[var(--text-primary)]">
+                Hospital Digital Twin
+              </h3>
+              <p className="mt-1 max-w-xl text-sm text-[var(--text-secondary)]">
+                Live capacity and flow state, what-if simulation, bottleneck detection, and advisory feedback to Emergency, Scheduling, and Resource Allocation.
+              </p>
+            </div>
+            <span className="rounded-md bg-primary-600/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary-600">
+              Available
+            </span>
+          </div>
+        </Link>
 
         <div>
           <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">
