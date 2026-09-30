@@ -40,4 +40,3 @@ Thumbs.db
 
 # Credentialed/downloaded real validation data must not be committed
 validation/datasets/_downloaded_real/
-validation/results/dataset/real_data_v1/
