@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "source": "Existing benchmark results + dataset runs executed in GitHub Actions on 24 Sep 2026",
-  "as_of": "2026-09-24",
+  "source": "Historical benchmark catalog. Empirical real-data summaries are preferred by the Validation Center; synthetic/reference values are retained only as engineering evidence.",
+  "as_of": "2026-09-30",
   "agents": [
     {
       "agent_id": "intake",
@@ -283,68 +283,56 @@
         {
           "task_id": "emergency_triage_classification",
           "task": "Triage Classification",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Accuracy",
           "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
-          "value": 52.0,
-          "note": "Accuracy: 52.0%; Macro F1: 33.0%"
+          "note": "Accuracy: 52.0%; Macro F1: 33.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "emergency_vital_monitoring",
           "task": "Real-Time Vital Monitoring",
-          "status": "VALIDATED_WITH_PROXY",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "note": "Proxy evaluation: HLT-009 true_alarm_flag is used as a binary physiological-abnormality proxy for supported vital streams. It is not a clinician-labelled threshold-correctness benchmark.; Accuracy: 32.0%; F1: 48.5%",
-          "dataset": "HLT-009 Synthetic Continuous Vital Sign Monitoring Dataset",
-          "metric": "F1 (alarm proxy)",
-          "value": 48.48
+          "note": "Proxy evaluation: HLT-009 true_alarm_flag is used as a binary physiological-abnormality proxy for supported vital streams. It is not a clinician-labelled threshold-correctness benchmark.; Accuracy: 32.0%; F1: 48.5% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available.",
+          "dataset": "HLT-009 Synthetic Continuous Vital Sign Monitoring Dataset"
         },
         {
           "task_id": "emergency_critical_event_detection",
           "task": "Critical Event Detection",
-          "status": "VALIDATED_WITH_PROXY",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
           "dataset": "HLT-009 Synthetic Continuous Vital Sign Monitoring Dataset",
-          "metric": "F1 (alarm proxy)",
-          "value": 48.48,
-          "note": "Proxy evaluation: true_alarm_flag is used as binary actionable-alarm ground truth. It is not an independently annotated diagnosis/event label.; Accuracy: 32.0%; F1: 48.5%"
+          "note": "Proxy evaluation: true_alarm_flag is used as binary actionable-alarm ground truth. It is not an independently annotated diagnosis/event label.; Accuracy: 32.0%; F1: 48.5% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "emergency_icu_requirement_prediction",
           "task": "ICU Requirement Prediction",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "F1",
-          "value": 46.15,
           "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
-          "note": "Accuracy: 72.0%; Precision: 100.0%; Recall: 30.0%; F1: 46.2%"
+          "note": "Accuracy: 72.0%; Precision: 100.0%; Recall: 30.0%; F1: 46.2% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "emergency_alert_generation",
           "task": "Emergency Alert Generation",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "F1",
-          "value": 78.79,
           "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
-          "note": "Accuracy: 72.0%; Precision: 72.2%; Recall: 86.7%; F1: 78.8%"
+          "note": "Accuracy: 72.0%; Precision: 72.2%; Recall: 86.7%; F1: 78.8% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "emergency_patient_priority_ranking",
           "task": "Patient Priority Ranking",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Accuracy",
-          "value": 52.0,
           "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
-          "note": "Accuracy: 52.0%; Macro F1: 33.0%"
+          "note": "Accuracy: 52.0%; Macro F1: 33.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         }
       ]
     },
@@ -355,68 +343,56 @@
         {
           "task_id": "scheduling_doctor_assignment",
           "task": "Doctor Assignment",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Accuracy",
           "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
-          "value": 72.0,
-          "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 72.0%"
+          "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 72.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "scheduling_appointment_scheduling",
           "task": "Appointment Scheduling",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Accuracy",
-          "value": 100.0,
           "dataset": "AISmithLab Appointment Scheduling Benchmark + Project Synthetic Functional Extension",
-          "note": "14 public benchmark cases plus project-labelled synthetic extension to 25 cases.; Accuracy: 100.0%"
+          "note": "14 public benchmark cases plus project-labelled synthetic extension to 25 cases.; Accuracy: 100.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "scheduling_surgery_scheduling",
           "task": "Surgery Scheduling",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Accuracy",
           "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
-          "value": 100.0,
-          "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 100.0%"
+          "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 100.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "scheduling_follow_up_planning",
           "task": "Follow-Up Planning",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Accuracy",
           "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
-          "value": 100.0,
-          "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 100.0%"
+          "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 100.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "scheduling_queue_optimization",
           "task": "Queue Optimization",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Accuracy",
           "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
-          "value": 100.0,
-          "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 100.0%"
+          "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 100.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "scheduling_workload_balancing",
           "task": "Workload Balancing",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Accuracy",
           "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
-          "value": 84.0,
-          "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 84.0%"
+          "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 84.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         }
       ]
     },
@@ -427,57 +403,47 @@
         {
           "task_id": "resource_allocation_bed_allocation",
           "task": "Bed Allocation",
-          "status": "AVAILABILITY_ALIGNED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "F1",
-          "value": 100.0,
           "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
-          "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0%"
+          "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "resource_allocation_icu_allocation",
           "task": "ICU Allocation",
-          "status": "AVAILABILITY_ALIGNED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "F1",
-          "value": 100.0,
           "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
-          "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0%"
+          "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "resource_allocation_ventilator_allocation",
           "task": "Ventilator Allocation",
-          "status": "AVAILABILITY_ALIGNED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "F1",
-          "value": 100.0,
           "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
-          "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0%"
+          "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "resource_allocation_staff_allocation",
           "task": "Staff Allocation",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Assignment Accuracy",
           "dataset": "Project Synthetic Resource Allocation Staff Benchmark v1",
-          "value": 100.0,
-          "note": "Synthetic labelled functional benchmark because HLT-010 has no patient-specific staff assignment ground truth.; Accuracy: 100.0%"
+          "note": "Synthetic labelled functional benchmark because HLT-010 has no patient-specific staff assignment ground truth.; Accuracy: 100.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "resource_allocation_equipment_allocation",
           "task": "Equipment Allocation",
-          "status": "AVAILABILITY_ALIGNED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "F1",
-          "value": 100.0,
           "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
-          "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0%"
+          "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0% Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "resource_allocation_demand_forecasting",
@@ -485,11 +451,10 @@
           "status": "PENDING_DATASET",
           "cases_evaluated": 0,
           "cases_in_benchmark": 0,
-          "metric": "MAE + RMSE + R\u00b2"
+          "metric": "MAE + RMSE + R²"
         }
       ]
-    }
-,
+    },
     {
       "agent_id": "insurance",
       "agent": "Insurance Agent",
@@ -497,35 +462,29 @@
         {
           "task_id": "insurance_policy_verification",
           "task": "Policy Verification",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Exact Structured Accuracy",
-          "value": 100,
           "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
-          "note": "Synthetic reference evaluation of deterministic policy consistency fields (verified, coverage_active, and issue count). It does not verify carrier-side eligibility."
+          "note": "Synthetic reference evaluation of deterministic policy consistency fields (verified, coverage_active, and issue count). It does not verify carrier-side eligibility. Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "insurance_coverage_estimation",
           "task": "Coverage Estimation",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Exact Structured Accuracy",
-          "value": 100,
           "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
-          "note": "Synthetic reference evaluation of eligible amount, deductible, insurer estimate, and patient estimate produced by the deterministic coverage calculator."
+          "note": "Synthetic reference evaluation of eligible amount, deductible, insurer estimate, and patient estimate produced by the deterministic coverage calculator. Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "insurance_preauthorization_requirement",
           "task": "Preauthorization Requirement Detection",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Accuracy",
-          "value": 100,
           "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
-          "note": "Evaluation covers only the deterministic requirement flag derived from supplied policy terms. It does not score the LLM-generated clinical-necessity recommendation."
+          "note": "Evaluation covers only the deterministic requirement flag derived from supplied policy terms. It does not score the LLM-generated clinical-necessity recommendation. Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "insurance_claim_generation",
@@ -552,46 +511,38 @@
         {
           "task_id": "digital_twin_capacity_projection",
           "task": "Capacity Projection",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Exact Structured Accuracy",
-          "value": 100,
           "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
-          "note": "Synthetic reference evaluation of deterministic resource projections for the Digital Twin what-if simulator."
+          "note": "Synthetic reference evaluation of deterministic resource projections for the Digital Twin what-if simulator. Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "digital_twin_bottleneck_detection",
           "task": "Bottleneck Detection",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "F1",
-          "value": 100,
           "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
-          "note": "Synthetic reference set evaluation of projected bottleneck resource types. Precision 100.0%; Recall 100.0%; F1 100.0%."
+          "note": "Synthetic reference set evaluation of projected bottleneck resource types. Precision 100.0%; Recall 100.0%; F1 100.0%. Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "digital_twin_operational_pressure_projection",
           "task": "Operational Pressure Projection",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "Accuracy",
-          "value": 100,
           "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
-          "note": "Synthetic reference evaluation of the deterministic projected operational-pressure value."
+          "note": "Synthetic reference evaluation of the deterministic projected operational-pressure value. Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         },
         {
           "task_id": "digital_twin_feedback_generation",
           "task": "Agent Feedback Generation",
-          "status": "VALIDATED",
+          "status": "ENGINEERING_REFERENCE",
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
-          "metric": "F1",
-          "value": 100,
           "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
-          "note": "Synthetic reference set evaluation of target operations agents for advisory feedback. Precision 100.0%; Recall 100.0%; F1 100.0%."
+          "note": "Synthetic reference set evaluation of target operations agents for advisory feedback. Precision 100.0%; Recall 100.0%; F1 100.0%. Historical synthetic/reference benchmark retained for engineering regression only; not an empirical real-world validation result. Real-data validation takes precedence when available."
         }
       ]
     }

@@ -68,23 +68,37 @@ def _result_manifest() -> dict[str, tuple[dict[str, Any], Optional[Path]]]:
     if not CASE_ROOT.exists():
         return manifest
 
-    # First pass: current operational benchmark results.
+    # Prefer empirical real-world results over historical synthetic/reference
+    # benchmarks. Synthetic artifacts remain available for engineering evidence,
+    # but they must not silently become the displayed empirical result.
+    candidates: dict[str, list[tuple[int, dict[str, Any], Optional[Path]]]] = {}
+
+    def add_candidate(summary_path: Path, payload: dict[str, Any]) -> None:
+        task_id = str(payload.get("task_id") or "")
+        if not task_id:
+            return
+        benchmark_type = str(payload.get("benchmark_type") or "").lower()
+        dataset = str(payload.get("dataset") or "").lower()
+        real = benchmark_type == "real_world" or "synthetic" not in dataset
+        priority = 100 if real else 10
+        candidates.setdefault(task_id, []).append(
+            (priority, payload, _case_path_for_summary(summary_path))
+        )
+
     for summary_path in sorted(CASE_ROOT.rglob("*.summary.json")):
         payload = _read_json(summary_path)
-        if not payload or not payload.get("task_id"):
-            continue
-        task_id = str(payload["task_id"])
-        manifest[task_id] = (payload, _case_path_for_summary(summary_path))
+        if payload:
+            add_candidate(summary_path, payload)
 
-    # Second pass: legacy/task-run summaries only when no preferred result
-    # exists for that task.
     for summary_path in sorted(CASE_ROOT.rglob("summary.json")):
         payload = _read_json(summary_path)
-        if not payload or not payload.get("task_id"):
-            continue
-        task_id = str(payload["task_id"])
-        if task_id not in manifest:
-            manifest[task_id] = (payload, _case_path_for_summary(summary_path))
+        if payload:
+            add_candidate(summary_path, payload)
+
+    for task_id, values in candidates.items():
+        values.sort(key=lambda item: (item[0], str(item[1].get("dataset") or "")), reverse=True)
+        _, payload, case_path = values[0]
+        manifest[task_id] = (payload, case_path)
 
     return manifest
 

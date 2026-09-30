@@ -37,3 +37,6 @@ Thumbs.db
 
 # Docker
 *.pid
+
+# Credentialed/downloaded real validation data must not be committed
+validation/datasets/_downloaded_real/
