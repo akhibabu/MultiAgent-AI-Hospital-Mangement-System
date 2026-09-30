@@ -14,6 +14,13 @@ on:
       - "hospital-ai/backend/app/ai/emergency/**"
       - "hospital-ai/backend/app/ai/resource_allocation/**"
       - "hospital-ai/backend/app/ai/digital_twin/**"
+  pull_request:
+    paths:
+      - "hospital-ai/validation/real_data/**"
+      - "hospital-ai/validation/datasets/hangu_real/**"
+      - "hospital-ai/backend/app/ai/emergency/**"
+      - "hospital-ai/backend/app/ai/resource_allocation/**"
+      - "hospital-ai/backend/app/ai/digital_twin/**"
 
 permissions:
   contents: write
