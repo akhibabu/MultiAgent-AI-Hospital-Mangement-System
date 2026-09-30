@@ -3,7 +3,7 @@
 Run from hospital-ai/:
     python validation/real_data/run_real_data_validation.py
 
-The runner never generates ground truth. It only scores tasks where the
+The runner never generates ground truth.\n# CI also verifies that every persisted score is tagged real_world. It only scores tasks where the
 external dataset supplies an independent observed target. Unsupported tasks
 are written as PENDING_REAL_GROUND_TRUTH.
 """
