@@ -2599,7 +2599,7 @@
             "resource_type": "Bed",
             "baseline_available": 25,
             "projected_available": 15,
-            "projected_utilization_percent": 81.3,
+            "projected_utilization_percent": 81.2,
             "shortage": 0,
             "status": "Elevated"
           },
@@ -3726,7 +3726,7 @@
             "resource_type": "ICU Bed",
             "baseline_available": 5,
             "projected_available": 3,
-            "projected_utilization_percent": 81.3,
+            "projected_utilization_percent": 81.2,
             "shortage": 0,
             "status": "Elevated"
           },
