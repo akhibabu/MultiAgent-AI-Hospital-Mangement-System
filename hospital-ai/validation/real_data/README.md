@@ -35,4 +35,4 @@ Use --max-cases to cap the local run. The runner writes summaries and per-case J
 
 No raw credentialed MIMIC data is committed to this repository. Public small data that is redistributed here carries source attribution and license terms in its dataset directory.
 
-CI workflow: `.github/workflows/real-data-validation.yml` runs the empirical benchmark on this validation path and records measured summaries only. The workflow file lives at the repository root so GitHub Actions can execute it.
+CI workflow: `.github/workflows/real-data-validation.yml` runs the empirical benchmark on this validation path and records measured summaries only. The workflow file lives at the repository root so GitHub Actions can execute it. CI run uses a numeric case limit and retries are safe because downloaded datasets are cached locally.
