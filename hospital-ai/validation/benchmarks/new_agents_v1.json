@@ -2003,7 +2003,7 @@
           "staff": {
             "total_doctors": 45,
             "available_doctors": 45,
-            "busy_doctors": -1,
+            "busy_doctors": 0,
             "utilization_percent": 0,
             "on_leave_doctors": 1
           },
@@ -2983,7 +2983,7 @@
           "staff": {
             "total_doctors": 40,
             "available_doctors": 40,
-            "busy_doctors": -2,
+            "busy_doctors": 0,
             "utilization_percent": 0,
             "on_leave_doctors": 2
           },
