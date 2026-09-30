@@ -1,0 +1,12 @@
+{
+  "task_id": "insurance_preauthorization_requirement",
+  "task": "Preauthorization Requirement Detection",
+  "status": "VALIDATED",
+  "cases_evaluated": 25,
+  "cases_in_benchmark": 25,
+  "headline_metric": "Accuracy",
+  "headline_value": 1.0,
+  "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
+  "note": "Evaluation covers only the deterministic requirement flag derived from supplied policy terms. It does not score the LLM-generated clinical-necessity recommendation.",
+  "accuracy": 1.0
+}

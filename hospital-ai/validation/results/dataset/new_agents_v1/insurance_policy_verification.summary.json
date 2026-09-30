@@ -1,0 +1,13 @@
+{
+  "task_id": "insurance_policy_verification",
+  "task": "Policy Verification",
+  "status": "VALIDATED",
+  "cases_evaluated": 25,
+  "cases_in_benchmark": 25,
+  "headline_metric": "Exact Structured Accuracy",
+  "headline_value": 1.0,
+  "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
+  "note": "Synthetic reference evaluation of deterministic policy consistency fields (verified, coverage_active, and issue count). It does not verify carrier-side eligibility.",
+  "accuracy": 1.0,
+  "f1_score": 1.0
+}

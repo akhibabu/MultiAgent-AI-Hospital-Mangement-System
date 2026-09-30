@@ -1,0 +1,14 @@
+{
+  "task_id": "digital_twin_bottleneck_detection",
+  "task": "Bottleneck Detection",
+  "status": "VALIDATED",
+  "cases_evaluated": 25,
+  "cases_in_benchmark": 25,
+  "headline_metric": "F1",
+  "headline_value": 1.0,
+  "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
+  "note": "Synthetic reference set evaluation of projected bottleneck resource types. Precision 100.0%; Recall 100.0%; F1 100.0%.",
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0
+}
