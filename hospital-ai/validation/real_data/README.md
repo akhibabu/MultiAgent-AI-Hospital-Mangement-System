@@ -34,3 +34,5 @@ python validation/real_data/run_real_data_validation.py
 Use --max-cases to cap the local run. The runner writes summaries and per-case JSONL under validation/results/dataset/real_data_v1/.
 
 No raw credentialed MIMIC data is committed to this repository. Public small data that is redistributed here carries source attribution and license terms in its dataset directory.
+
+CI workflow: `.github/workflows/real-data-validation.yml` runs the empirical benchmark on this validation path and records measured summaries only.
