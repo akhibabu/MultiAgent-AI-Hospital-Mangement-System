@@ -5,8 +5,8 @@
   "cases_evaluated": 25,
   "cases_in_benchmark": 25,
   "headline_metric": "Exact Structured Accuracy",
-  "headline_value": 0.92,
+  "headline_value": 1.0,
   "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
   "note": "Synthetic reference evaluation of deterministic resource projections for the Digital Twin what-if simulator.",
-  "accuracy": 0.92
+  "accuracy": 1.0
 }
