@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "source": "Existing benchmark results + dataset runs executed in GitHub Actions on 24 Sep 2026",
-  "as_of": "2026-09-24",
+  "source": "Existing benchmark results + dataset runs executed in GitHub Actions, plus NEW-AGENTS-REF-25-v1 benchmark for Insurance and Digital Twin",
+  "as_of": "2026-09-30",
   "agents": [
     {
       "agent_id": "intake",
@@ -288,7 +288,7 @@
           "cases_in_benchmark": 25,
           "metric": "Accuracy",
           "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
-          "value": 52.0,
+          "value": 52,
           "note": "Accuracy: 52.0%; Macro F1: 33.0%"
         },
         {
@@ -342,7 +342,7 @@
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
           "metric": "Accuracy",
-          "value": 52.0,
+          "value": 52,
           "dataset": "HLT-005 Synthetic Hospital Admission Dataset",
           "note": "Accuracy: 52.0%; Macro F1: 33.0%"
         }
@@ -360,7 +360,7 @@
           "cases_in_benchmark": 25,
           "metric": "Accuracy",
           "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
-          "value": 72.0,
+          "value": 72,
           "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 72.0%"
         },
         {
@@ -370,7 +370,7 @@
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
           "metric": "Accuracy",
-          "value": 100.0,
+          "value": 100,
           "dataset": "AISmithLab Appointment Scheduling Benchmark + Project Synthetic Functional Extension",
           "note": "14 public benchmark cases plus project-labelled synthetic extension to 25 cases.; Accuracy: 100.0%"
         },
@@ -382,7 +382,7 @@
           "cases_in_benchmark": 25,
           "metric": "Accuracy",
           "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
-          "value": 100.0,
+          "value": 100,
           "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 100.0%"
         },
         {
@@ -393,7 +393,7 @@
           "cases_in_benchmark": 25,
           "metric": "Accuracy",
           "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
-          "value": 100.0,
+          "value": 100,
           "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 100.0%"
         },
         {
@@ -404,7 +404,7 @@
           "cases_in_benchmark": 25,
           "metric": "Accuracy",
           "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
-          "value": 100.0,
+          "value": 100,
           "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 100.0%"
         },
         {
@@ -415,7 +415,7 @@
           "cases_in_benchmark": 25,
           "metric": "Accuracy",
           "dataset": "Project Synthetic Scheduling Functional Benchmark v1",
-          "value": 84.0,
+          "value": 84,
           "note": "Synthetic labelled functional benchmark; not historical hospital performance.; Accuracy: 84.0%"
         }
       ]
@@ -431,7 +431,7 @@
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
           "metric": "F1",
-          "value": 100.0,
+          "value": 100,
           "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
           "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0%"
         },
@@ -442,7 +442,7 @@
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
           "metric": "F1",
-          "value": 100.0,
+          "value": 100,
           "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
           "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0%"
         },
@@ -453,7 +453,7 @@
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
           "metric": "F1",
-          "value": 100.0,
+          "value": 100,
           "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
           "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0%"
         },
@@ -465,7 +465,7 @@
           "cases_in_benchmark": 25,
           "metric": "Assignment Accuracy",
           "dataset": "Project Synthetic Resource Allocation Staff Benchmark v1",
-          "value": 100.0,
+          "value": 100,
           "note": "Synthetic labelled functional benchmark because HLT-010 has no patient-specific staff assignment ground truth.; Accuracy: 100.0%"
         },
         {
@@ -475,7 +475,7 @@
           "cases_evaluated": 25,
           "cases_in_benchmark": 25,
           "metric": "F1",
-          "value": 100.0,
+          "value": 100,
           "dataset": "HLT-010 Synthetic Hospital Resource Usage Dataset",
           "note": "This benchmark measures agreement with dataset-recorded resource availability, not historical patient-to-resource assignment.; Accuracy: 100.0%; Precision: 100.0%; Recall: 100.0%; F1: 100.0%"
         },
@@ -485,7 +485,89 @@
           "status": "PENDING_DATASET",
           "cases_evaluated": 0,
           "cases_in_benchmark": 0,
-          "metric": "MAE + RMSE + R\u00b2"
+          "metric": "MAE + RMSE + R²"
+        }
+      ]
+    },
+    {
+      "agent_id": "insurance",
+      "agent": "Insurance Agent",
+      "tasks": [
+        {
+          "task_id": "insurance_policy_verification",
+          "task": "Policy Verification",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25,
+          "metric": "Exact Structured Accuracy"
+        },
+        {
+          "task_id": "insurance_coverage_estimation",
+          "task": "Coverage Estimation",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25,
+          "metric": "Exact Structured Accuracy"
+        },
+        {
+          "task_id": "insurance_preauthorization_requirement",
+          "task": "Preauthorization Requirement Detection",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25,
+          "metric": "Accuracy"
+        },
+        {
+          "task_id": "insurance_claim_generation",
+          "task": "Claim Generation",
+          "status": "PENDING_HUMAN_REVIEW",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25
+        },
+        {
+          "task_id": "insurance_fraud_screening",
+          "task": "Fraud Screening",
+          "status": "PENDING_HUMAN_REVIEW",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25
+        }
+      ]
+    },
+    {
+      "agent_id": "digital_twin",
+      "agent": "Digital Twin",
+      "tasks": [
+        {
+          "task_id": "digital_twin_capacity_projection",
+          "task": "Capacity Projection",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25,
+          "metric": "Exact Structured Accuracy"
+        },
+        {
+          "task_id": "digital_twin_bottleneck_detection",
+          "task": "Bottleneck Detection",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25,
+          "metric": "F1"
+        },
+        {
+          "task_id": "digital_twin_operational_pressure_projection",
+          "task": "Operational Pressure Projection",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25,
+          "metric": "Accuracy"
+        },
+        {
+          "task_id": "digital_twin_feedback_generation",
+          "task": "Agent Feedback Generation",
+          "status": "PENDING_DATASET",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25,
+          "metric": "F1"
         }
       ]
     }
