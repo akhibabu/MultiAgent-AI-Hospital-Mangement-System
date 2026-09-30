@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "datasets": {
+    "mimic_iv_ed_demo_2_2": {
+      "type": "real_world_open_demo",
+      "source": "PhysioNet",
+      "url": "https://physionet.org/content/mimic-iv-ed-demo/2.2/",
+      "files": ["ed/triage.csv.gz", "ed/edstays.csv.gz"],
+      "license": "Open Data Commons Open Database License v1.0",
+      "role": "Emergency triage and observed ICU admission outcome linkage"
+    },
+    "mimic_iv_demo_2_2": {
+      "type": "real_world_open_demo",
+      "source": "PhysioNet",
+      "url": "https://physionet.org/content/mimic-iv-demo/2.2/",
+      "files": ["icu/icustays.csv.gz"],
+      "license": "Open Data Commons Open Database License v1.0",
+      "role": "ICU admission linkage for Emergency validation"
+    },
+    "hangu_real_outpatient": {
+      "type": "real_world_open",
+      "source": "fenghaolin/HanguData",
+      "url": "https://github.com/fenghaolin/HanguData",
+      "file_in_repo": "validation/datasets/hangu_real/Data.csv",
+      "license": "CC BY-NC-SA 4.0",
+      "role": "Real outpatient service-time and session evidence; not an optimal schedule ground truth"
+    },
+    "hhs_hospital_capacity_timeseries": {
+      "type": "real_world_open",
+      "source": "U.S. Department of Health & Human Services / HealthData.gov",
+      "url": "https://healthdata.gov/Hospital/COVID-19-Reported-Patient-Impact-and-Hospital-Capa/sgxm-t72h",
+      "api": "https://healthdata.gov/resource/sgxm-t72h.json",
+      "role": "Real facility/state capacity for Resource Allocation and restricted Digital Twin projection"
+    },
+    "cms_physician_other_practitioners_geography_service_2024": {
+      "type": "real_world_open",
+      "source": "CMS",
+      "url": "https://data.cms.gov/provider-summary-by-type-of-service/medicare-physician-other-practitioners/medicare-physician-other-practitioners-by-geography-and-service",
+      "role": "Real Medicare service, HCPCS, payment and charge context for future Insurance claim/benefit benchmarks"
+    },
+    "oig_leie": {
+      "type": "real_world_open",
+      "source": "U.S. Department of Health & Human Services Office of Inspector General",
+      "url": "https://oig.hhs.gov/exclusions/exclusions_list.asp",
+      "role": "Provider exclusion screening only; not a complete fraud ground truth"
+    },
+    "reallife_or_scheduling": {
+      "type": "real_world_open",
+      "source": "Mendeley Data",
+      "url": "https://data.mendeley.com/datasets/zg8v4s2kpw/1",
+      "role": "Real operating-room log and planning/replanning solutions for future Scheduling validation"
+    }
+  }
+}
