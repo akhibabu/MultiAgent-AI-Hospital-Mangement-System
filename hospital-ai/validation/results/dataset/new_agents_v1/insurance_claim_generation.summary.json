@@ -1,0 +1,11 @@
+{
+  "task_id": "insurance_claim_generation",
+  "task": "Claim Generation",
+  "status": "PENDING_HUMAN_REVIEW",
+  "cases_evaluated": 0,
+  "cases_in_benchmark": 25,
+  "headline_metric": null,
+  "headline_value": null,
+  "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
+  "note": "The new Insurance Agent stage is LLM-backed and produces narrative/review judgments. This repository currently has no defensible labelled ground truth for automatic semantic scoring, so it remains pending human review rather than receiving an invented accuracy/F1."
+}

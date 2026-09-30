@@ -489,5 +489,111 @@
         }
       ]
     }
+,
+    {
+      "agent_id": "insurance",
+      "agent": "Insurance Agent",
+      "tasks": [
+        {
+          "task_id": "insurance_policy_verification",
+          "task": "Policy Verification",
+          "status": "VALIDATED",
+          "cases_evaluated": 25,
+          "cases_in_benchmark": 25,
+          "metric": "Exact Structured Accuracy",
+          "value": 100,
+          "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
+          "note": "Synthetic reference evaluation of deterministic policy consistency fields (verified, coverage_active, and issue count). It does not verify carrier-side eligibility."
+        },
+        {
+          "task_id": "insurance_coverage_estimation",
+          "task": "Coverage Estimation",
+          "status": "VALIDATED",
+          "cases_evaluated": 25,
+          "cases_in_benchmark": 25,
+          "metric": "Exact Structured Accuracy",
+          "value": 100,
+          "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
+          "note": "Synthetic reference evaluation of eligible amount, deductible, insurer estimate, and patient estimate produced by the deterministic coverage calculator."
+        },
+        {
+          "task_id": "insurance_preauthorization_requirement",
+          "task": "Preauthorization Requirement Detection",
+          "status": "VALIDATED",
+          "cases_evaluated": 25,
+          "cases_in_benchmark": 25,
+          "metric": "Accuracy",
+          "value": 100,
+          "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
+          "note": "Evaluation covers only the deterministic requirement flag derived from supplied policy terms. It does not score the LLM-generated clinical-necessity recommendation."
+        },
+        {
+          "task_id": "insurance_claim_generation",
+          "task": "Claim Generation",
+          "status": "PENDING_HUMAN_REVIEW",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25,
+          "note": "The new Insurance Agent stage is LLM-backed and produces narrative/review judgments. This repository currently has no defensible labelled ground truth for automatic semantic scoring, so it remains pending human review rather than receiving an invented accuracy/F1."
+        },
+        {
+          "task_id": "insurance_fraud_screening",
+          "task": "Fraud Screening",
+          "status": "PENDING_HUMAN_REVIEW",
+          "cases_evaluated": 0,
+          "cases_in_benchmark": 25,
+          "note": "The new Insurance Agent stage is LLM-backed and produces narrative/review judgments. This repository currently has no defensible labelled ground truth for automatic semantic scoring, so it remains pending human review rather than receiving an invented accuracy/F1."
+        }
+      ]
+    },
+    {
+      "agent_id": "digital_twin",
+      "agent": "Digital Twin",
+      "tasks": [
+        {
+          "task_id": "digital_twin_capacity_projection",
+          "task": "Capacity Projection",
+          "status": "VALIDATED",
+          "cases_evaluated": 25,
+          "cases_in_benchmark": 25,
+          "metric": "Exact Structured Accuracy",
+          "value": 100,
+          "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
+          "note": "Synthetic reference evaluation of deterministic resource projections for the Digital Twin what-if simulator."
+        },
+        {
+          "task_id": "digital_twin_bottleneck_detection",
+          "task": "Bottleneck Detection",
+          "status": "VALIDATED",
+          "cases_evaluated": 25,
+          "cases_in_benchmark": 25,
+          "metric": "F1",
+          "value": 100,
+          "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
+          "note": "Synthetic reference set evaluation of projected bottleneck resource types. Precision 100.0%; Recall 100.0%; F1 100.0%."
+        },
+        {
+          "task_id": "digital_twin_operational_pressure_projection",
+          "task": "Operational Pressure Projection",
+          "status": "VALIDATED",
+          "cases_evaluated": 25,
+          "cases_in_benchmark": 25,
+          "metric": "Accuracy",
+          "value": 100,
+          "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
+          "note": "Synthetic reference evaluation of the deterministic projected operational-pressure value."
+        },
+        {
+          "task_id": "digital_twin_feedback_generation",
+          "task": "Agent Feedback Generation",
+          "status": "VALIDATED",
+          "cases_evaluated": 25,
+          "cases_in_benchmark": 25,
+          "metric": "F1",
+          "value": 100,
+          "dataset": "NEW-AGENTS-REF-25-v1 (synthetic project reference)",
+          "note": "Synthetic reference set evaluation of target operations agents for advisory feedback. Precision 100.0%; Recall 100.0%; F1 100.0%."
+        }
+      ]
+    }
   ]
 }
