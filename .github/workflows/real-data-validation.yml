@@ -54,7 +54,7 @@ jobs:
 
       - name: Run empirical validation
         env:
-          MAX_CASES: \${{ github.event.inputs.max_cases || '1000' }}
+          MAX_CASES: ${{ github.event.inputs.max_cases || '1000' }}
         run: |
           python validation/real_data/run_real_data_validation.py --max-cases "$MAX_CASES"
 
