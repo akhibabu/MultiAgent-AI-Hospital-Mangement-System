@@ -1,0 +1,13 @@
+{
+  "task_id": "insurance_coverage_estimation",
+  "task": "Coverage Estimation",
+  "status": "PENDING_REAL_GROUND_TRUTH",
+  "cases_evaluated": 0,
+  "cases_in_benchmark": 0,
+  "headline_metric": null,
+  "headline_value": null,
+  "dataset": "CMS Medicare Physician & Other Practitioners / CMS plan data / OIG LEIE",
+  "benchmark_type": "real_world",
+  "source_url": "https://data.cms.gov/provider-summary-by-type-of-service/medicare-physician-other-practitioners/medicare-physician-other-practitioners-by-geography-and-service",
+  "note": "Real CMS/OIG sources are available for claims, service codes, payment context, plan benefits, and provider exclusions, but they do not provide a member-level eligibility label or a complete, independently adjudicated fraud/authorization ground truth matching this agent interface. No synthetic score is substituted."
+}

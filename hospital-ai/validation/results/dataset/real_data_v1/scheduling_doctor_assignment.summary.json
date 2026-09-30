@@ -1,0 +1,13 @@
+{
+  "task_id": "scheduling_doctor_assignment",
+  "task": "Doctor Assignment",
+  "status": "PENDING_REAL_GROUND_TRUTH",
+  "cases_evaluated": 0,
+  "cases_in_benchmark": 6637,
+  "headline_metric": null,
+  "headline_value": null,
+  "dataset": "Hangu real outpatient consultation dataset",
+  "benchmark_type": "real_world",
+  "source_url": "https://github.com/fenghaolin/HanguData",
+  "note": "Loaded real outpatient data (6637 consultation rows, 381 sessions) including observed service times and appointment/session timing. It does not contain an independently adjudicated optimal doctor/slot/queue policy for the current deterministic agent, so no accuracy score is assigned."
+}

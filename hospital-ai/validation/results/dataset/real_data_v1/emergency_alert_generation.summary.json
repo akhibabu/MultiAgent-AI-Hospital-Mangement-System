@@ -1,0 +1,13 @@
+{
+  "task_id": "emergency_alert_generation",
+  "task": "Emergency Alert Generation",
+  "status": "PENDING_REAL_GROUND_TRUTH",
+  "cases_evaluated": 0,
+  "cases_in_benchmark": 0,
+  "headline_metric": null,
+  "headline_value": null,
+  "dataset": "MIMIC-IV-ED Demo v2.2",
+  "benchmark_type": "real_world",
+  "source_url": "https://physionet.org/content/mimic-iv-ed-demo/2.2/",
+  "note": "The public dataset contains relevant observations but no independent clinician-labelled target matching this exact project output. No proxy score is substituted."
+}

@@ -1,0 +1,17 @@
+{
+  "task_id": "resource_allocation_bed_allocation",
+  "task": "Bed Allocation",
+  "status": "VALIDATED_REAL_AVAILABILITY",
+  "cases_evaluated": 981,
+  "cases_in_benchmark": 981,
+  "headline_metric": "Availability Alignment F1",
+  "headline_value": 1.0,
+  "dataset": "HHS COVID-19 Reported Patient Impact and Hospital Capacity by State Timeseries",
+  "benchmark_type": "real_world",
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0,
+  "source_url": "https://healthdata.gov/Hospital/COVID-19-Reported-Patient-Impact-and-Hospital-Capa/sgxm-t72h",
+  "note": "Real facility/state capacity data used for inpatient beds. The target is whether reported capacity leaves at least one unit available. This is availability alignment, not historical patient-to-resource assignment accuracy."
+}

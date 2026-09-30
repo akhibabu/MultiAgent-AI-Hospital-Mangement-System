@@ -1,0 +1,16 @@
+{
+  "task_id": "emergency_triage_classification",
+  "task": "Triage Classification",
+  "status": "VALIDATED_REAL",
+  "cases_evaluated": 207,
+  "cases_in_benchmark": 207,
+  "headline_metric": "Accuracy",
+  "headline_value": 0.11594202898550725,
+  "dataset": "MIMIC-IV-ED Demo v2.2",
+  "benchmark_type": "real_world",
+  "accuracy": 0.11594202898550725,
+  "macro_f1": 0.07947019867549668,
+  "f1_score": 0.07947019867549668,
+  "source_url": "https://physionet.org/content/mimic-iv-ed-demo/2.2/",
+  "note": "Ground truth is the MIMIC triage acuity assigned in the ED record. Project mapping 1-2 Critical, 3 Urgent, 4 Semi-Urgent, 5 Routine. This is retrospective dataset validation, not a clinical validation study."
+}

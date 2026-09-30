@@ -1,0 +1,13 @@
+{
+  "task_id": "digital_twin_feedback_generation",
+  "task": "Agent Feedback Generation",
+  "status": "PENDING_REAL_GROUND_TRUTH",
+  "cases_evaluated": 0,
+  "cases_in_benchmark": 0,
+  "headline_metric": null,
+  "headline_value": null,
+  "dataset": "HHS COVID-19 Reported Patient Impact and Hospital Capacity by State Timeseries",
+  "benchmark_type": "real_world",
+  "source_url": "https://healthdata.gov/Hospital/COVID-19-Reported-Patient-Impact-and-Hospital-Capa/sgxm-t72h",
+  "note": "The public capacity series does not contain an independent labelled target for this exact Digital Twin output. The repository will not score these tasks against its own scenario equations."
+}

@@ -1,0 +1,15 @@
+{
+  "task_id": "digital_twin_capacity_projection",
+  "task": "Capacity Projection",
+  "status": "VALIDATED_REAL_RESTRICTED",
+  "cases_evaluated": 927,
+  "cases_in_benchmark": 927,
+  "headline_metric": "MAE (beds)",
+  "headline_value": 450.86407766990294,
+  "dataset": "HHS COVID-19 Reported Patient Impact and Hospital Capacity by State Timeseries",
+  "benchmark_type": "real_world",
+  "mae_beds": 450.86407766990294,
+  "rmse_beds": 1264.4961991008329,
+  "source_url": "https://healthdata.gov/Hospital/COVID-19-Reported-Patient-Impact-and-Hospital-Capa/sgxm-t72h",
+  "note": "Restricted real-data one-day projection test. The simulator receives prior-day reported adult confirmed COVID admissions as an incoming-admission input and is compared with the independently observed next-day bed availability. This is not a full hospital forecast, and it is not a causal digital-twin validation."
+}

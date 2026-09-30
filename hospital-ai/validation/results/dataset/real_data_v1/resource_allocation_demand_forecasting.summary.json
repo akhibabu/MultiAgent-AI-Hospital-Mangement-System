@@ -1,0 +1,13 @@
+{
+  "task_id": "resource_allocation_demand_forecasting",
+  "task": "Demand Forecasting",
+  "status": "PENDING_REAL_GROUND_TRUTH",
+  "cases_evaluated": 0,
+  "cases_in_benchmark": 0,
+  "headline_metric": null,
+  "headline_value": null,
+  "dataset": "HHS COVID-19 Reported Patient Impact and Hospital Capacity by State Timeseries",
+  "benchmark_type": "real_world",
+  "source_url": "https://healthdata.gov/Hospital/COVID-19-Reported-Patient-Impact-and-Hospital-Capa/sgxm-t72h",
+  "note": "The public dataset does not contain the required patient-level equipment/staff assignment or a future-demand label matching this project task. No synthetic target is used."
+}

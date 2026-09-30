@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "benchmark_type": "real_world",
+  "generated_at": "2026-09-30T10:45:45.928327+00:00",
+  "datasets": {
+    "mimic_iv_ed_demo_2_2": {
+      "source": "PhysioNet",
+      "url": "https://physionet.org/content/mimic-iv-ed-demo/2.2/",
+      "access": "open_demo"
+    },
+    "mimic_iv_demo_2_2": {
+      "source": "PhysioNet",
+      "url": "https://physionet.org/content/mimic-iv-demo/2.2/",
+      "access": "open_demo"
+    },
+    "hangu_real_outpatient": {
+      "source": "fenghaolin/HanguData",
+      "url": "https://github.com/fenghaolin/HanguData",
+      "access": "committed_with_attribution"
+    },
+    "hhs_capacity": {
+      "source": "U.S. Department of Health & Human Services / HealthData.gov",
+      "url": "https://healthdata.gov/Hospital/COVID-19-Reported-Patient-Impact-and-Hospital-Capa/sgxm-t72h",
+      "access": "public_api"
+    },
+    "cms_insurance": {
+      "source": "CMS",
+      "url": "https://data.cms.gov/provider-summary-by-type-of-service/medicare-physician-other-practitioners/medicare-physician-other-practitioners-by-geography-and-service",
+      "access": "public_dataset"
+    }
+  }
+}
