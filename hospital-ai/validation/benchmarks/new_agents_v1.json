@@ -1,0 +1,4615 @@
+{
+  "benchmark_id": "NEW-AGENTS-REF-25-v1",
+  "version": "1.0",
+  "type": "synthetic_project_reference",
+  "created_at": "2026-09-30",
+  "description": "Synthetic project-reference benchmark for the newly added Insurance Agent and Hospital Digital Twin. It validates deterministic, auditable components and leaves LLM-generated narrative/review tasks for human evaluation.",
+  "insurance_cases": [
+    {
+      "case_id": "INS-VAL-001",
+      "input": {
+        "service_name": "MRI",
+        "service_date": "2026-01-11",
+        "billed_amount": 600,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1001",
+          "member_id": "MEM-2001",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 80,
+          "deductible_remaining": 500,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 50,
+          "covered_services": [
+            "Consultation",
+            "MRI"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": [
+            "MRI"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 600,
+          "deductible_applied": 500,
+          "insurer_estimate": 80,
+          "patient_estimate": 570
+        },
+        "preauthorization": {
+          "authorization_required": true
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-002",
+      "input": {
+        "service_name": "Cosmetic Surgery",
+        "service_date": "2026-02-12",
+        "billed_amount": 1400,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1002",
+          "member_id": "MEM-2002",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 70,
+          "deductible_remaining": 0,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 0,
+          "covered_services": [
+            "Surgery"
+          ],
+          "excluded_services": [
+            "Cosmetic Surgery"
+          ],
+          "preauthorization_services": [
+            "Surgery"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 1
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 0
+        },
+        "preauthorization": {
+          "authorization_required": true
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-003",
+      "input": {
+        "service_name": "Consultation",
+        "service_date": "2026-03-13",
+        "billed_amount": 3500,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1003",
+          "member_id": "MEM-2003",
+          "plan_name": "Hospital Secure",
+          "status": "inactive",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 90,
+          "deductible_remaining": 200,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 25,
+          "covered_services": [
+            "Consultation"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 1
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 25
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-004",
+      "input": {
+        "service_name": "Consultation",
+        "service_date": "2026-04-14",
+        "billed_amount": 7600,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1004",
+          "member_id": "MEM-2004",
+          "plan_name": "Hospital Secure",
+          "status": "expired",
+          "effective_from": "2025-01-01",
+          "effective_to": "2025-12-31",
+          "coverage_percent": 90,
+          "deductible_remaining": 100,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 20,
+          "covered_services": [
+            "Consultation"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 2
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 20
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-005",
+      "input": {
+        "service_name": "CT",
+        "service_date": "2026-05-20",
+        "billed_amount": 1100,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1005",
+          "member_id": "MEM-2005",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-06-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 80,
+          "deductible_remaining": 300,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 30,
+          "covered_services": [
+            "CT"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": [
+            "CT"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 1
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 30
+        },
+        "preauthorization": {
+          "authorization_required": true
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-006",
+      "input": {
+        "service_name": "CT",
+        "service_date": "2026-08-01",
+        "billed_amount": 2200,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1006",
+          "member_id": "MEM-2006",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-06-30",
+          "coverage_percent": 80,
+          "deductible_remaining": 300,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 30,
+          "covered_services": [
+            "CT"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": [
+            "CT"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 1
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 30
+        },
+        "preauthorization": {
+          "authorization_required": true
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-007",
+      "input": {
+        "service_name": "Consultation",
+        "service_date": "2026-07-17",
+        "billed_amount": 1900,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1007",
+          "member_id": "MEM-2007",
+          "plan_name": "Hospital Secure",
+          "status": "unknown",
+          "effective_from": null,
+          "effective_to": null,
+          "coverage_percent": 60,
+          "deductible_remaining": 100,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 10,
+          "covered_services": [
+            "Consultation"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 1
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 10
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-008",
+      "input": {
+        "service_name": "Physiotherapy",
+        "service_date": "2026-08-18",
+        "billed_amount": 4700,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1008",
+          "member_id": "MEM-2008",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 0,
+          "deductible_remaining": 0,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 0,
+          "covered_services": [],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 4700,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 4700
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-009",
+      "input": {
+        "service_name": "Admission",
+        "service_date": "2026-09-19",
+        "billed_amount": 650,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1009",
+          "member_id": "MEM-2009",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 90,
+          "deductible_remaining": 2000,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 100,
+          "covered_services": [
+            "Admission"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": [
+            "Admission"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 650,
+          "deductible_applied": 650,
+          "insurer_estimate": 0,
+          "patient_estimate": 650
+        },
+        "preauthorization": {
+          "authorization_required": true
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-010",
+      "input": {
+        "service_name": "Physiotherapy",
+        "service_date": "2026-01-20",
+        "billed_amount": 3300,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1010",
+          "member_id": "MEM-2010",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 50,
+          "deductible_remaining": 250,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 75,
+          "covered_services": [],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 3300,
+          "deductible_applied": 250,
+          "insurer_estimate": 1525,
+          "patient_estimate": 1850
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-011",
+      "input": {
+        "service_name": "Cosmetic Surgery",
+        "service_date": "2026-02-21",
+        "billed_amount": 700,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1011",
+          "member_id": "MEM-2011",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 80,
+          "deductible_remaining": 500,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 50,
+          "covered_services": [
+            "Consultation",
+            "MRI"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": [
+            "MRI"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 700,
+          "deductible_applied": 500,
+          "insurer_estimate": 160,
+          "patient_estimate": 590
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-012",
+      "input": {
+        "service_name": "Laboratory Test",
+        "service_date": "2026-03-22",
+        "billed_amount": 1200,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1012",
+          "member_id": "MEM-2012",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 70,
+          "deductible_remaining": 0,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 0,
+          "covered_services": [
+            "Surgery"
+          ],
+          "excluded_services": [
+            "Cosmetic Surgery"
+          ],
+          "preauthorization_services": [
+            "Surgery"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 1200,
+          "deductible_applied": 0,
+          "insurer_estimate": 840,
+          "patient_estimate": 360
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-013",
+      "input": {
+        "service_name": "X-Ray",
+        "service_date": "2026-04-23",
+        "billed_amount": 3600,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1013",
+          "member_id": "MEM-2013",
+          "plan_name": "Hospital Secure",
+          "status": "inactive",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 90,
+          "deductible_remaining": 200,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 25,
+          "covered_services": [
+            "Consultation"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 1
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 25
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-014",
+      "input": {
+        "service_name": "Surgery",
+        "service_date": "2026-05-24",
+        "billed_amount": 7700,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1014",
+          "member_id": "MEM-2014",
+          "plan_name": "Hospital Secure",
+          "status": "expired",
+          "effective_from": "2025-01-01",
+          "effective_to": "2025-12-31",
+          "coverage_percent": 90,
+          "deductible_remaining": 100,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 20,
+          "covered_services": [
+            "Consultation"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 2
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 20
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-015",
+      "input": {
+        "service_name": "MRI",
+        "service_date": "2026-06-25",
+        "billed_amount": 900,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1015",
+          "member_id": "MEM-2015",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-06-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 80,
+          "deductible_remaining": 300,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 30,
+          "covered_services": [
+            "CT"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": [
+            "CT"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 900,
+          "deductible_applied": 300,
+          "insurer_estimate": 480,
+          "patient_estimate": 450
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-016",
+      "input": {
+        "service_name": "Dental Procedure",
+        "service_date": "2026-07-26",
+        "billed_amount": 2300,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1016",
+          "member_id": "MEM-2016",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-06-30",
+          "coverage_percent": 80,
+          "deductible_remaining": 300,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 30,
+          "covered_services": [
+            "CT"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": [
+            "CT"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 1
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 30
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-017",
+      "input": {
+        "service_name": "MRI",
+        "service_date": "2026-08-27",
+        "billed_amount": 2000,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1017",
+          "member_id": "MEM-2017",
+          "plan_name": "Hospital Secure",
+          "status": "unknown",
+          "effective_from": null,
+          "effective_to": null,
+          "coverage_percent": 60,
+          "deductible_remaining": 100,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 10,
+          "covered_services": [
+            "Consultation"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 1
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 10
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-018",
+      "input": {
+        "service_name": "CT",
+        "service_date": "2026-09-01",
+        "billed_amount": 4500,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1018",
+          "member_id": "MEM-2018",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 0,
+          "deductible_remaining": 0,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 0,
+          "covered_services": [],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 4500,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 4500
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-019",
+      "input": {
+        "service_name": "Physiotherapy",
+        "service_date": "2026-01-02",
+        "billed_amount": 750,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1019",
+          "member_id": "MEM-2019",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 90,
+          "deductible_remaining": 2000,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 100,
+          "covered_services": [
+            "Admission"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": [
+            "Admission"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 750,
+          "deductible_applied": 750,
+          "insurer_estimate": 0,
+          "patient_estimate": 750
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-020",
+      "input": {
+        "service_name": "MRI",
+        "service_date": "2026-02-03",
+        "billed_amount": 3400,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1020",
+          "member_id": "MEM-2020",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 50,
+          "deductible_remaining": 250,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 75,
+          "covered_services": [],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 3400,
+          "deductible_applied": 250,
+          "insurer_estimate": 1575,
+          "patient_estimate": 1900
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-021",
+      "input": {
+        "service_name": "Surgery",
+        "service_date": "2026-03-04",
+        "billed_amount": 500,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1021",
+          "member_id": "MEM-2021",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 80,
+          "deductible_remaining": 500,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 50,
+          "covered_services": [
+            "Consultation",
+            "MRI"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": [
+            "MRI"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 500,
+          "deductible_applied": 500,
+          "insurer_estimate": 0,
+          "patient_estimate": 500
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-022",
+      "input": {
+        "service_name": "Laboratory Test",
+        "service_date": "2026-04-05",
+        "billed_amount": 1300,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1022",
+          "member_id": "MEM-2022",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 70,
+          "deductible_remaining": 0,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 0,
+          "covered_services": [
+            "Surgery"
+          ],
+          "excluded_services": [
+            "Cosmetic Surgery"
+          ],
+          "preauthorization_services": [
+            "Surgery"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 1300,
+          "deductible_applied": 0,
+          "insurer_estimate": 910,
+          "patient_estimate": 390
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-023",
+      "input": {
+        "service_name": "X-Ray",
+        "service_date": "2026-05-06",
+        "billed_amount": 3700,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1023",
+          "member_id": "MEM-2023",
+          "plan_name": "Hospital Secure",
+          "status": "inactive",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 90,
+          "deductible_remaining": 200,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 25,
+          "covered_services": [
+            "Consultation"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 1
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 25
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-024",
+      "input": {
+        "service_name": "Surgery",
+        "service_date": "2026-06-07",
+        "billed_amount": 7500,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1024",
+          "member_id": "MEM-2024",
+          "plan_name": "Hospital Secure",
+          "status": "expired",
+          "effective_from": "2025-01-01",
+          "effective_to": "2025-12-31",
+          "coverage_percent": 90,
+          "deductible_remaining": 100,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 20,
+          "covered_services": [
+            "Consultation"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": []
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": false,
+          "coverage_active": false,
+          "issue_count": 2
+        },
+        "coverage_estimate": {
+          "eligible_amount": 0,
+          "deductible_applied": 0,
+          "insurer_estimate": 0,
+          "patient_estimate": 20
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    },
+    {
+      "case_id": "INS-VAL-025",
+      "input": {
+        "service_name": "MRI",
+        "service_date": "2026-07-08",
+        "billed_amount": 1000,
+        "policy": {
+          "provider_name": "HOS Insurance",
+          "policy_number": "POL-1025",
+          "member_id": "MEM-2025",
+          "plan_name": "Hospital Secure",
+          "status": "active",
+          "effective_from": "2026-06-01",
+          "effective_to": "2026-12-31",
+          "coverage_percent": 80,
+          "deductible_remaining": 300,
+          "out_of_pocket_remaining": 5000,
+          "annual_limit_remaining": 100000,
+          "copay": 30,
+          "covered_services": [
+            "CT"
+          ],
+          "excluded_services": [],
+          "preauthorization_services": [
+            "CT"
+          ]
+        }
+      },
+      "ground_truth": {
+        "policy_verification": {
+          "verified": true,
+          "coverage_active": true,
+          "issue_count": 0
+        },
+        "coverage_estimate": {
+          "eligible_amount": 1000,
+          "deductible_applied": 300,
+          "insurer_estimate": 560,
+          "patient_estimate": 470
+        },
+        "preauthorization": {
+          "authorization_required": false
+        }
+      }
+    }
+  ],
+  "digital_twin_cases": [
+    {
+      "case_id": "DT-VAL-001",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 80,
+              "available_quantity": 9,
+              "in_use_quantity": 71,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 88.8
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 12,
+              "available_quantity": 2,
+              "in_use_quantity": 10,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 83.3
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 10,
+              "available_quantity": 2,
+              "in_use_quantity": 8,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 80
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 5,
+              "available_quantity": 1,
+              "in_use_quantity": 4,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 80
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 22,
+              "available_quantity": 9,
+              "in_use_quantity": 13,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 59.1
+            }
+          ],
+          "staff": {
+            "total_doctors": 35,
+            "available_doctors": 31,
+            "busy_doctors": 3,
+            "on_leave": 1,
+            "utilization_percent": 11.4
+          },
+          "flow": {
+            "appointments_next_24h": 13,
+            "appointments_next_7d": 38,
+            "emergency_results_last_24h": 3,
+            "high_or_critical_emergencies": 1,
+            "icu_signals_last_24h": 1,
+            "scheduling_runs_last_24h": 3,
+            "allocation_runs_last_24h": 2,
+            "allocation_conflicts_last_24h": 1
+          },
+          "operational_pressure": 88.8
+        },
+        "scenario": {
+          "horizon_hours": 36,
+          "emergency_arrivals": 1,
+          "planned_admissions": 3,
+          "expected_discharges": 1,
+          "icu_admissions": 1,
+          "icu_discharges": 1,
+          "ventilator_demand": 1,
+          "additional_theatre_demand": 1,
+          "staff_absent": 1,
+          "additional_appointments": 1
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 88.8,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 9,
+            "projected_available": 6,
+            "projected_utilization_percent": 92.5,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 2,
+            "projected_available": 2,
+            "projected_utilization_percent": 83.3,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 2,
+            "projected_available": 1,
+            "projected_utilization_percent": 90,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 1,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 9,
+            "projected_available": 9,
+            "projected_utilization_percent": 59.1,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-002",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 100,
+              "available_quantity": 13,
+              "in_use_quantity": 87,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 87
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 14,
+              "available_quantity": 3,
+              "in_use_quantity": 11,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 78.6
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 12,
+              "available_quantity": 3,
+              "in_use_quantity": 9,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 75
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 6,
+              "available_quantity": 2,
+              "in_use_quantity": 4,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 66.7
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 24,
+              "available_quantity": 10,
+              "in_use_quantity": 14,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 58.3
+            }
+          ],
+          "staff": {
+            "total_doctors": 40,
+            "available_doctors": 32,
+            "busy_doctors": 6,
+            "on_leave": 2,
+            "utilization_percent": 20
+          },
+          "flow": {
+            "appointments_next_24h": 16,
+            "appointments_next_7d": 41,
+            "emergency_results_last_24h": 4,
+            "high_or_critical_emergencies": 2,
+            "icu_signals_last_24h": 2,
+            "scheduling_runs_last_24h": 4,
+            "allocation_runs_last_24h": 3,
+            "allocation_conflicts_last_24h": 2
+          },
+          "operational_pressure": 87
+        },
+        "scenario": {
+          "horizon_hours": 48,
+          "emergency_arrivals": 2,
+          "planned_admissions": 4,
+          "expected_discharges": 2,
+          "icu_admissions": 2,
+          "icu_discharges": 0,
+          "ventilator_demand": 2,
+          "additional_theatre_demand": 2,
+          "staff_absent": 2,
+          "additional_appointments": 2
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 87,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 13,
+            "projected_available": 9,
+            "projected_utilization_percent": 91,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 3,
+            "projected_available": 1,
+            "projected_utilization_percent": 92.9,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 3,
+            "projected_available": 1,
+            "projected_utilization_percent": 91.7,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 2,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 10,
+            "projected_available": 10,
+            "projected_utilization_percent": 58.3,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-003",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 120,
+              "available_quantity": 17,
+              "in_use_quantity": 103,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 85.8
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 16,
+              "available_quantity": 4,
+              "in_use_quantity": 12,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 75
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 8,
+              "available_quantity": 4,
+              "in_use_quantity": 4,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 4,
+              "available_quantity": 3,
+              "in_use_quantity": 1,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 25
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 26,
+              "available_quantity": 11,
+              "in_use_quantity": 15,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 57.7
+            }
+          ],
+          "staff": {
+            "total_doctors": 45,
+            "available_doctors": 33,
+            "busy_doctors": 12,
+            "on_leave": 0,
+            "utilization_percent": 26.7
+          },
+          "flow": {
+            "appointments_next_24h": 19,
+            "appointments_next_7d": 44,
+            "emergency_results_last_24h": 5,
+            "high_or_critical_emergencies": 3,
+            "icu_signals_last_24h": 0,
+            "scheduling_runs_last_24h": 5,
+            "allocation_runs_last_24h": 1,
+            "allocation_conflicts_last_24h": 3
+          },
+          "operational_pressure": 85.8
+        },
+        "scenario": {
+          "horizon_hours": 60,
+          "emergency_arrivals": 3,
+          "planned_admissions": 5,
+          "expected_discharges": 3,
+          "icu_admissions": 3,
+          "icu_discharges": 1,
+          "ventilator_demand": 3,
+          "additional_theatre_demand": 0,
+          "staff_absent": 3,
+          "additional_appointments": 3
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 85.8,
+        "projected_operational_pressure": 96.3,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 17,
+            "projected_available": 12,
+            "projected_utilization_percent": 90,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 4,
+            "projected_available": 2,
+            "projected_utilization_percent": 87.5,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 4,
+            "projected_available": 1,
+            "projected_utilization_percent": 87.5,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 3,
+            "projected_available": 3,
+            "projected_utilization_percent": 25,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 11,
+            "projected_available": 11,
+            "projected_utilization_percent": 57.7,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-004",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 140,
+              "available_quantity": 21,
+              "in_use_quantity": 119,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 85
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 10,
+              "available_quantity": 5,
+              "in_use_quantity": 5,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 10,
+              "available_quantity": 5,
+              "in_use_quantity": 5,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 5,
+              "available_quantity": 0,
+              "in_use_quantity": 5,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 100
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 28,
+              "available_quantity": 12,
+              "in_use_quantity": 16,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 57.1
+            }
+          ],
+          "staff": {
+            "total_doctors": 30,
+            "available_doctors": 14,
+            "busy_doctors": 15,
+            "on_leave": 1,
+            "utilization_percent": 53.3
+          },
+          "flow": {
+            "appointments_next_24h": 22,
+            "appointments_next_7d": 47,
+            "emergency_results_last_24h": 6,
+            "high_or_critical_emergencies": 0,
+            "icu_signals_last_24h": 1,
+            "scheduling_runs_last_24h": 2,
+            "allocation_runs_last_24h": 2,
+            "allocation_conflicts_last_24h": 4
+          },
+          "operational_pressure": 100
+        },
+        "scenario": {
+          "horizon_hours": 24,
+          "emergency_arrivals": 4,
+          "planned_admissions": 6,
+          "expected_discharges": 4,
+          "icu_admissions": 0,
+          "icu_discharges": 0,
+          "ventilator_demand": 4,
+          "additional_theatre_demand": 1,
+          "staff_absent": 4,
+          "additional_appointments": 4
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 100,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 21,
+            "projected_available": 15,
+            "projected_utilization_percent": 89.3,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 5,
+            "projected_available": 5,
+            "projected_utilization_percent": 50,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 5,
+            "projected_available": 1,
+            "projected_utilization_percent": 90,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 0,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 1,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 12,
+            "projected_available": 12,
+            "projected_utilization_percent": 57.1,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-005",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 60,
+              "available_quantity": 25,
+              "in_use_quantity": 35,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 58.3
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 12,
+              "available_quantity": 1,
+              "in_use_quantity": 11,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 91.7
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 12,
+              "available_quantity": 6,
+              "in_use_quantity": 6,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 6,
+              "available_quantity": 1,
+              "in_use_quantity": 5,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 83.3
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 20,
+              "available_quantity": 8,
+              "in_use_quantity": 12,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 60
+            }
+          ],
+          "staff": {
+            "total_doctors": 35,
+            "available_doctors": 15,
+            "busy_doctors": 18,
+            "on_leave": 2,
+            "utilization_percent": 57.1
+          },
+          "flow": {
+            "appointments_next_24h": 10,
+            "appointments_next_7d": 35,
+            "emergency_results_last_24h": 7,
+            "high_or_critical_emergencies": 1,
+            "icu_signals_last_24h": 2,
+            "scheduling_runs_last_24h": 3,
+            "allocation_runs_last_24h": 3,
+            "allocation_conflicts_last_24h": 0
+          },
+          "operational_pressure": 91.7
+        },
+        "scenario": {
+          "horizon_hours": 36,
+          "emergency_arrivals": 5,
+          "planned_admissions": 7,
+          "expected_discharges": 0,
+          "icu_admissions": 1,
+          "icu_discharges": 1,
+          "ventilator_demand": 0,
+          "additional_theatre_demand": 2,
+          "staff_absent": 5,
+          "additional_appointments": 5
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 91.7,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 25,
+            "projected_available": 13,
+            "projected_utilization_percent": 78.3,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 1,
+            "projected_available": 1,
+            "projected_utilization_percent": 91.7,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 6,
+            "projected_available": 6,
+            "projected_utilization_percent": 50,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 1,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 1,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 8,
+            "projected_available": 8,
+            "projected_utilization_percent": 60,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-006",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 80,
+              "available_quantity": 5,
+              "in_use_quantity": 75,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 93.8
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 14,
+              "available_quantity": 2,
+              "in_use_quantity": 12,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 85.7
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 8,
+              "available_quantity": 1,
+              "in_use_quantity": 7,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 87.5
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 4,
+              "available_quantity": 2,
+              "in_use_quantity": 2,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 22,
+              "available_quantity": 9,
+              "in_use_quantity": 13,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 59.1
+            }
+          ],
+          "staff": {
+            "total_doctors": 40,
+            "available_doctors": 16,
+            "busy_doctors": 24,
+            "on_leave": 0,
+            "utilization_percent": 60
+          },
+          "flow": {
+            "appointments_next_24h": 13,
+            "appointments_next_7d": 38,
+            "emergency_results_last_24h": 2,
+            "high_or_critical_emergencies": 0,
+            "icu_signals_last_24h": 0,
+            "scheduling_runs_last_24h": 4,
+            "allocation_runs_last_24h": 1,
+            "allocation_conflicts_last_24h": 1
+          },
+          "operational_pressure": 93.8
+        },
+        "scenario": {
+          "horizon_hours": 48,
+          "emergency_arrivals": 6,
+          "planned_admissions": 2,
+          "expected_discharges": 1,
+          "icu_admissions": 2,
+          "icu_discharges": 0,
+          "ventilator_demand": 1,
+          "additional_theatre_demand": 0,
+          "staff_absent": 6,
+          "additional_appointments": 0
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 93.8,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 5,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 2,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 2,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 1,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 2,
+            "projected_available": 2,
+            "projected_utilization_percent": 50,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 9,
+            "projected_available": 9,
+            "projected_utilization_percent": 59.1,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-007",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 100,
+              "available_quantity": 9,
+              "in_use_quantity": 91,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 91
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 16,
+              "available_quantity": 3,
+              "in_use_quantity": 13,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 81.3
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 10,
+              "available_quantity": 2,
+              "in_use_quantity": 8,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 80
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 5,
+              "available_quantity": 3,
+              "in_use_quantity": 2,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 40
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 24,
+              "available_quantity": 10,
+              "in_use_quantity": 14,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 58.3
+            }
+          ],
+          "staff": {
+            "total_doctors": 45,
+            "available_doctors": 45,
+            "busy_doctors": -1,
+            "on_leave": 1,
+            "utilization_percent": 0
+          },
+          "flow": {
+            "appointments_next_24h": 16,
+            "appointments_next_7d": 41,
+            "emergency_results_last_24h": 3,
+            "high_or_critical_emergencies": 1,
+            "icu_signals_last_24h": 1,
+            "scheduling_runs_last_24h": 5,
+            "allocation_runs_last_24h": 2,
+            "allocation_conflicts_last_24h": 2
+          },
+          "operational_pressure": 91
+        },
+        "scenario": {
+          "horizon_hours": 60,
+          "emergency_arrivals": 0,
+          "planned_admissions": 3,
+          "expected_discharges": 2,
+          "icu_admissions": 3,
+          "icu_discharges": 1,
+          "ventilator_demand": 2,
+          "additional_theatre_demand": 1,
+          "staff_absent": 7,
+          "additional_appointments": 1
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 91,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 9,
+            "projected_available": 8,
+            "projected_utilization_percent": 92,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 3,
+            "projected_available": 1,
+            "projected_utilization_percent": 93.8,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 2,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 3,
+            "projected_available": 2,
+            "projected_utilization_percent": 60,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 10,
+            "projected_available": 10,
+            "projected_utilization_percent": 58.3,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-008",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 120,
+              "available_quantity": 13,
+              "in_use_quantity": 107,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 89.2
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 10,
+              "available_quantity": 4,
+              "in_use_quantity": 6,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 60
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 12,
+              "available_quantity": 3,
+              "in_use_quantity": 9,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 75
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 6,
+              "available_quantity": 0,
+              "in_use_quantity": 6,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 100
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 26,
+              "available_quantity": 11,
+              "in_use_quantity": 15,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 57.7
+            }
+          ],
+          "staff": {
+            "total_doctors": 30,
+            "available_doctors": 26,
+            "busy_doctors": 2,
+            "on_leave": 2,
+            "utilization_percent": 13.3
+          },
+          "flow": {
+            "appointments_next_24h": 19,
+            "appointments_next_7d": 44,
+            "emergency_results_last_24h": 4,
+            "high_or_critical_emergencies": 0,
+            "icu_signals_last_24h": 2,
+            "scheduling_runs_last_24h": 2,
+            "allocation_runs_last_24h": 3,
+            "allocation_conflicts_last_24h": 3
+          },
+          "operational_pressure": 100
+        },
+        "scenario": {
+          "horizon_hours": 24,
+          "emergency_arrivals": 1,
+          "planned_admissions": 4,
+          "expected_discharges": 3,
+          "icu_admissions": 0,
+          "icu_discharges": 0,
+          "ventilator_demand": 3,
+          "additional_theatre_demand": 2,
+          "staff_absent": 0,
+          "additional_appointments": 2
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 100,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 13,
+            "projected_available": 11,
+            "projected_utilization_percent": 90.8,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 4,
+            "projected_available": 4,
+            "projected_utilization_percent": 60,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 3,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 0,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 2,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 11,
+            "projected_available": 11,
+            "projected_utilization_percent": 57.7,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-009",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 140,
+              "available_quantity": 17,
+              "in_use_quantity": 123,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 87.9
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 12,
+              "available_quantity": 5,
+              "in_use_quantity": 7,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 58.3
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 8,
+              "available_quantity": 4,
+              "in_use_quantity": 4,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 4,
+              "available_quantity": 1,
+              "in_use_quantity": 3,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 75
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 28,
+              "available_quantity": 12,
+              "in_use_quantity": 16,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 57.1
+            }
+          ],
+          "staff": {
+            "total_doctors": 35,
+            "available_doctors": 27,
+            "busy_doctors": 8,
+            "on_leave": 0,
+            "utilization_percent": 22.9
+          },
+          "flow": {
+            "appointments_next_24h": 22,
+            "appointments_next_7d": 47,
+            "emergency_results_last_24h": 5,
+            "high_or_critical_emergencies": 1,
+            "icu_signals_last_24h": 0,
+            "scheduling_runs_last_24h": 3,
+            "allocation_runs_last_24h": 1,
+            "allocation_conflicts_last_24h": 4
+          },
+          "operational_pressure": 87.9
+        },
+        "scenario": {
+          "horizon_hours": 36,
+          "emergency_arrivals": 2,
+          "planned_admissions": 5,
+          "expected_discharges": 4,
+          "icu_admissions": 1,
+          "icu_discharges": 1,
+          "ventilator_demand": 4,
+          "additional_theatre_demand": 0,
+          "staff_absent": 1,
+          "additional_appointments": 3
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 87.9,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 17,
+            "projected_available": 14,
+            "projected_utilization_percent": 90,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 5,
+            "projected_available": 5,
+            "projected_utilization_percent": 58.3,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 4,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 1,
+            "projected_available": 1,
+            "projected_utilization_percent": 75,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 12,
+            "projected_available": 12,
+            "projected_utilization_percent": 57.1,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-010",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 60,
+              "available_quantity": 21,
+              "in_use_quantity": 39,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 65
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 14,
+              "available_quantity": 1,
+              "in_use_quantity": 13,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 92.9
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 10,
+              "available_quantity": 5,
+              "in_use_quantity": 5,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 5,
+              "available_quantity": 2,
+              "in_use_quantity": 3,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 60
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 20,
+              "available_quantity": 8,
+              "in_use_quantity": 12,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 60
+            }
+          ],
+          "staff": {
+            "total_doctors": 40,
+            "available_doctors": 28,
+            "busy_doctors": 11,
+            "on_leave": 1,
+            "utilization_percent": 30
+          },
+          "flow": {
+            "appointments_next_24h": 10,
+            "appointments_next_7d": 35,
+            "emergency_results_last_24h": 6,
+            "high_or_critical_emergencies": 2,
+            "icu_signals_last_24h": 1,
+            "scheduling_runs_last_24h": 4,
+            "allocation_runs_last_24h": 2,
+            "allocation_conflicts_last_24h": 0
+          },
+          "operational_pressure": 92.9
+        },
+        "scenario": {
+          "horizon_hours": 48,
+          "emergency_arrivals": 3,
+          "planned_admissions": 6,
+          "expected_discharges": 0,
+          "icu_admissions": 2,
+          "icu_discharges": 0,
+          "ventilator_demand": 0,
+          "additional_theatre_demand": 1,
+          "staff_absent": 2,
+          "additional_appointments": 4
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 92.9,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 21,
+            "projected_available": 12,
+            "projected_utilization_percent": 80,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 1,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 1,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 5,
+            "projected_available": 5,
+            "projected_utilization_percent": 50,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 2,
+            "projected_available": 1,
+            "projected_utilization_percent": 80,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 8,
+            "projected_available": 8,
+            "projected_utilization_percent": 60,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-011",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 80,
+              "available_quantity": 25,
+              "in_use_quantity": 55,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 68.8
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 16,
+              "available_quantity": 2,
+              "in_use_quantity": 14,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 87.5
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 12,
+              "available_quantity": 6,
+              "in_use_quantity": 6,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 6,
+              "available_quantity": 3,
+              "in_use_quantity": 3,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 22,
+              "available_quantity": 9,
+              "in_use_quantity": 13,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 59.1
+            }
+          ],
+          "staff": {
+            "total_doctors": 45,
+            "available_doctors": 29,
+            "busy_doctors": 14,
+            "on_leave": 2,
+            "utilization_percent": 35.6
+          },
+          "flow": {
+            "appointments_next_24h": 13,
+            "appointments_next_7d": 38,
+            "emergency_results_last_24h": 7,
+            "high_or_critical_emergencies": 3,
+            "icu_signals_last_24h": 2,
+            "scheduling_runs_last_24h": 5,
+            "allocation_runs_last_24h": 3,
+            "allocation_conflicts_last_24h": 1
+          },
+          "operational_pressure": 87.5
+        },
+        "scenario": {
+          "horizon_hours": 60,
+          "emergency_arrivals": 4,
+          "planned_admissions": 7,
+          "expected_discharges": 1,
+          "icu_admissions": 3,
+          "icu_discharges": 1,
+          "ventilator_demand": 1,
+          "additional_theatre_demand": 2,
+          "staff_absent": 3,
+          "additional_appointments": 5
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 87.5,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 25,
+            "projected_available": 15,
+            "projected_utilization_percent": 81.3,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 2,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 6,
+            "projected_available": 5,
+            "projected_utilization_percent": 58.3,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 3,
+            "projected_available": 1,
+            "projected_utilization_percent": 83.3,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 9,
+            "projected_available": 9,
+            "projected_utilization_percent": 59.1,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-012",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 100,
+              "available_quantity": 5,
+              "in_use_quantity": 95,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 95
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 10,
+              "available_quantity": 3,
+              "in_use_quantity": 7,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 70
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 8,
+              "available_quantity": 1,
+              "in_use_quantity": 7,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 87.5
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 4,
+              "available_quantity": 0,
+              "in_use_quantity": 4,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 100
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 24,
+              "available_quantity": 10,
+              "in_use_quantity": 14,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 58.3
+            }
+          ],
+          "staff": {
+            "total_doctors": 30,
+            "available_doctors": 10,
+            "busy_doctors": 20,
+            "on_leave": 0,
+            "utilization_percent": 66.7
+          },
+          "flow": {
+            "appointments_next_24h": 16,
+            "appointments_next_7d": 41,
+            "emergency_results_last_24h": 2,
+            "high_or_critical_emergencies": 0,
+            "icu_signals_last_24h": 0,
+            "scheduling_runs_last_24h": 2,
+            "allocation_runs_last_24h": 1,
+            "allocation_conflicts_last_24h": 2
+          },
+          "operational_pressure": 100
+        },
+        "scenario": {
+          "horizon_hours": 24,
+          "emergency_arrivals": 5,
+          "planned_admissions": 2,
+          "expected_discharges": 2,
+          "icu_admissions": 0,
+          "icu_discharges": 0,
+          "ventilator_demand": 2,
+          "additional_theatre_demand": 0,
+          "staff_absent": 4,
+          "additional_appointments": 0
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 100,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 5,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 3,
+            "projected_available": 3,
+            "projected_utilization_percent": 70,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 1,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 1,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 0,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 10,
+            "projected_available": 10,
+            "projected_utilization_percent": 58.3,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-013",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 120,
+              "available_quantity": 9,
+              "in_use_quantity": 111,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 92.5
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 12,
+              "available_quantity": 4,
+              "in_use_quantity": 8,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 66.7
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 10,
+              "available_quantity": 2,
+              "in_use_quantity": 8,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 80
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 5,
+              "available_quantity": 1,
+              "in_use_quantity": 4,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 80
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 26,
+              "available_quantity": 11,
+              "in_use_quantity": 15,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 57.7
+            }
+          ],
+          "staff": {
+            "total_doctors": 35,
+            "available_doctors": 11,
+            "busy_doctors": 23,
+            "on_leave": 1,
+            "utilization_percent": 68.6
+          },
+          "flow": {
+            "appointments_next_24h": 19,
+            "appointments_next_7d": 44,
+            "emergency_results_last_24h": 3,
+            "high_or_critical_emergencies": 1,
+            "icu_signals_last_24h": 1,
+            "scheduling_runs_last_24h": 3,
+            "allocation_runs_last_24h": 2,
+            "allocation_conflicts_last_24h": 3
+          },
+          "operational_pressure": 92.5
+        },
+        "scenario": {
+          "horizon_hours": 36,
+          "emergency_arrivals": 6,
+          "planned_admissions": 3,
+          "expected_discharges": 3,
+          "icu_admissions": 1,
+          "icu_discharges": 1,
+          "ventilator_demand": 3,
+          "additional_theatre_demand": 1,
+          "staff_absent": 5,
+          "additional_appointments": 1
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 92.5,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 9,
+            "projected_available": 3,
+            "projected_utilization_percent": 97.5,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 4,
+            "projected_available": 4,
+            "projected_utilization_percent": 66.7,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 2,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 1,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 1,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 11,
+            "projected_available": 11,
+            "projected_utilization_percent": 57.7,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-014",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 140,
+              "available_quantity": 13,
+              "in_use_quantity": 127,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 90.7
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 14,
+              "available_quantity": 5,
+              "in_use_quantity": 9,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 64.3
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 12,
+              "available_quantity": 3,
+              "in_use_quantity": 9,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 75
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 6,
+              "available_quantity": 2,
+              "in_use_quantity": 4,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 66.7
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 28,
+              "available_quantity": 12,
+              "in_use_quantity": 16,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 57.1
+            }
+          ],
+          "staff": {
+            "total_doctors": 40,
+            "available_doctors": 40,
+            "busy_doctors": -2,
+            "on_leave": 2,
+            "utilization_percent": 0
+          },
+          "flow": {
+            "appointments_next_24h": 22,
+            "appointments_next_7d": 47,
+            "emergency_results_last_24h": 4,
+            "high_or_critical_emergencies": 2,
+            "icu_signals_last_24h": 2,
+            "scheduling_runs_last_24h": 4,
+            "allocation_runs_last_24h": 3,
+            "allocation_conflicts_last_24h": 4
+          },
+          "operational_pressure": 90.7
+        },
+        "scenario": {
+          "horizon_hours": 48,
+          "emergency_arrivals": 0,
+          "planned_admissions": 4,
+          "expected_discharges": 4,
+          "icu_admissions": 2,
+          "icu_discharges": 0,
+          "ventilator_demand": 4,
+          "additional_theatre_demand": 2,
+          "staff_absent": 6,
+          "additional_appointments": 2
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 90.7,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 13,
+            "projected_available": 13,
+            "projected_utilization_percent": 90.7,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 5,
+            "projected_available": 3,
+            "projected_utilization_percent": 78.6,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 3,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 1,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 2,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 12,
+            "projected_available": 12,
+            "projected_utilization_percent": 57.1,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-015",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 60,
+              "available_quantity": 17,
+              "in_use_quantity": 43,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 71.7
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 16,
+              "available_quantity": 1,
+              "in_use_quantity": 15,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 93.8
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 8,
+              "available_quantity": 4,
+              "in_use_quantity": 4,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 4,
+              "available_quantity": 3,
+              "in_use_quantity": 1,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 25
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 20,
+              "available_quantity": 8,
+              "in_use_quantity": 12,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 60
+            }
+          ],
+          "staff": {
+            "total_doctors": 45,
+            "available_doctors": 41,
+            "busy_doctors": 4,
+            "on_leave": 0,
+            "utilization_percent": 8.9
+          },
+          "flow": {
+            "appointments_next_24h": 10,
+            "appointments_next_7d": 35,
+            "emergency_results_last_24h": 5,
+            "high_or_critical_emergencies": 3,
+            "icu_signals_last_24h": 0,
+            "scheduling_runs_last_24h": 5,
+            "allocation_runs_last_24h": 1,
+            "allocation_conflicts_last_24h": 0
+          },
+          "operational_pressure": 93.8
+        },
+        "scenario": {
+          "horizon_hours": 60,
+          "emergency_arrivals": 1,
+          "planned_admissions": 5,
+          "expected_discharges": 0,
+          "icu_admissions": 3,
+          "icu_discharges": 1,
+          "ventilator_demand": 0,
+          "additional_theatre_demand": 0,
+          "staff_absent": 7,
+          "additional_appointments": 3
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 93.8,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 17,
+            "projected_available": 11,
+            "projected_utilization_percent": 81.7,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 1,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 1,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 4,
+            "projected_available": 4,
+            "projected_utilization_percent": 50,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 3,
+            "projected_available": 3,
+            "projected_utilization_percent": 25,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 8,
+            "projected_available": 8,
+            "projected_utilization_percent": 60,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-016",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 80,
+              "available_quantity": 21,
+              "in_use_quantity": 59,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 73.8
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 10,
+              "available_quantity": 2,
+              "in_use_quantity": 8,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 80
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 10,
+              "available_quantity": 5,
+              "in_use_quantity": 5,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 5,
+              "available_quantity": 0,
+              "in_use_quantity": 5,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 100
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 22,
+              "available_quantity": 9,
+              "in_use_quantity": 13,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 59.1
+            }
+          ],
+          "staff": {
+            "total_doctors": 30,
+            "available_doctors": 22,
+            "busy_doctors": 7,
+            "on_leave": 1,
+            "utilization_percent": 26.7
+          },
+          "flow": {
+            "appointments_next_24h": 13,
+            "appointments_next_7d": 38,
+            "emergency_results_last_24h": 6,
+            "high_or_critical_emergencies": 0,
+            "icu_signals_last_24h": 1,
+            "scheduling_runs_last_24h": 2,
+            "allocation_runs_last_24h": 2,
+            "allocation_conflicts_last_24h": 1
+          },
+          "operational_pressure": 100
+        },
+        "scenario": {
+          "horizon_hours": 24,
+          "emergency_arrivals": 2,
+          "planned_admissions": 6,
+          "expected_discharges": 1,
+          "icu_admissions": 0,
+          "icu_discharges": 0,
+          "ventilator_demand": 1,
+          "additional_theatre_demand": 1,
+          "staff_absent": 0,
+          "additional_appointments": 4
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 100,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 21,
+            "projected_available": 14,
+            "projected_utilization_percent": 82.5,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 2,
+            "projected_available": 2,
+            "projected_utilization_percent": 80,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 5,
+            "projected_available": 4,
+            "projected_utilization_percent": 60,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 0,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 1,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 9,
+            "projected_available": 9,
+            "projected_utilization_percent": 59.1,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-017",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 100,
+              "available_quantity": 25,
+              "in_use_quantity": 75,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 75
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 12,
+              "available_quantity": 3,
+              "in_use_quantity": 9,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 75
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 12,
+              "available_quantity": 6,
+              "in_use_quantity": 6,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 6,
+              "available_quantity": 1,
+              "in_use_quantity": 5,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 83.3
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 24,
+              "available_quantity": 10,
+              "in_use_quantity": 14,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 58.3
+            }
+          ],
+          "staff": {
+            "total_doctors": 35,
+            "available_doctors": 23,
+            "busy_doctors": 10,
+            "on_leave": 2,
+            "utilization_percent": 34.3
+          },
+          "flow": {
+            "appointments_next_24h": 16,
+            "appointments_next_7d": 41,
+            "emergency_results_last_24h": 7,
+            "high_or_critical_emergencies": 1,
+            "icu_signals_last_24h": 2,
+            "scheduling_runs_last_24h": 3,
+            "allocation_runs_last_24h": 3,
+            "allocation_conflicts_last_24h": 2
+          },
+          "operational_pressure": 83.3
+        },
+        "scenario": {
+          "horizon_hours": 36,
+          "emergency_arrivals": 3,
+          "planned_admissions": 7,
+          "expected_discharges": 2,
+          "icu_admissions": 1,
+          "icu_discharges": 1,
+          "ventilator_demand": 2,
+          "additional_theatre_demand": 2,
+          "staff_absent": 1,
+          "additional_appointments": 5
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 83.3,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 25,
+            "projected_available": 17,
+            "projected_utilization_percent": 83,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 3,
+            "projected_available": 3,
+            "projected_utilization_percent": 75,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 6,
+            "projected_available": 4,
+            "projected_utilization_percent": 66.7,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 1,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 1,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 10,
+            "projected_available": 10,
+            "projected_utilization_percent": 58.3,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-018",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 120,
+              "available_quantity": 5,
+              "in_use_quantity": 115,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 95.8
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 14,
+              "available_quantity": 4,
+              "in_use_quantity": 10,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 71.4
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 8,
+              "available_quantity": 1,
+              "in_use_quantity": 7,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 87.5
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 4,
+              "available_quantity": 2,
+              "in_use_quantity": 2,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 26,
+              "available_quantity": 11,
+              "in_use_quantity": 15,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 57.7
+            }
+          ],
+          "staff": {
+            "total_doctors": 40,
+            "available_doctors": 24,
+            "busy_doctors": 16,
+            "on_leave": 0,
+            "utilization_percent": 40
+          },
+          "flow": {
+            "appointments_next_24h": 19,
+            "appointments_next_7d": 44,
+            "emergency_results_last_24h": 2,
+            "high_or_critical_emergencies": 0,
+            "icu_signals_last_24h": 0,
+            "scheduling_runs_last_24h": 4,
+            "allocation_runs_last_24h": 1,
+            "allocation_conflicts_last_24h": 3
+          },
+          "operational_pressure": 95.8
+        },
+        "scenario": {
+          "horizon_hours": 48,
+          "emergency_arrivals": 4,
+          "planned_admissions": 2,
+          "expected_discharges": 3,
+          "icu_admissions": 2,
+          "icu_discharges": 0,
+          "ventilator_demand": 3,
+          "additional_theatre_demand": 0,
+          "staff_absent": 2,
+          "additional_appointments": 0
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 95.8,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 5,
+            "projected_available": 2,
+            "projected_utilization_percent": 98.3,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 4,
+            "projected_available": 2,
+            "projected_utilization_percent": 85.7,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 1,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 2,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 2,
+            "projected_available": 2,
+            "projected_utilization_percent": 50,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 11,
+            "projected_available": 11,
+            "projected_utilization_percent": 57.7,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-019",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 140,
+              "available_quantity": 9,
+              "in_use_quantity": 131,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 93.6
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 16,
+              "available_quantity": 5,
+              "in_use_quantity": 11,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 68.8
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 10,
+              "available_quantity": 2,
+              "in_use_quantity": 8,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 80
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 5,
+              "available_quantity": 3,
+              "in_use_quantity": 2,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 40
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 28,
+              "available_quantity": 12,
+              "in_use_quantity": 16,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 57.1
+            }
+          ],
+          "staff": {
+            "total_doctors": 45,
+            "available_doctors": 25,
+            "busy_doctors": 19,
+            "on_leave": 1,
+            "utilization_percent": 44.4
+          },
+          "flow": {
+            "appointments_next_24h": 22,
+            "appointments_next_7d": 47,
+            "emergency_results_last_24h": 3,
+            "high_or_critical_emergencies": 1,
+            "icu_signals_last_24h": 1,
+            "scheduling_runs_last_24h": 5,
+            "allocation_runs_last_24h": 2,
+            "allocation_conflicts_last_24h": 4
+          },
+          "operational_pressure": 93.6
+        },
+        "scenario": {
+          "horizon_hours": 60,
+          "emergency_arrivals": 5,
+          "planned_admissions": 3,
+          "expected_discharges": 4,
+          "icu_admissions": 3,
+          "icu_discharges": 1,
+          "ventilator_demand": 4,
+          "additional_theatre_demand": 1,
+          "staff_absent": 3,
+          "additional_appointments": 1
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 93.6,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 9,
+            "projected_available": 5,
+            "projected_utilization_percent": 96.4,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 5,
+            "projected_available": 3,
+            "projected_utilization_percent": 81.3,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 2,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 2,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 3,
+            "projected_available": 2,
+            "projected_utilization_percent": 60,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 12,
+            "projected_available": 12,
+            "projected_utilization_percent": 57.1,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-020",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 60,
+              "available_quantity": 13,
+              "in_use_quantity": 47,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 78.3
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 10,
+              "available_quantity": 1,
+              "in_use_quantity": 9,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 90
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 12,
+              "available_quantity": 3,
+              "in_use_quantity": 9,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 75
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 6,
+              "available_quantity": 0,
+              "in_use_quantity": 6,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 100
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 20,
+              "available_quantity": 8,
+              "in_use_quantity": 12,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 60
+            }
+          ],
+          "staff": {
+            "total_doctors": 30,
+            "available_doctors": 6,
+            "busy_doctors": 22,
+            "on_leave": 2,
+            "utilization_percent": 80
+          },
+          "flow": {
+            "appointments_next_24h": 10,
+            "appointments_next_7d": 35,
+            "emergency_results_last_24h": 4,
+            "high_or_critical_emergencies": 0,
+            "icu_signals_last_24h": 2,
+            "scheduling_runs_last_24h": 2,
+            "allocation_runs_last_24h": 3,
+            "allocation_conflicts_last_24h": 0
+          },
+          "operational_pressure": 100
+        },
+        "scenario": {
+          "horizon_hours": 24,
+          "emergency_arrivals": 6,
+          "planned_admissions": 4,
+          "expected_discharges": 0,
+          "icu_admissions": 0,
+          "icu_discharges": 0,
+          "ventilator_demand": 0,
+          "additional_theatre_demand": 2,
+          "staff_absent": 4,
+          "additional_appointments": 2
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 100,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 13,
+            "projected_available": 3,
+            "projected_utilization_percent": 95,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 1,
+            "projected_available": 1,
+            "projected_utilization_percent": 90,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 3,
+            "projected_available": 3,
+            "projected_utilization_percent": 75,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 0,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 2,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 8,
+            "projected_available": 8,
+            "projected_utilization_percent": 60,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "Clinical Staff",
+          "ICU Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-021",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 80,
+              "available_quantity": 17,
+              "in_use_quantity": 63,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 78.8
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 12,
+              "available_quantity": 2,
+              "in_use_quantity": 10,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 83.3
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 8,
+              "available_quantity": 4,
+              "in_use_quantity": 4,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 4,
+              "available_quantity": 1,
+              "in_use_quantity": 3,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 75
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 22,
+              "available_quantity": 9,
+              "in_use_quantity": 13,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 59.1
+            }
+          ],
+          "staff": {
+            "total_doctors": 35,
+            "available_doctors": 35,
+            "busy_doctors": 0,
+            "on_leave": 0,
+            "utilization_percent": 0
+          },
+          "flow": {
+            "appointments_next_24h": 13,
+            "appointments_next_7d": 38,
+            "emergency_results_last_24h": 5,
+            "high_or_critical_emergencies": 1,
+            "icu_signals_last_24h": 0,
+            "scheduling_runs_last_24h": 3,
+            "allocation_runs_last_24h": 1,
+            "allocation_conflicts_last_24h": 1
+          },
+          "operational_pressure": 83.3
+        },
+        "scenario": {
+          "horizon_hours": 36,
+          "emergency_arrivals": 0,
+          "planned_admissions": 5,
+          "expected_discharges": 1,
+          "icu_admissions": 1,
+          "icu_discharges": 1,
+          "ventilator_demand": 1,
+          "additional_theatre_demand": 0,
+          "staff_absent": 5,
+          "additional_appointments": 3
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 83.3,
+        "projected_operational_pressure": 84.8,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 17,
+            "projected_available": 13,
+            "projected_utilization_percent": 83.8,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 2,
+            "projected_available": 2,
+            "projected_utilization_percent": 83.3,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 4,
+            "projected_available": 3,
+            "projected_utilization_percent": 62.5,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 1,
+            "projected_available": 1,
+            "projected_utilization_percent": 75,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 9,
+            "projected_available": 9,
+            "projected_utilization_percent": 59.1,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-022",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 100,
+              "available_quantity": 21,
+              "in_use_quantity": 79,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 79
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 14,
+              "available_quantity": 3,
+              "in_use_quantity": 11,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 78.6
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 10,
+              "available_quantity": 5,
+              "in_use_quantity": 5,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 5,
+              "available_quantity": 2,
+              "in_use_quantity": 3,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 60
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 24,
+              "available_quantity": 10,
+              "in_use_quantity": 14,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 58.3
+            }
+          ],
+          "staff": {
+            "total_doctors": 40,
+            "available_doctors": 36,
+            "busy_doctors": 3,
+            "on_leave": 1,
+            "utilization_percent": 10
+          },
+          "flow": {
+            "appointments_next_24h": 16,
+            "appointments_next_7d": 41,
+            "emergency_results_last_24h": 6,
+            "high_or_critical_emergencies": 2,
+            "icu_signals_last_24h": 1,
+            "scheduling_runs_last_24h": 4,
+            "allocation_runs_last_24h": 2,
+            "allocation_conflicts_last_24h": 2
+          },
+          "operational_pressure": 79
+        },
+        "scenario": {
+          "horizon_hours": 48,
+          "emergency_arrivals": 1,
+          "planned_admissions": 6,
+          "expected_discharges": 2,
+          "icu_admissions": 2,
+          "icu_discharges": 0,
+          "ventilator_demand": 2,
+          "additional_theatre_demand": 1,
+          "staff_absent": 6,
+          "additional_appointments": 4
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 79,
+        "projected_operational_pressure": 92.9,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 21,
+            "projected_available": 16,
+            "projected_utilization_percent": 84,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 3,
+            "projected_available": 1,
+            "projected_utilization_percent": 92.9,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 5,
+            "projected_available": 3,
+            "projected_utilization_percent": 70,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 2,
+            "projected_available": 1,
+            "projected_utilization_percent": 80,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 10,
+            "projected_available": 10,
+            "projected_utilization_percent": 58.3,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-023",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 120,
+              "available_quantity": 25,
+              "in_use_quantity": 95,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 79.2
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 16,
+              "available_quantity": 4,
+              "in_use_quantity": 12,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 75
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 12,
+              "available_quantity": 6,
+              "in_use_quantity": 6,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 6,
+              "available_quantity": 3,
+              "in_use_quantity": 3,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 26,
+              "available_quantity": 11,
+              "in_use_quantity": 15,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 57.7
+            }
+          ],
+          "staff": {
+            "total_doctors": 45,
+            "available_doctors": 37,
+            "busy_doctors": 6,
+            "on_leave": 2,
+            "utilization_percent": 17.8
+          },
+          "flow": {
+            "appointments_next_24h": 19,
+            "appointments_next_7d": 44,
+            "emergency_results_last_24h": 7,
+            "high_or_critical_emergencies": 3,
+            "icu_signals_last_24h": 2,
+            "scheduling_runs_last_24h": 5,
+            "allocation_runs_last_24h": 3,
+            "allocation_conflicts_last_24h": 3
+          },
+          "operational_pressure": 79.2
+        },
+        "scenario": {
+          "horizon_hours": 60,
+          "emergency_arrivals": 2,
+          "planned_admissions": 7,
+          "expected_discharges": 3,
+          "icu_admissions": 3,
+          "icu_discharges": 1,
+          "ventilator_demand": 3,
+          "additional_theatre_demand": 2,
+          "staff_absent": 7,
+          "additional_appointments": 5
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 79.2,
+        "projected_operational_pressure": 87.7,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 25,
+            "projected_available": 19,
+            "projected_utilization_percent": 84.2,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 4,
+            "projected_available": 2,
+            "projected_utilization_percent": 87.5,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 6,
+            "projected_available": 3,
+            "projected_utilization_percent": 75,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 3,
+            "projected_available": 1,
+            "projected_utilization_percent": 83.3,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 11,
+            "projected_available": 11,
+            "projected_utilization_percent": 57.7,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-024",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 140,
+              "available_quantity": 5,
+              "in_use_quantity": 135,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 96.4
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 10,
+              "available_quantity": 5,
+              "in_use_quantity": 5,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 50
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 8,
+              "available_quantity": 1,
+              "in_use_quantity": 7,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 87.5
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 4,
+              "available_quantity": 0,
+              "in_use_quantity": 4,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 100
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 28,
+              "available_quantity": 12,
+              "in_use_quantity": 16,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 57.1
+            }
+          ],
+          "staff": {
+            "total_doctors": 30,
+            "available_doctors": 18,
+            "busy_doctors": 12,
+            "on_leave": 0,
+            "utilization_percent": 40
+          },
+          "flow": {
+            "appointments_next_24h": 22,
+            "appointments_next_7d": 47,
+            "emergency_results_last_24h": 2,
+            "high_or_critical_emergencies": 0,
+            "icu_signals_last_24h": 0,
+            "scheduling_runs_last_24h": 2,
+            "allocation_runs_last_24h": 1,
+            "allocation_conflicts_last_24h": 4
+          },
+          "operational_pressure": 100
+        },
+        "scenario": {
+          "horizon_hours": 24,
+          "emergency_arrivals": 3,
+          "planned_admissions": 2,
+          "expected_discharges": 4,
+          "icu_admissions": 0,
+          "icu_discharges": 0,
+          "ventilator_demand": 4,
+          "additional_theatre_demand": 0,
+          "staff_absent": 0,
+          "additional_appointments": 0
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 100,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 5,
+            "projected_available": 4,
+            "projected_utilization_percent": 97.1,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 5,
+            "projected_available": 5,
+            "projected_utilization_percent": 50,
+            "shortage": 0,
+            "status": "Stable"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 1,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 3,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 0,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 12,
+            "projected_available": 12,
+            "projected_utilization_percent": 57.1,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    },
+    {
+      "case_id": "DT-VAL-025",
+      "input": {
+        "state": {
+          "resources": [
+            {
+              "resource_type": "Bed",
+              "total_quantity": 60,
+              "available_quantity": 9,
+              "in_use_quantity": 51,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 85
+            },
+            {
+              "resource_type": "ICU Bed",
+              "total_quantity": 12,
+              "available_quantity": 1,
+              "in_use_quantity": 11,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 91.7
+            },
+            {
+              "resource_type": "Ventilator",
+              "total_quantity": 10,
+              "available_quantity": 2,
+              "in_use_quantity": 8,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 80
+            },
+            {
+              "resource_type": "Operation Theatre",
+              "total_quantity": 5,
+              "available_quantity": 1,
+              "in_use_quantity": 4,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 80
+            },
+            {
+              "resource_type": "Medical Equipment",
+              "total_quantity": 20,
+              "available_quantity": 8,
+              "in_use_quantity": 12,
+              "maintenance_quantity": 0,
+              "out_of_service_quantity": 0,
+              "utilization_percent": 60
+            }
+          ],
+          "staff": {
+            "total_doctors": 35,
+            "available_doctors": 19,
+            "busy_doctors": 15,
+            "on_leave": 1,
+            "utilization_percent": 45.7
+          },
+          "flow": {
+            "appointments_next_24h": 10,
+            "appointments_next_7d": 35,
+            "emergency_results_last_24h": 3,
+            "high_or_critical_emergencies": 1,
+            "icu_signals_last_24h": 1,
+            "scheduling_runs_last_24h": 3,
+            "allocation_runs_last_24h": 2,
+            "allocation_conflicts_last_24h": 0
+          },
+          "operational_pressure": 91.7
+        },
+        "scenario": {
+          "horizon_hours": 36,
+          "emergency_arrivals": 4,
+          "planned_admissions": 3,
+          "expected_discharges": 0,
+          "icu_admissions": 1,
+          "icu_discharges": 1,
+          "ventilator_demand": 0,
+          "additional_theatre_demand": 1,
+          "staff_absent": 1,
+          "additional_appointments": 1
+        }
+      },
+      "ground_truth": {
+        "operational_pressure": 91.7,
+        "projected_operational_pressure": 100,
+        "resource_projections": [
+          {
+            "resource_type": "Bed",
+            "baseline_available": 9,
+            "projected_available": 2,
+            "projected_utilization_percent": 96.7,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "ICU Bed",
+            "baseline_available": 1,
+            "projected_available": 1,
+            "projected_utilization_percent": 91.7,
+            "shortage": 0,
+            "status": "High Pressure"
+          },
+          {
+            "resource_type": "Ventilator",
+            "baseline_available": 2,
+            "projected_available": 2,
+            "projected_utilization_percent": 80,
+            "shortage": 0,
+            "status": "Elevated"
+          },
+          {
+            "resource_type": "Operation Theatre",
+            "baseline_available": 1,
+            "projected_available": 0,
+            "projected_utilization_percent": 100,
+            "shortage": 0,
+            "status": "Critical"
+          },
+          {
+            "resource_type": "Medical Equipment",
+            "baseline_available": 8,
+            "projected_available": 8,
+            "projected_utilization_percent": 60,
+            "shortage": 0,
+            "status": "Stable"
+          }
+        ],
+        "bottleneck_types": [
+          "Bed",
+          "ICU Bed",
+          "Operation Theatre",
+          "Ventilator"
+        ],
+        "feedback_targets": [
+          "emergency",
+          "resource_allocation",
+          "scheduling"
+        ]
+      }
+    }
+  ]
+}
