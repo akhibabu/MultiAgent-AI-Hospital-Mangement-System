@@ -40,3 +40,25 @@ jobs:
           git diff --cached --quiet && echo "No validation result changes." && exit 0
           git commit -m "chore: record new-agent validation results [skip ci]"
           git push
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hospital-ai/frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: hospital-ai/frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
