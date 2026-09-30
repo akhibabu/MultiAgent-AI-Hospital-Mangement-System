@@ -492,6 +492,10 @@ def run_digital_twin(records: list[dict[str, object]], max_cases: int | None) ->
             if None in (current_total, current_used, next_total, next_used):
                 continue
             incoming = int(round(max(prior_adm or 0.0, 0.0)))
+            # DigitalTwinScenario caps planned_admissions at 1000. Do not clip
+            # a real observation silently; exclude out-of-contract rows instead.
+            if incoming > 1000:
+                continue
             state_model = HospitalTwinState(
                 resources=[ResourceTwinState(
                     resource_type="Bed",
