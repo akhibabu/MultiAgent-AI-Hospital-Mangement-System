@@ -17,8 +17,12 @@ type Agent = { agent_id: string; agent: string; tasks: Task[] };
 type Overview = { as_of?: string; source?: string; disclaimer: string; agents: Agent[] };
 type CaseRow = { case_id: string; task_id: string; status: string; prediction?: unknown; ground_truth?: unknown; metrics?: Record<string, unknown> };
 
+function isDatasetValidated(status: string) {
+  return status.startsWith('VALIDATED') || status === 'AVAILABILITY_ALIGNED';
+}
+
 function statusClass(status: string) {
-  if (status === 'VALIDATED') return 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600';
+  if (status.startsWith('VALIDATED')) return 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600';
   if (status === 'PENDING_HUMAN_REVIEW') return 'border-amber-500/30 bg-amber-500/10 text-amber-600';
   if (status === 'PENDING_DATASET') return 'border-blue-500/30 bg-blue-500/10 text-blue-600';
   if (status === 'IN_PROGRESS') return 'border-violet-500/30 bg-violet-500/10 text-violet-600';
@@ -64,7 +68,7 @@ export default function ValidationCenterPage() {
   if (loading) return <section className="p-6 text-sm text-[var(--text-secondary)]">Loading validation evidence…</section>;
   if (error || !data) return <section className="p-6"><h1 className="text-2xl font-semibold">Validation Center</h1><p className="mt-2 text-sm text-red-600">{error ?? 'Validation data is unavailable.'}</p></section>;
 
-  const validatedTasks = data.agents.reduce((total, item) => total + item.tasks.filter((task) => task.status === 'VALIDATED').length, 0);
+  const validatedTasks = data.agents.reduce((total, item) => total + item.tasks.filter((task) => isDatasetValidated(task.status)).length, 0);
   const totalTasks = data.agents.reduce((total, item) => total + item.tasks.length, 0);
   const evaluatedCases = data.agents.reduce((total, item) => total + item.tasks.reduce((subtotal, task) => subtotal + task.cases_evaluated, 0), 0);
   const benchmarkCases = data.agents.reduce((total, item) => total + item.tasks.reduce((subtotal, task) => subtotal + task.cases_in_benchmark, 0), 0);
@@ -92,7 +96,7 @@ export default function ValidationCenterPage() {
             className={`rounded-xl border p-3 text-left transition ${selectedAgent === item.agent_id ? 'border-primary-500 bg-primary-500/5' : 'border-[var(--border-color)] hover:bg-[var(--bg-navbar)]'}`}
           >
             <div className="text-sm font-semibold">{item.agent.replace(' Agent', '')}</div>
-            <div className="mt-1 text-xs text-[var(--text-secondary)]">{item.tasks.filter((task) => task.status === 'VALIDATED').length}/{item.tasks.length} dataset validated</div>
+            <div className="mt-1 text-xs text-[var(--text-secondary)]">{item.tasks.filter((task) => isDatasetValidated(task.status)).length}/{item.tasks.length} dataset validated</div>
             <div className="mt-1 text-xs text-[var(--text-secondary)]">{item.tasks.reduce((s, task) => s + task.cases_evaluated, 0).toLocaleString()} cases</div>
           </button>
         ))}
