@@ -13,6 +13,7 @@ pdfplumber==0.11.6
 pillow==11.1.0
 pytesseract==0.3.13
 pdf2image==1.17.0
+email-validator
 # Primary OCR (optional — auto-falls back to Tesseract if installed):
 #   pip install paddlepaddle paddleocr
 
